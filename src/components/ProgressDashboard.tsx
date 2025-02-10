@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
-import { ChartLineUp, Target, Trophy, TrendingUp } from "lucide-react";
+import { ChartLine, Target, Trophy, TrendingUp } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 interface ProgressStats {
@@ -102,7 +102,7 @@ const ProgressDashboard = () => {
                 <h3 className="text-2xl font-bold mt-1">{Math.round(positivePercentage)}%</h3>
               </div>
               <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <ChartLineUp className="h-4 w-4 text-primary" />
+                <ChartLine className="h-4 w-4 text-primary" />
               </div>
             </div>
           </Card>
