@@ -19,10 +19,10 @@ const HeroSection = () => {
           </span>
         </div>
         
-        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 slide-up bg-gradient-to-r from-primary via-purple-600 to-blue-600 bg-clip-text text-transparent" style={{ animationDelay: "0.1s" }}>
+        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 slide-up" style={{ animationDelay: "0.1s" }}>
           Transform Your Life with
           <br /> 
-          <span className="relative">
+          <span className="text-primary relative inline-block mt-2">
             Mindful Recovery
             <span className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-primary to-purple-600 rounded-full transform scale-x-0 transition-transform duration-500 group-hover:scale-x-100"></span>
           </span>
