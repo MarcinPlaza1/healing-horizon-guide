@@ -1,7 +1,8 @@
-
 import { Brain, Target, Clock, Battery, Trophy } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { AddChallengeDialog } from "./AddChallengeDialog";
+import { ChallengeList } from "./ChallengeList";
 
 export const DopamineDetox = () => {
   return (
@@ -64,27 +65,15 @@ export const DopamineDetox = () => {
 
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="bg-card/50 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle>Active Detox Challenges</CardTitle>
-              <CardDescription>Your ongoing dopamine detox challenges</CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Active Challenges</CardTitle>
+                <CardDescription>Your ongoing dopamine detox challenges</CardDescription>
+              </div>
+              <AddChallengeDialog />
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Social Media Break</p>
-                    <p className="text-sm text-muted-foreground">2 days remaining</p>
-                  </div>
-                  <Progress value={60} className="w-[100px]" />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Digital Sunset</p>
-                    <p className="text-sm text-muted-foreground">Daily challenge</p>
-                  </div>
-                  <Progress value={100} className="w-[100px]" />
-                </div>
-              </div>
+              <ChallengeList />
             </CardContent>
           </Card>
 
