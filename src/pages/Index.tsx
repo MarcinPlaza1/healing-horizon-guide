@@ -2,7 +2,7 @@
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import FeatureCard from "@/components/FeatureCard";
-import { Heart, Users, Calendar, Shield, Book, Trophy, Star } from "lucide-react";
+import { Heart, Users, Calendar, Shield, Book, Trophy, Sparkles, Target, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -74,27 +74,48 @@ const Index = () => {
               <div className="grid md:grid-cols-2 gap-12 items-center relative">
                 <div className="text-left">
                   <span className="inline-block px-4 py-1.5 text-sm font-medium bg-primary/10 text-primary rounded-full mb-6">
-                    Success Stories
+                    Start Your Journey Today
                   </span>
-                  <h2 className="text-3xl md:text-4xl font-bold mb-6">Join Thousands Who Have Already Transformed Their Lives</h2>
+                  <h2 className="text-3xl md:text-4xl font-bold mb-6">Begin Your Path to Personal Growth</h2>
                   <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-                    Our community members have experienced remarkable growth and positive change. 
-                    Through dedication and support, they've built stronger, healthier lives.
+                    Take the first step towards a more mindful and balanced life. Our platform provides the tools, 
+                    guidance, and support you need to start your wellness journey.
                   </p>
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="flex">
-                      {[1, 2, 3, 4, 5].map((_, i) => (
-                        <Star key={i} className="w-6 h-6 text-yellow-400 fill-yellow-400" />
-                      ))}
+                  <div className="grid grid-cols-2 gap-6 mb-8">
+                    <div className="flex items-start gap-3">
+                      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <Target className="w-5 h-5 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-1">Set Goals</h3>
+                        <p className="text-muted-foreground">Define your personal objectives</p>
+                      </div>
                     </div>
-                    <span className="text-muted-foreground">4.9/5 from over 1,000 reviews</span>
+                    <div className="flex items-start gap-3">
+                      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <Sparkles className="w-5 h-5 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-1">Track Progress</h3>
+                        <p className="text-muted-foreground">Monitor your development</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <Leaf className="w-5 h-5 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-1">Build Habits</h3>
+                        <p className="text-muted-foreground">Develop healthy routines</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="relative">
                   <div className="aspect-video rounded-2xl overflow-hidden glass-card p-1">
                     <img 
-                      src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
-                      alt="Success Story"
+                      src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d"
+                      alt="Personal Growth Journey"
                       className="w-full h-full object-cover rounded-xl"
                     />
                   </div>
