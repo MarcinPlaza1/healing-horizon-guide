@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { PlusCircle, Trophy, AlertTriangle, CheckCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -18,16 +19,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Addiction, Milestone } from "@/types/addiction";
 import { AddAddictionForm } from "./addiction/AddAddictionForm";
-import { AddMilestoneForm } from "./addiction/AddMilestoneForm";
 import { AddictionCard } from "./addiction/AddictionCard";
 
 const AddictionTracker = () => {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
-  const [milestoneDialogOpen, setMilestoneDialogOpen] = useState(false);
-  const [selectedAddiction, setSelectedAddiction] = useState<Addiction | null>(null);
   const { toast } = useToast();
   
   const { data: addictions, refetch: refetchAddictions } = useQuery({
@@ -65,7 +63,7 @@ const AddictionTracker = () => {
     },
   });
 
-  const { data: milestones, refetch: refetchMilestones } = useQuery({
+  const { data: milestones } = useQuery({
     queryKey: ['milestones'],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -117,7 +115,6 @@ const AddictionTracker = () => {
       });
 
       refetchAddictions();
-      refetchMilestones();
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -146,7 +143,6 @@ const AddictionTracker = () => {
       });
 
       refetchAddictions();
-      refetchMilestones();
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -248,38 +244,12 @@ const AddictionTracker = () => {
                 addiction={addiction}
                 milestones={milestones?.filter(m => m.addiction_id === addiction.id) || []}
                 onUpdateStatus={updateAddictionStatus}
-                onAddMilestone={(addiction) => {
-                  setSelectedAddiction(addiction);
-                  setMilestoneDialogOpen(true);
-                }}
                 onDelete={deleteAddiction}
               />
             ))}
           </div>
         </CardContent>
       </Card>
-
-      {/* Milestone Dialog */}
-      <Dialog open={milestoneDialogOpen} onOpenChange={setMilestoneDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add Recovery Milestone</DialogTitle>
-            <DialogDescription>
-              Record a significant achievement in your recovery journey.
-            </DialogDescription>
-          </DialogHeader>
-          {selectedAddiction && (
-            <AddMilestoneForm
-              addiction={selectedAddiction}
-              onSuccess={() => {
-                setMilestoneDialogOpen(false);
-                refetchMilestones();
-              }}
-              onCancel={() => setMilestoneDialogOpen(false)}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 
 import { format } from "date-fns";
-import { Trophy, AlertTriangle, CheckCircle, Clock, MoreVertical, Calendar, Target, FileText, Plus, Goal } from "lucide-react";
+import { AlertTriangle, CheckCircle, Clock, MoreVertical, Calendar, Target, FileText, Plus, Goal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -33,7 +33,6 @@ interface AddictionCardProps {
   addiction: Addiction;
   milestones: Milestone[];
   onUpdateStatus: (addiction: Addiction, newStatus: string) => void;
-  onAddMilestone: (addiction: Addiction) => void;
   onDelete?: (addiction: Addiction) => void;
 }
 
@@ -41,7 +40,6 @@ export const AddictionCard = ({
   addiction,
   milestones,
   onUpdateStatus,
-  onAddMilestone,
   onDelete,
 }: AddictionCardProps) => {
   const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
@@ -116,6 +114,9 @@ export const AddictionCard = ({
 
       setNewGoal({ title: "", target_date: "" });
       setIsAddGoalOpen(false);
+      
+      // Refresh the page to show the new goal
+      window.location.reload();
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -146,6 +147,9 @@ export const AddictionCard = ({
         title: "Goal Updated",
         description: "Your goal has been updated.",
       });
+      
+      // Refresh the page to show the updated goal
+      window.location.reload();
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -357,18 +361,6 @@ export const AddictionCard = ({
             </div>
           )}
 
-          <div className="flex items-center justify-between pt-2">
-            <Button
-              variant="secondary"
-              size="lg"
-              onClick={() => onAddMilestone(addiction)}
-              className="w-full"
-            >
-              <Trophy className="h-5 w-5 mr-2" />
-              Add Milestone
-            </Button>
-          </div>
-          
           {milestones?.length > 0 && (
             <div className="space-y-3 pt-2">
               <h5 className="text-sm font-medium flex items-center gap-2">
