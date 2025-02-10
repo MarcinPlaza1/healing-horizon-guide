@@ -9,6 +9,7 @@ import MindfulnessTracker from "@/components/MindfulnessTracker";
 import HealthSummary from "@/components/HealthSummary";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
+import { Json } from "@/integrations/supabase/types";
 
 interface DashboardPreferences {
   widget_order: string[];
@@ -47,7 +48,15 @@ const Dashboard = () => {
         .single();
 
       if (data?.dashboard_preferences) {
-        setPreferences(data.dashboard_preferences as DashboardPreferences);
+        // Validate the structure of dashboard_preferences before setting it
+        const prefs = data.dashboard_preferences as any;
+        if (
+          Array.isArray(prefs.widget_order) &&
+          Array.isArray(prefs.favorite_widgets) &&
+          Array.isArray(prefs.expanded_widgets)
+        ) {
+          setPreferences(prefs as DashboardPreferences);
+        }
       }
     };
 
@@ -71,9 +80,16 @@ const Dashboard = () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
+    // Convert preferences to a JSON-compatible object
+    const jsonPreferences: Json = {
+      widget_order: newPreferences.widget_order,
+      favorite_widgets: newPreferences.favorite_widgets,
+      expanded_widgets: newPreferences.expanded_widgets
+    };
+
     const { error } = await supabase
       .from('profiles')
-      .update({ dashboard_preferences: newPreferences })
+      .update({ dashboard_preferences: jsonPreferences })
       .eq('id', user.id);
 
     if (error) {
