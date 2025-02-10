@@ -2,22 +2,21 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
-import { Plus, Droplets, Apple, Cookie, Beef, AlertCircle, Loader } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { AddNutritionLog } from "./AddNutritionLog";
-import { Skeleton } from "@/components/ui/skeleton";
+import { NutritionLoadingState } from "./components/NutritionLoadingState";
+import { NutritionErrorState } from "./components/NutritionErrorState";
+import { NutritionEmptyState } from "./components/NutritionEmptyState";
+import { NutritionProgressTracker } from "./components/NutritionProgressTracker";
 
 interface NutritionGoals {
   daily_water_ml: number;
   daily_calories: number;
   daily_sugar_grams: number;
-  daily_fat_grams: number;
   daily_protein_grams: number;
+  daily_fat_grams: number;
   daily_carbs_grams: number;
 }
 
@@ -128,70 +127,16 @@ export const NutritionTracking = () => {
     }
   };
 
-  const calculateProgress = (current: number, goal: number) => {
-    return Math.min((current / goal) * 100, 100);
-  };
-
-  if (error) {
-    return (
-      <Card className="border-destructive">
-        <CardHeader>
-          <div className="flex items-center gap-2 text-destructive">
-            <AlertCircle className="h-5 w-5" />
-            <CardTitle>Error Loading Nutrition Data</CardTitle>
-          </div>
-          <CardDescription>{error}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button onClick={fetchNutritionData} variant="outline" className="w-full">
-            Try Again
-          </Button>
-        </CardContent>
-      </Card>
-    );
+  if (isLoading) {
+    return <NutritionLoadingState />;
   }
 
-  if (isLoading) {
-    return (
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-8 w-[300px]" />
-          <Skeleton className="h-4 w-[250px] mt-2" />
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Skeleton className="h-4 w-4 rounded-full" />
-                    <Skeleton className="h-4 w-[100px]" />
-                  </div>
-                  <Skeleton className="h-4 w-[80px]" />
-                </div>
-                <Skeleton className="h-2 w-full" />
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    );
+  if (error) {
+    return <NutritionErrorState error={error} onRetry={fetchNutritionData} />;
   }
 
   if (!goals || !todayLog) {
-    return (
-      <Card className="border-dashed">
-        <CardHeader className="space-y-4">
-          <div className="flex items-center justify-center">
-            <AlertCircle className="h-8 w-8 text-muted-foreground" />
-          </div>
-          <CardTitle className="text-center">No Nutrition Data</CardTitle>
-          <CardDescription className="text-center">
-            Start tracking your nutrition by adding your first log
-          </CardDescription>
-        </CardHeader>
-      </Card>
-    );
+    return <NutritionEmptyState />;
   }
 
   return (
@@ -212,59 +157,7 @@ export const NutritionTracking = () => {
           <CardDescription>Track your daily nutrition and water intake</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-6">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Droplets className="h-4 w-4 text-blue-500" />
-                  <Label>Water Intake</Label>
-                </div>
-                <span className="text-sm text-muted-foreground">
-                  {todayLog.water_ml}ml / {goals.daily_water_ml}ml
-                </span>
-              </div>
-              <Progress value={calculateProgress(todayLog.water_ml, goals.daily_water_ml)} />
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Apple className="h-4 w-4 text-green-500" />
-                  <Label>Calories</Label>
-                </div>
-                <span className="text-sm text-muted-foreground">
-                  {todayLog.calories} / {goals.daily_calories} kcal
-                </span>
-              </div>
-              <Progress value={calculateProgress(todayLog.calories, goals.daily_calories)} />
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Cookie className="h-4 w-4 text-amber-500" />
-                  <Label>Sugar</Label>
-                </div>
-                <span className="text-sm text-muted-foreground">
-                  {todayLog.sugar_grams}g / {goals.daily_sugar_grams}g
-                </span>
-              </div>
-              <Progress value={calculateProgress(todayLog.sugar_grams, goals.daily_sugar_grams)} />
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Beef className="h-4 w-4 text-red-500" />
-                  <Label>Protein</Label>
-                </div>
-                <span className="text-sm text-muted-foreground">
-                  {todayLog.protein_grams}g / {goals.daily_protein_grams}g
-                </span>
-              </div>
-              <Progress value={calculateProgress(todayLog.protein_grams, goals.daily_protein_grams)} />
-            </div>
-          </div>
+          <NutritionProgressTracker todayLog={todayLog} goals={goals} />
         </CardContent>
       </Card>
 
@@ -276,4 +169,3 @@ export const NutritionTracking = () => {
     </div>
   );
 };
-
