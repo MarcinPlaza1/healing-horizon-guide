@@ -15,14 +15,15 @@ const DailyInspiration = () => {
 
   useEffect(() => {
     const fetchQuote = async () => {
+      // Using a simpler query that will still give us random results
       const { data, error } = await supabase
         .from('inspirational_quotes')
-        .select('*')
-        .limit(1)
-        .order('RANDOM()');
+        .select('*');
 
       if (data && data.length > 0) {
-        setQuote(data[0]);
+        // Get a random quote from the results
+        const randomIndex = Math.floor(Math.random() * data.length);
+        setQuote(data[randomIndex]);
       }
     };
 
