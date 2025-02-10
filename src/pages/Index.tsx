@@ -73,16 +73,16 @@ const Index = () => {
               <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-purple-400/20 rounded-full blur-3xl" />
               <div className="grid md:grid-cols-2 gap-12 items-center relative">
                 <div className="text-left">
-                  <span className="inline-block px-4 py-1.5 text-sm font-medium bg-primary/10 text-primary rounded-full mb-6">
+                  <span className="inline-block px-4 py-1.5 text-sm font-medium bg-primary/10 text-primary rounded-full mb-6 animate-pulse">
                     Start Your Journey Today
                   </span>
-                  <h2 className="text-3xl md:text-4xl font-bold mb-6">Begin Your Path to Personal Growth</h2>
-                  <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+                  <h2 className="text-3xl md:text-4xl font-bold mb-6 slide-up">Begin Your Path to Personal Growth</h2>
+                  <p className="text-muted-foreground text-lg mb-8 leading-relaxed slide-up">
                     Take the first step towards a more mindful and balanced life. Our platform provides the tools, 
                     guidance, and support you need to start your wellness journey.
                   </p>
-                  <div className="grid grid-cols-2 gap-6 mb-8">
-                    <div className="flex items-start gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                    <div className="flex items-start gap-3 hover:scale-105 transition-transform duration-300">
                       <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
                         <Target className="w-5 h-5 text-primary" />
                       </div>
@@ -91,7 +91,7 @@ const Index = () => {
                         <p className="text-muted-foreground">Define your personal objectives</p>
                       </div>
                     </div>
-                    <div className="flex items-start gap-3">
+                    <div className="flex items-start gap-3 hover:scale-105 transition-transform duration-300">
                       <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
                         <Sparkles className="w-5 h-5 text-primary" />
                       </div>
@@ -100,7 +100,7 @@ const Index = () => {
                         <p className="text-muted-foreground">Monitor your development</p>
                       </div>
                     </div>
-                    <div className="flex items-start gap-3">
+                    <div className="flex items-start gap-3 hover:scale-105 transition-transform duration-300">
                       <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
                         <Leaf className="w-5 h-5 text-primary" />
                       </div>
@@ -111,12 +111,13 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
-                <div className="relative">
-                  <div className="aspect-video rounded-2xl overflow-hidden glass-card p-1">
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-primary to-purple-600 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-1000"></div>
+                  <div className="aspect-video rounded-2xl overflow-hidden glass-card p-1 relative">
                     <img 
                       src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d"
                       alt="Personal Growth Journey"
-                      className="w-full h-full object-cover rounded-xl"
+                      className="w-full h-full object-cover rounded-xl transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
                 </div>
@@ -133,15 +134,15 @@ const Index = () => {
           <div className="container mx-auto text-center relative">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 slide-up">Ready to Start Your Journey?</h2>
             <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto slide-up">
-              Join thousands of others who have already taken the first step towards a better life.
+              Take the first step towards a better tomorrow. Your path to wellness begins here.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 slide-up">
               <Link to="/auth">
-                <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-6 bg-primary hover:bg-primary/90 transition-all duration-300">
+                <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-6 bg-primary hover:bg-primary/90 transition-all duration-300 hover:scale-105">
                   Get Started Now
                 </Button>
               </Link>
-              <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8 py-6 hover:bg-primary/5 transition-all duration-300">
+              <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8 py-6 hover:bg-primary/5 transition-all duration-300 hover:scale-105">
                 Learn More
               </Button>
             </div>
