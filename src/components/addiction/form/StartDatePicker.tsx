@@ -30,7 +30,7 @@ export const StartDatePicker = ({ control }: StartDatePickerProps) => {
       control={control}
       name="start_date"
       render={({ field }) => (
-        <FormItem className="flex flex-col">
+        <FormItem className="flex flex-col animate-fade-in">
           <FormLabel>When did it start?</FormLabel>
           <FormDescription>
             Select the approximate date when this addiction began. This helps track your recovery journey.
@@ -39,9 +39,9 @@ export const StartDatePicker = ({ control }: StartDatePickerProps) => {
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
-                  variant={"outline"}
+                  variant="outline"
                   className={cn(
-                    "w-full pl-3 text-left font-normal",
+                    "w-full pl-3 text-left font-normal transition-all duration-200 hover:border-primary/50",
                     !field.value && "text-muted-foreground"
                   )}
                 >
@@ -63,6 +63,7 @@ export const StartDatePicker = ({ control }: StartDatePickerProps) => {
                   date > new Date() || date < new Date("1900-01-01")
                 }
                 initialFocus
+                className="rounded-md border shadow-lg"
               />
             </PopoverContent>
           </Popover>

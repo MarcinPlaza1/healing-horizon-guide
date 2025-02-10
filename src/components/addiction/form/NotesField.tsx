@@ -21,7 +21,7 @@ export const NotesField = ({ control }: NotesFieldProps) => {
       control={control}
       name="notes"
       render={({ field }) => (
-        <FormItem>
+        <FormItem className="animate-fade-in">
           <FormLabel>Personal Notes</FormLabel>
           <FormDescription>
             Add any personal notes, thoughts, or context about this addiction. This is private and only visible to you.
@@ -29,7 +29,7 @@ export const NotesField = ({ control }: NotesFieldProps) => {
           <FormControl>
             <Textarea
               placeholder="E.g., What triggers this addiction? What motivates you to recover?"
-              className="h-32 resize-none"
+              className="h-32 resize-none transition-all duration-200 hover:border-primary/50 focus:border-primary"
               {...field}
             />
           </FormControl>

@@ -46,7 +46,6 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
         throw new Error("You must be logged in to add an addiction record");
       }
 
-      // Fetch the addiction type details
       const { data: typeData, error: typeError } = await supabase
         .from('addiction_types')
         .select('*')
@@ -102,10 +101,10 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
         
         <NotesField control={form.control} />
 
-        <div className="flex gap-3 pt-2">
+        <div className="flex gap-3 pt-2 animate-fade-in">
           <Button 
             type="submit" 
-            className="flex-1"
+            className="flex-1 transition-all duration-300 hover:scale-102"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
@@ -122,6 +121,7 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
             variant="outline" 
             onClick={onCancel}
             disabled={isSubmitting}
+            className="transition-all duration-200 hover:bg-destructive/5"
           >
             Cancel
           </Button>

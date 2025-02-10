@@ -48,7 +48,7 @@ export const AddictionTypeSelect = ({ control, selectedType }: AddictionTypeSele
   if (isLoading) return null;
 
   return (
-    <>
+    <div className="space-y-4 animate-fade-in">
       <FormField
         control={control}
         name="addiction_type_id"
@@ -60,13 +60,17 @@ export const AddictionTypeSelect = ({ control, selectedType }: AddictionTypeSele
             </FormDescription>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
-                <SelectTrigger>
+                <SelectTrigger className="transition-all duration-200 hover:border-primary/50">
                   <SelectValue placeholder="Select addiction type" />
                 </SelectTrigger>
               </FormControl>
-              <SelectContent>
+              <SelectContent className="max-h-[300px]">
                 {addictionTypes?.map((type) => (
-                  <SelectItem key={type.id} value={type.id}>
+                  <SelectItem 
+                    key={type.id} 
+                    value={type.id}
+                    className="transition-colors duration-200 hover:bg-primary/5"
+                  >
                     {type.name}
                   </SelectItem>
                 ))}
@@ -78,7 +82,7 @@ export const AddictionTypeSelect = ({ control, selectedType }: AddictionTypeSele
       />
 
       {selectedType && addictionTypes?.find(t => t.id === selectedType.id) && (
-        <Alert className="bg-primary/5 border-primary/20">
+        <Alert className="bg-primary/5 border-primary/20 animate-fade-in">
           <InfoIcon className="h-4 w-4 text-primary" />
           <AlertTitle className="text-primary">
             About {addictionTypes.find(t => t.id === selectedType.id)?.name}
@@ -93,7 +97,9 @@ export const AddictionTypeSelect = ({ control, selectedType }: AddictionTypeSele
                 <p className="font-medium text-sm text-foreground">Common triggers:</p>
                 <ul className="list-disc list-inside mt-2 text-sm text-muted-foreground">
                   {addictionTypes.find(t => t.id === selectedType.id)?.common_triggers?.map((trigger, index) => (
-                    <li key={index}>{trigger}</li>
+                    <li key={index} className="transition-colors duration-200 hover:text-foreground">
+                      {trigger}
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -101,6 +107,6 @@ export const AddictionTypeSelect = ({ control, selectedType }: AddictionTypeSele
           </AlertDescription>
         </Alert>
       )}
-    </>
+    </div>
   );
 };
