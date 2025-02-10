@@ -44,6 +44,30 @@ export type Database = {
           },
         ]
       }
+      inspirational_quotes: {
+        Row: {
+          author: string | null
+          category: string | null
+          created_at: string
+          id: string
+          quote: string
+        }
+        Insert: {
+          author?: string | null
+          category?: string | null
+          created_at?: string
+          id?: string
+          quote: string
+        }
+        Update: {
+          author?: string | null
+          category?: string | null
+          created_at?: string
+          id?: string
+          quote?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -52,6 +76,7 @@ export type Database = {
           full_name: string | null
           id: string
           last_check_in: string | null
+          longest_streak: number | null
           preferences: Json | null
           privacy_settings: Json | null
           recovery_start_date: string | null
@@ -59,6 +84,7 @@ export type Database = {
           streak_count: number | null
           username: string | null
           website: string | null
+          weekly_mood_counts: Json | null
         }
         Insert: {
           avatar_url?: string | null
@@ -67,6 +93,7 @@ export type Database = {
           full_name?: string | null
           id: string
           last_check_in?: string | null
+          longest_streak?: number | null
           preferences?: Json | null
           privacy_settings?: Json | null
           recovery_start_date?: string | null
@@ -74,6 +101,7 @@ export type Database = {
           streak_count?: number | null
           username?: string | null
           website?: string | null
+          weekly_mood_counts?: Json | null
         }
         Update: {
           avatar_url?: string | null
@@ -82,6 +110,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           last_check_in?: string | null
+          longest_streak?: number | null
           preferences?: Json | null
           privacy_settings?: Json | null
           recovery_start_date?: string | null
@@ -89,6 +118,7 @@ export type Database = {
           streak_count?: number | null
           username?: string | null
           website?: string | null
+          weekly_mood_counts?: Json | null
         }
         Relationships: []
       }
