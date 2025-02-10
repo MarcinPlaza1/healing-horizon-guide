@@ -1,6 +1,6 @@
 
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Lightbulb } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,6 +13,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -23,7 +24,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
 import {
   Popover,
   PopoverContent,
@@ -31,6 +31,8 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { AddictionType } from "@/types/addiction";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useToast } from "@/components/ui/use-toast";
 
 interface AddAddictionFormProps {
   onSuccess: () => void;
@@ -40,7 +42,6 @@ interface AddAddictionFormProps {
 export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps) => {
   const { toast } = useToast();
   
-  // Fetch addiction types
   const { data: addictionTypes } = useQuery({
     queryKey: ['addiction-types'],
     queryFn: async () => {
@@ -91,8 +92,8 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
       if (error) throw error;
 
       toast({
-        title: "Success",
-        description: "Addiction record added successfully.",
+        title: "Record Added Successfully",
+        description: "Your recovery journey has begun. We're here to support you every step of the way.",
       });
       
       onSuccess();
@@ -100,7 +101,7 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Error",
+        title: "Error Adding Record",
         description: error.message,
       });
     }
@@ -108,17 +109,20 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="addiction_type_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Addiction Type</FormLabel>
+              <FormLabel className="text-base">Type of Addiction</FormLabel>
+              <FormDescription>
+                Select the category that best describes your situation
+              </FormDescription>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select addiction type" />
+                  <SelectTrigger className="h-12">
+                    <SelectValue placeholder="Choose type" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -135,19 +139,22 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
         />
 
         {selectedType && (
-          <div className="text-sm text-muted-foreground">
-            <p>{selectedType.description}</p>
-            {selectedType.common_triggers && selectedType.common_triggers.length > 0 && (
-              <div className="mt-2">
-                <p className="font-medium">Common triggers:</p>
-                <ul className="list-disc list-inside">
-                  {selectedType.common_triggers.map((trigger, index) => (
-                    <li key={index}>{trigger}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
+          <Alert variant="default" className="bg-primary/5 border-primary/20">
+            <Lightbulb className="h-4 w-4 text-primary" />
+            <AlertDescription className="text-sm text-muted-foreground">
+              <p className="mb-2">{selectedType.description}</p>
+              {selectedType.common_triggers && selectedType.common_triggers.length > 0 && (
+                <div className="mt-2">
+                  <p className="font-medium text-foreground">Common triggers:</p>
+                  <ul className="list-disc list-inside mt-1">
+                    {selectedType.common_triggers.map((trigger, index) => (
+                      <li key={index} className="text-sm">{trigger}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </AlertDescription>
+          </Alert>
         )}
 
         <FormField
@@ -155,14 +162,17 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
           name="start_date"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Start Date</FormLabel>
+              <FormLabel className="text-base">Start Date</FormLabel>
+              <FormDescription>
+                When did you first notice this behavior?
+              </FormDescription>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "w-full pl-3 text-left font-normal",
+                        "w-full pl-3 text-left font-normal h-12",
                         !field.value && "text-muted-foreground"
                       )}
                     >
@@ -197,10 +207,14 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
           name="notes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Notes</FormLabel>
+              <FormLabel className="text-base">Initial Notes</FormLabel>
+              <FormDescription>
+                What motivated you to start this recovery journey?
+              </FormDescription>
               <FormControl>
                 <Textarea
-                  placeholder="Add any additional notes"
+                  placeholder="Share your thoughts..."
+                  className="h-32 resize-none"
                   {...field}
                 />
               </FormControl>
@@ -209,9 +223,13 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
           )}
         />
 
-        <div className="flex gap-2">
-          <Button type="submit" className="flex-1">Add Record</Button>
-          <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
+        <div className="flex gap-2 pt-4">
+          <Button type="submit" className="flex-1">
+            Start Recovery Journey
+          </Button>
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
         </div>
       </form>
     </Form>
