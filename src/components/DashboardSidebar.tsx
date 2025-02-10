@@ -1,5 +1,5 @@
 
-import { ChevronRight, Heart, Calendar, Settings2, LayoutDashboard, TrendingUp, CheckSquare, Pill, BarChart, LineChart } from "lucide-react";
+import { ChevronRight, Heart, Calendar, Settings2, LayoutDashboard, TrendingUp, CheckSquare, Pill, BarChart, LineChart, Brain } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -39,6 +39,11 @@ const menuItems = [
     title: "Addiction Recovery",
     icon: Pill,
     to: "/dashboard/addiction",
+  },
+  {
+    title: "Dopamine Detox",
+    icon: Brain,
+    to: "/dashboard/dopamine-detox",
   },
   {
     title: "Health Statistics",
