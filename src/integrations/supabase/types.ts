@@ -513,6 +513,39 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          created_at: string | null
+          id: string
+          link: string | null
+          message: string
+          read: boolean | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          link?: string | null
+          message: string
+          read?: boolean | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          link?: string | null
+          message?: string
+          read?: boolean | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       nutrition_goals: {
         Row: {
           activity_level: string | null
@@ -748,6 +781,10 @@ export type Database = {
           daily_fat_grams: number
           daily_carbs_grams: number
         }[]
+      }
+      clean_old_notifications: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
     }
     Enums: {

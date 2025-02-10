@@ -1,13 +1,22 @@
 
 import { Link, useNavigate } from "react-router-dom";
-import { Heart, Users, Calendar, LogOut, UserCircle } from "lucide-react";
+import { Heart, Users, Calendar, LogOut, UserCircle, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { NotificationsList } from "@/components/notifications/NotificationsList";
+import { useNotifications } from "@/hooks/use-notifications";
+import { cn } from "@/lib/utils";
 
 const Navigation = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { unreadCount } = useNotifications();
 
   const handleSignOut = async () => {
     try {
@@ -44,6 +53,25 @@ const Navigation = () => {
               <UserCircle className="w-4 h-4" />
               <span>Profile</span>
             </Link>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative"
+                >
+                  <Bell className="w-5 h-5" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground rounded-full text-xs flex items-center justify-center">
+                      {unreadCount}
+                    </span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-0" align="end">
+                <NotificationsList />
+              </PopoverContent>
+            </Popover>
             <Button
               variant="ghost"
               size="sm"
