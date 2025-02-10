@@ -28,4 +28,3 @@ export interface Milestone {
   milestone_date: string;
   days_clean: number;
 }
-

@@ -105,7 +105,7 @@ const AddictionTracker = () => {
 
   return (
     <div className="space-y-6">
-      <Card className="backdrop-blur-sm bg-white/50">
+      <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <div>
             <CardTitle>Addiction Tracker</CardTitle>
@@ -113,7 +113,7 @@ const AddictionTracker = () => {
           </div>
           <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
             <DialogTrigger asChild>
-              <Button size="icon" className="rounded-full">
+              <Button size="icon">
                 <PlusCircle className="h-4 w-4" />
               </Button>
             </DialogTrigger>
@@ -135,9 +135,9 @@ const AddictionTracker = () => {
           </Dialog>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <div className="space-y-4">
             {addictions?.length === 0 && (
-              <div className="text-center text-muted-foreground py-8 col-span-full">
+              <div className="text-center text-muted-foreground py-8">
                 No records added yet. Click the + button to add one.
               </div>
             )}
@@ -183,4 +183,3 @@ const AddictionTracker = () => {
 };
 
 export default AddictionTracker;
-
