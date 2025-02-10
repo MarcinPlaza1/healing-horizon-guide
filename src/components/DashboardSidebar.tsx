@@ -1,5 +1,5 @@
 
-import { ChevronRight, Heart, Calendar, Settings2, LayoutDashboard, TrendingUp, CheckSquare, Pill, BarChart } from "lucide-react";
+import { ChevronRight, Heart, Calendar, Settings2, LayoutDashboard, TrendingUp, CheckSquare, Pill, BarChart, LineChart } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -24,6 +24,11 @@ const menuItems = [
     title: "Progress",
     icon: TrendingUp,
     to: "/dashboard/progress",
+  },
+  {
+    title: "Analytics",
+    icon: LineChart,
+    to: "/dashboard/analytics",
   },
   {
     title: "Daily Check-in",
