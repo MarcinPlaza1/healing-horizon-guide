@@ -1,6 +1,6 @@
 
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,6 +13,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -30,7 +31,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
 import { AddictionType } from "@/types/addiction";
+import { InfoIcon } from "lucide-react";
 
 interface AddAddictionFormProps {
   onSuccess: () => void;
@@ -40,13 +47,13 @@ interface AddAddictionFormProps {
 export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps) => {
   const { toast } = useToast();
   
-  // Fetch addiction types
-  const { data: addictionTypes } = useQuery({
+  const { data: addictionTypes, isLoading: isLoadingTypes } = useQuery({
     queryKey: ['addiction-types'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('addiction_types')
-        .select('*');
+        .select('*')
+        .order('name');
 
       if (error) throw error;
       return data as AddictionType[];
@@ -86,13 +93,14 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
           notes: values.notes,
           status: values.status,
           user_id: user.id,
+          goals: [],
         }]);
 
       if (error) throw error;
 
       toast({
         title: "Success",
-        description: "Addiction record added successfully.",
+        description: "Record added successfully. You can now start tracking your recovery journey.",
       });
       
       onSuccess();
@@ -106,15 +114,26 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
     }
   };
 
+  if (isLoadingTypes) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <Loader2 className="h-8 w-8 animate-spin text-primary/60" />
+      </div>
+    );
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="addiction_type_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Addiction Type</FormLabel>
+              <FormLabel>Type of Addiction</FormLabel>
+              <FormDescription>
+                Select the type of addiction you want to track. This helps us provide relevant support and resources.
+              </FormDescription>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -135,19 +154,23 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
         />
 
         {selectedType && (
-          <div className="text-sm text-muted-foreground">
-            <p>{selectedType.description}</p>
-            {selectedType.common_triggers && selectedType.common_triggers.length > 0 && (
-              <div className="mt-2">
-                <p className="font-medium">Common triggers:</p>
-                <ul className="list-disc list-inside">
-                  {selectedType.common_triggers.map((trigger, index) => (
-                    <li key={index}>{trigger}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
+          <Alert className="bg-primary/5 border-primary/20">
+            <InfoIcon className="h-4 w-4 text-primary" />
+            <AlertTitle className="text-primary">About {selectedType.name}</AlertTitle>
+            <AlertDescription className="mt-2">
+              <p className="text-muted-foreground">{selectedType.description}</p>
+              {selectedType.common_triggers && selectedType.common_triggers.length > 0 && (
+                <div className="mt-4">
+                  <p className="font-medium text-sm text-foreground">Common triggers:</p>
+                  <ul className="list-disc list-inside mt-2 text-sm text-muted-foreground">
+                    {selectedType.common_triggers.map((trigger, index) => (
+                      <li key={index}>{trigger}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </AlertDescription>
+          </Alert>
         )}
 
         <FormField
@@ -155,7 +178,10 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
           name="start_date"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Start Date</FormLabel>
+              <FormLabel>When did it start?</FormLabel>
+              <FormDescription>
+                Select the approximate date when this addiction began. This helps track your recovery journey.
+              </FormDescription>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -197,10 +223,14 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
           name="notes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Notes</FormLabel>
+              <FormLabel>Personal Notes</FormLabel>
+              <FormDescription>
+                Add any personal notes, thoughts, or context about this addiction. This is private and only visible to you.
+              </FormDescription>
               <FormControl>
                 <Textarea
-                  placeholder="Add any additional notes"
+                  placeholder="E.g., What triggers this addiction? What motivates you to recover?"
+                  className="h-32 resize-none"
                   {...field}
                 />
               </FormControl>
@@ -209,9 +239,13 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
           )}
         />
 
-        <div className="flex gap-2">
-          <Button type="submit" className="flex-1">Add Record</Button>
-          <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
+        <div className="flex gap-3 pt-2">
+          <Button type="submit" className="flex-1">
+            Start Recovery Journey
+          </Button>
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
         </div>
       </form>
     </Form>

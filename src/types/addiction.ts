@@ -1,4 +1,6 @@
 
+import { Json } from "@/integrations/supabase/types";
+
 export interface Addiction {
   id: string;
   name: string;
@@ -17,6 +19,7 @@ export interface Goal {
   title: string;
   completed: boolean;
   target_date?: string;
+  [key: string]: Json | undefined;
 }
 
 export interface AddictionType {
