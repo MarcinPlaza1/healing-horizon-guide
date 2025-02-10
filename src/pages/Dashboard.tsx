@@ -9,6 +9,7 @@ import DailyCheckin from "@/components/DailyCheckin";
 import MindfulnessTracker from "@/components/MindfulnessTracker";
 import HealthSummary from "@/components/HealthSummary";
 import MoodChart from "@/components/MoodChart";
+import AddictionTracker from "@/components/AddictionTracker";
 
 const DashboardPage = () => {
   return (
@@ -28,6 +29,7 @@ const DashboardPage = () => {
                     <MindfulnessTracker />
                     <HealthSummary />
                     <MoodChart />
+                    <AddictionTracker />
                   </div>
                 </div>
               } />

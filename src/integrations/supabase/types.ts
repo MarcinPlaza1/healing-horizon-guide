@@ -9,6 +9,48 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      addictions: {
+        Row: {
+          clean_since: string | null
+          created_at: string
+          id: string
+          last_relapse_date: string | null
+          name: string
+          notes: string | null
+          start_date: string
+          status: string
+          triggers: string[] | null
+          type: Database["public"]["Enums"]["addiction_type"]
+          user_id: string
+        }
+        Insert: {
+          clean_since?: string | null
+          created_at?: string
+          id?: string
+          last_relapse_date?: string | null
+          name: string
+          notes?: string | null
+          start_date: string
+          status?: string
+          triggers?: string[] | null
+          type: Database["public"]["Enums"]["addiction_type"]
+          user_id: string
+        }
+        Update: {
+          clean_since?: string | null
+          created_at?: string
+          id?: string
+          last_relapse_date?: string | null
+          name?: string
+          notes?: string | null
+          start_date?: string
+          status?: string
+          triggers?: string[] | null
+          type?: Database["public"]["Enums"]["addiction_type"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       daily_checkins: {
         Row: {
           created_at: string
@@ -194,6 +236,47 @@ export type Database = {
         }
         Relationships: []
       }
+      recovery_milestones: {
+        Row: {
+          addiction_id: string
+          created_at: string
+          days_clean: number
+          description: string | null
+          id: string
+          milestone_date: string
+          milestone_type: string
+          user_id: string
+        }
+        Insert: {
+          addiction_id: string
+          created_at?: string
+          days_clean: number
+          description?: string | null
+          id?: string
+          milestone_date?: string
+          milestone_type: string
+          user_id: string
+        }
+        Update: {
+          addiction_id?: string
+          created_at?: string
+          days_clean?: number
+          description?: string | null
+          id?: string
+          milestone_date?: string
+          milestone_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recovery_milestones_addiction_id_fkey"
+            columns: ["addiction_id"]
+            isOneToOne: false
+            referencedRelation: "addictions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -202,7 +285,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      addiction_type: "substance" | "behavioral"
     }
     CompositeTypes: {
       [_ in never]: never
