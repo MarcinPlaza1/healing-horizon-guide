@@ -18,9 +18,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { AddictionFormValues } from "./FormSchema";
 
 interface StartDatePickerProps {
-  control: Control<any>;
+  control: Control<AddictionFormValues>;
 }
 
 export const StartDatePicker = ({ control }: StartDatePickerProps) => {

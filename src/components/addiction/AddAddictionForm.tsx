@@ -1,5 +1,6 @@
 
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -9,6 +10,8 @@ import { AddictionType } from "@/types/addiction";
 import { AddictionTypeSelect } from "./form/AddictionTypeSelect";
 import { StartDatePicker } from "./form/StartDatePicker";
 import { NotesField } from "./form/NotesField";
+import { addictionFormSchema, AddictionFormValues } from "./form/FormSchema";
+import { useState } from "react";
 
 interface AddAddictionFormProps {
   onSuccess: () => void;
@@ -17,10 +20,11 @@ interface AddAddictionFormProps {
 
 export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps) => {
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const form = useForm({
+  const form = useForm<AddictionFormValues>({
+    resolver: zodResolver(addictionFormSchema),
     defaultValues: {
-      name: "",
       addiction_type_id: "",
       start_date: new Date(),
       notes: "",
@@ -28,21 +32,35 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
     },
   });
 
-  const selectedType = form.watch('addiction_type_id');
+  const selectedTypeId = form.watch('addiction_type_id');
+  const selectedType = form.getValues()?.addiction_type_id ? 
+    { id: selectedTypeId } as AddictionType : 
+    undefined;
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: AddictionFormValues) => {
     try {
+      setIsSubmitting(true);
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
         throw new Error("You must be logged in to add an addiction record");
       }
 
+      // Fetch the addiction type details
+      const { data: typeData, error: typeError } = await supabase
+        .from('addiction_types')
+        .select('*')
+        .eq('id', values.addiction_type_id)
+        .single();
+
+      if (typeError) throw typeError;
+      if (!typeData) throw new Error("Selected addiction type not found");
+
       const { error } = await supabase
         .from('addictions')
         .insert([{
-          name: selectedType?.name || values.name,
-          type: selectedType?.category || 'substance',
+          name: typeData.name,
+          type: typeData.category,
           addiction_type_id: values.addiction_type_id,
           start_date: values.start_date.toISOString(),
           clean_since: values.start_date.toISOString(),
@@ -67,6 +85,8 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
         title: "Error",
         description: error.message,
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -83,10 +103,26 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
         <NotesField control={form.control} />
 
         <div className="flex gap-3 pt-2">
-          <Button type="submit" className="flex-1">
-            Start Recovery Journey
+          <Button 
+            type="submit" 
+            className="flex-1"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Adding Record...
+              </>
+            ) : (
+              "Start Recovery Journey"
+            )}
           </Button>
-          <Button type="button" variant="outline" onClick={onCancel}>
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={onCancel}
+            disabled={isSubmitting}
+          >
             Cancel
           </Button>
         </div>

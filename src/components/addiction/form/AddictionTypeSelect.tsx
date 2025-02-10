@@ -24,9 +24,10 @@ import {
   AlertTitle,
 } from "@/components/ui/alert";
 import { AddictionType } from "@/types/addiction";
+import { AddictionFormValues } from "./FormSchema";
 
 interface AddictionTypeSelectProps {
-  control: Control<any>;
+  control: Control<AddictionFormValues>;
   selectedType: AddictionType | undefined;
 }
 
@@ -76,17 +77,22 @@ export const AddictionTypeSelect = ({ control, selectedType }: AddictionTypeSele
         )}
       />
 
-      {selectedType && (
+      {selectedType && addictionTypes?.find(t => t.id === selectedType.id) && (
         <Alert className="bg-primary/5 border-primary/20">
           <InfoIcon className="h-4 w-4 text-primary" />
-          <AlertTitle className="text-primary">About {selectedType.name}</AlertTitle>
+          <AlertTitle className="text-primary">
+            About {addictionTypes.find(t => t.id === selectedType.id)?.name}
+          </AlertTitle>
           <AlertDescription className="mt-2">
-            <p className="text-muted-foreground">{selectedType.description}</p>
-            {selectedType.common_triggers && selectedType.common_triggers.length > 0 && (
+            <p className="text-muted-foreground">
+              {addictionTypes.find(t => t.id === selectedType.id)?.description}
+            </p>
+            {addictionTypes.find(t => t.id === selectedType.id)?.common_triggers && 
+             addictionTypes.find(t => t.id === selectedType.id)?.common_triggers?.length! > 0 && (
               <div className="mt-4">
                 <p className="font-medium text-sm text-foreground">Common triggers:</p>
                 <ul className="list-disc list-inside mt-2 text-sm text-muted-foreground">
-                  {selectedType.common_triggers.map((trigger, index) => (
+                  {addictionTypes.find(t => t.id === selectedType.id)?.common_triggers?.map((trigger, index) => (
                     <li key={index}>{trigger}</li>
                   ))}
                 </ul>
