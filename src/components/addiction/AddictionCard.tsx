@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { AlertTriangle, CheckCircle, Clock, MoreVertical, Target, FileText, Plus, Goal, Trophy } from "lucide-react";
+import { AlertTriangle, CheckCircle, Clock, MoreVertical, Target, FileText, Plus, Goal, Trophy, HeartPulse, Brain, PillBottle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -72,6 +72,17 @@ export const AddictionCard = ({
         return <AlertTriangle className="h-4 w-4" />;
       default:
         return null;
+    }
+  };
+
+  const getTypeIcon = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'substance':
+        return <PillBottle className="h-4 w-4" />;
+      case 'behavioral':
+        return <Brain className="h-4 w-4" />;
+      default:
+        return <HeartPulse className="h-4 w-4" />;
     }
   };
 
@@ -219,16 +230,28 @@ export const AddictionCard = ({
   }, [addiction.id]);
 
   return (
-    <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-xl">
+    <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-xl bg-gradient-to-br from-background to-muted/50">
       <div className={cn(
-        "absolute inset-0 w-2",
+        "absolute inset-y-0 left-0 w-1.5",
         getStatusColor(addiction.status)
       )} />
       
-      <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-4 pl-8">
-        <div className="space-y-2">
+      <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-4 pl-6">
+        <div className="space-y-3">
           <div className="flex items-center gap-3">
-            <h4 className="text-2xl font-semibold tracking-tight">{addiction.name}</h4>
+            <div className="rounded-lg bg-primary/10 p-2">
+              {getTypeIcon(addiction.type)}
+            </div>
+            <div>
+              <h4 className="text-xl font-semibold tracking-tight">{addiction.name}</h4>
+              <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+                <span>{addiction.type}</span>
+                <span>•</span>
+                <span>Started {format(new Date(addiction.start_date), "PPP")}</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-2">
             <span className={cn(
               "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium",
               getStatusColor(addiction.status)
@@ -236,19 +259,15 @@ export const AddictionCard = ({
               {getStatusIcon(addiction.status)}
               {addiction.status}
             </span>
-          </div>
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <div className="flex items-center gap-1.5">
-              <Target className="h-4 w-4" />
-              {addiction.type}
-            </div>
-            <span>•</span>
-            <div className="flex items-center gap-1.5">
-              <Calendar className="h-4 w-4" />
-              Started {format(new Date(addiction.start_date), "PPP")}
-            </div>
+            {addiction.clean_since && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-3 py-1 text-sm font-medium text-green-500">
+                <CheckCircle className="h-4 w-4" />
+                {calculateCleanDays(addiction.clean_since)} days clean
+              </span>
+            )}
           </div>
         </div>
+        
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -280,174 +299,164 @@ export const AddictionCard = ({
         </DropdownMenu>
       </CardHeader>
 
-      <CardContent className="pl-8">
-        <div className="space-y-6">
-          {addiction.clean_since && (
-            <div className="rounded-lg bg-green-500/5 border border-green-500/10 p-4">
-              <p className="text-xl font-semibold text-green-500">
-                {calculateCleanDays(addiction.clean_since)} days clean
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Since {format(new Date(addiction.clean_since), "PPP")}
-              </p>
-            </div>
-          )}
+      <CardContent className="pl-6 space-y-6">
+        {addiction.notes && (
+          <div className="flex items-start gap-3 rounded-lg bg-muted/50 p-4">
+            <FileText className="h-5 w-5 text-muted-foreground mt-0.5" />
+            <p className="text-sm text-muted-foreground">{addiction.notes}</p>
+          </div>
+        )}
 
-          {addiction.notes && (
-            <div className="flex items-start gap-3 rounded-lg bg-muted/50 p-4">
-              <FileText className="h-5 w-5 text-muted-foreground mt-0.5" />
-              <p className="text-sm text-muted-foreground">{addiction.notes}</p>
-            </div>
-          )}
-
-          {/* Goals Section */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h5 className="text-sm font-medium flex items-center gap-2">
-                <Goal className="h-4 w-4" />
-                Recovery Goals
-              </h5>
-              <Dialog open={isAddGoalOpen} onOpenChange={setIsAddGoalOpen}>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 px-2"
-                  >
-                    <Plus className="h-4 w-4" />
+        {/* Goals Section with updated design */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h5 className="text-sm font-medium flex items-center gap-2">
+              <Goal className="h-4 w-4" />
+              Recovery Goals
+            </h5>
+            <Dialog open={isAddGoalOpen} onOpenChange={setIsAddGoalOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 px-3"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Goal
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add Recovery Goal</DialogTitle>
+                  <DialogDescription>
+                    Set a new goal for your recovery journey
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="title">Goal Title</Label>
+                    <Input
+                      id="title"
+                      placeholder="Enter your goal"
+                      value={newGoal.title}
+                      onChange={(e) => setNewGoal(prev => ({ ...prev, title: e.target.value }))}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="target_date">Target Date (Optional)</Label>
+                    <Input
+                      id="target_date"
+                      type="date"
+                      value={newGoal.target_date}
+                      onChange={(e) => setNewGoal(prev => ({ ...prev, target_date: e.target.value }))}
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end gap-3">
+                  <Button variant="outline" onClick={() => setIsAddGoalOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleAddGoal}>
                     Add Goal
                   </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Add Recovery Goal</DialogTitle>
-                    <DialogDescription>
-                      Set a new goal for your recovery journey
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4 py-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="title">Goal Title</Label>
-                      <Input
-                        id="title"
-                        placeholder="Enter your goal"
-                        value={newGoal.title}
-                        onChange={(e) => setNewGoal(prev => ({ ...prev, title: e.target.value }))}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="target_date">Target Date (Optional)</Label>
-                      <Input
-                        id="target_date"
-                        type="date"
-                        value={newGoal.target_date}
-                        onChange={(e) => setNewGoal(prev => ({ ...prev, target_date: e.target.value }))}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex justify-end gap-3">
-                    <Button variant="outline" onClick={() => setIsAddGoalOpen(false)}>
-                      Cancel
-                    </Button>
-                    <Button onClick={handleAddGoal}>
-                      Add Goal
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
-            <div className="space-y-2">
-              {addiction.goals?.map((goal, index) => (
-                <div
-                  key={index}
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+          
+          <div className="grid gap-3">
+            {addiction.goals?.map((goal, index) => (
+              <div
+                key={index}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg border p-4 transition-colors",
+                  goal.completed ? "bg-green-500/5 border-green-500/20" : "bg-card hover:bg-muted/50"
+                )}
+              >
+                <Button
+                  variant="ghost"
+                  size="sm"
                   className={cn(
-                    "flex items-center gap-3 rounded-lg border p-3 transition-colors",
-                    goal.completed ? "bg-green-500/5 border-green-500/20" : "bg-card hover:bg-muted/50"
+                    "h-8 w-8 p-0 rounded-full",
+                    goal.completed && "text-green-500"
                   )}
+                  onClick={() => toggleGoal(index)}
                 >
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className={cn(
-                      "h-5 w-5 p-0",
-                      goal.completed && "text-green-500"
-                    )}
-                    onClick={() => toggleGoal(index)}
-                  >
-                    <CheckCircle className="h-4 w-4" />
-                  </Button>
-                  <div className="flex-1 min-w-0">
-                    <p className={cn(
-                      "text-sm font-medium",
-                      goal.completed && "text-muted-foreground line-through"
-                    )}>
-                      {goal.title}
+                  <CheckCircle className="h-4 w-4" />
+                </Button>
+                <div className="flex-1 min-w-0">
+                  <p className={cn(
+                    "text-sm font-medium",
+                    goal.completed && "text-muted-foreground line-through"
+                  )}>
+                    {goal.title}
+                  </p>
+                  {goal.target_date && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Target: {format(new Date(goal.target_date), "PPP")}
                     </p>
-                    {goal.target_date && (
-                      <p className="text-xs text-muted-foreground">
-                        Target: {format(new Date(goal.target_date), "PPP")}
-                      </p>
-                    )}
+                  )}
+                </div>
+              </div>
+            ))}
+            {(!addiction.goals || addiction.goals.length === 0) && (
+              <div className="text-center py-8 text-muted-foreground bg-muted/30 rounded-lg">
+                <Goal className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                <p className="text-sm font-medium">No goals set yet</p>
+                <p className="text-xs mt-1">Add your first recovery goal to track your progress</p>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {/* Triggers Section with updated design */}
+        {addiction.triggers && addiction.triggers.length > 0 && (
+          <div className="space-y-3">
+            <h5 className="text-sm font-medium flex items-center gap-2">
+              <Target className="h-4 w-4" />
+              Known Triggers
+            </h5>
+            <div className="flex flex-wrap gap-2">
+              {addiction.triggers.map((trigger, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center rounded-full bg-destructive/10 text-destructive px-3 py-1 text-sm font-medium"
+                >
+                  {trigger}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Milestones Section with updated design */}
+        {milestones?.length > 0 && (
+          <div className="space-y-3">
+            <h5 className="text-sm font-medium flex items-center gap-2">
+              <Trophy className="h-4 w-4 text-yellow-500" />
+              Recovery Milestones
+            </h5>
+            <div className="grid gap-3">
+              {milestones.map((milestone) => (
+                <div
+                  key={milestone.id}
+                  className="flex items-center gap-4 rounded-lg border bg-card/50 p-4 transition-colors hover:bg-muted/50"
+                >
+                  <div className="flex-1 min-w-0 space-y-1">
+                    <p className="text-sm font-medium">
+                      {milestone.milestone_type}
+                    </p>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <span>{milestone.days_clean} days</span>
+                      <span>•</span>
+                      <span>{format(new Date(milestone.milestone_date), "PPP")}</span>
+                    </div>
                   </div>
                 </div>
               ))}
-              {(!addiction.goals || addiction.goals.length === 0) && (
-                <div className="text-center py-6 text-muted-foreground">
-                  <Goal className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                  <p className="text-sm">No goals set yet</p>
-                  <p className="text-xs">Add your first recovery goal to track your progress</p>
-                </div>
-              )}
             </div>
           </div>
-          
-          {addiction.triggers && addiction.triggers.length > 0 && (
-            <div className="space-y-3">
-              <h5 className="text-sm font-medium flex items-center gap-2">
-                <Target className="h-4 w-4" />
-                Known Triggers
-              </h5>
-              <div className="flex flex-wrap gap-2">
-                {addiction.triggers.map((trigger, index) => (
-                  <span
-                    key={index}
-                    className="inline-flex items-center rounded-full bg-muted px-3 py-1 text-sm font-medium transition-colors hover:bg-muted/80"
-                  >
-                    {trigger}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {milestones?.length > 0 && (
-            <div className="space-y-3 pt-2">
-              <h5 className="text-sm font-medium flex items-center gap-2">
-                <Trophy className="h-4 w-4 text-yellow-500" />
-                Recovery Milestones
-              </h5>
-              <div className="space-y-3">
-                {milestones.map((milestone) => (
-                  <div
-                    key={milestone.id}
-                    className="flex items-center gap-4 rounded-lg border bg-card p-4 transition-colors hover:bg-muted/50"
-                  >
-                    <div className="flex-1 min-w-0 space-y-1">
-                      <p className="text-sm font-medium truncate">
-                        {milestone.milestone_type}
-                      </p>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <span>{milestone.days_clean} days</span>
-                        <span>•</span>
-                        <span>{format(new Date(milestone.milestone_date), "PPP")}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+        )}
       </CardContent>
     </Card>
   );
