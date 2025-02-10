@@ -72,7 +72,22 @@ const ProgressDashboard = () => {
         };
 
         if (profileData) {
-          setStats({ ...profileData, addiction_stats });
+          // Ensure weekly_mood_counts is properly typed
+          const weekly_mood_counts = profileData.weekly_mood_counts as ProgressStats['weekly_mood_counts'] || {
+            great: 0,
+            good: 0,
+            okay: 0,
+            difficult: 0,
+            struggling: 0
+          };
+
+          setStats({
+            streak_count: profileData.streak_count,
+            longest_streak: profileData.longest_streak,
+            last_check_in: profileData.last_check_in,
+            weekly_mood_counts,
+            addiction_stats
+          });
         }
       } catch (error) {
         toast({
@@ -218,3 +233,4 @@ const ProgressDashboard = () => {
 };
 
 export default ProgressDashboard;
+
