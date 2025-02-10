@@ -2,7 +2,6 @@
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import FeatureCard from "@/components/FeatureCard";
-import Dashboard from "@/components/Dashboard";
 import { Heart, Users, Calendar } from "lucide-react";
 
 const Index = () => {
@@ -34,8 +33,6 @@ const Index = () => {
             </div>
           </div>
         </section>
-        
-        <Dashboard />
       </main>
     </div>
   );

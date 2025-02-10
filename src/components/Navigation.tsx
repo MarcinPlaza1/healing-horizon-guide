@@ -32,13 +32,13 @@ const Navigation = () => {
             <span className="text-xl font-semibold">MindfulRecovery</span>
           </Link>
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="flex items-center space-x-1 text-sm font-medium hover:text-primary transition-colors">
+            <Link to="/dashboard" className="flex items-center space-x-1 text-sm font-medium hover:text-primary transition-colors">
+              <Calendar className="w-4 h-4" />
+              <span>Dashboard</span>
+            </Link>
+            <Link to="/dashboard" className="flex items-center space-x-1 text-sm font-medium hover:text-primary transition-colors">
               <Users className="w-4 h-4" />
               <span>Community</span>
-            </Link>
-            <Link to="/" className="flex items-center space-x-1 text-sm font-medium hover:text-primary transition-colors">
-              <Calendar className="w-4 h-4" />
-              <span>Progress</span>
             </Link>
             <Button
               variant="ghost"
