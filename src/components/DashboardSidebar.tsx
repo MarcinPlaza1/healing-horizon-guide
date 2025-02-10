@@ -81,17 +81,21 @@ export function DashboardSidebar() {
   const location = useLocation();
 
   return (
-    <Sidebar className="border-r border-border/50">
-      <div className="flex h-16 items-center border-b border-border/50 px-6">
-        <Heart className="w-6 h-6 text-primary mr-2" />
-        <span className="font-semibold">MindfulRecovery</span>
-        <SidebarTrigger className="ml-auto h-8 w-8">
+    <Sidebar className="border-r border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="flex h-16 items-center border-b border-border/50 px-6 bg-primary/5">
+        <Heart className="w-6 h-6 text-primary mr-2 animate-pulse" />
+        <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
+          MindfulRecovery
+        </span>
+        <SidebarTrigger className="ml-auto h-8 w-8 hover:bg-primary/10 transition-colors rounded-lg">
           <ChevronRight className="h-4 w-4" />
         </SidebarTrigger>
       </div>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-xs uppercase tracking-wider text-muted-foreground/70 font-medium px-6 py-2">
+            Dashboard
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
@@ -99,18 +103,33 @@ export function DashboardSidebar() {
                   <SidebarMenuButton
                     asChild
                     className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-colors relative group",
-                      "hover:bg-secondary hover:text-foreground",
-                      "focus:bg-secondary focus:text-foreground",
-                      "active:bg-secondary/80",
-                      location.pathname === item.to && "bg-secondary text-foreground"
+                      "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all duration-200 relative group mx-2",
+                      "hover:bg-primary/10 hover:text-primary hover:translate-x-1",
+                      "focus:bg-primary/10 focus:text-primary",
+                      "active:bg-primary/5",
+                      location.pathname === item.to && "bg-primary/10 text-primary translate-x-1"
                     )}
                   >
                     <Link to={item.to} className="flex items-center w-full">
-                      <item.icon className="w-4 h-4 shrink-0" />
-                      <div className="ml-3">
-                        <span className="font-medium">{item.title}</span>
-                        <p className="text-xs text-muted-foreground hidden group-hover:block">
+                      <div className="relative">
+                        <item.icon className={cn(
+                          "w-4 h-4 shrink-0",
+                          "transition-transform duration-200",
+                          "group-hover:scale-110",
+                          location.pathname === item.to && "scale-110"
+                        )} />
+                        {location.pathname === item.to && (
+                          <div className="absolute -left-1 -right-1 -bottom-1 h-0.5 bg-primary rounded-full" />
+                        )}
+                      </div>
+                      <div className="ml-3 flex flex-col">
+                        <span className="font-medium text-sm">{item.title}</span>
+                        <p className={cn(
+                          "text-[11px] text-muted-foreground/70",
+                          "transition-all duration-200",
+                          "opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0",
+                          location.pathname === item.to && "opacity-100 translate-y-0"
+                        )}>
                           {item.description}
                         </p>
                       </div>
