@@ -6,10 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { Plus, Droplets, Apple, Cookie, Beef } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { Plus, Droplets, Apple, Cookie, Beef, AlertCircle, Loader } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { AddNutritionLog } from "./AddNutritionLog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface NutritionGoals {
   daily_water_ml: number;
@@ -35,6 +36,8 @@ export const NutritionTracking = () => {
   const [showAddLog, setShowAddLog] = useState(false);
   const [goals, setGoals] = useState<NutritionGoals | null>(null);
   const [todayLog, setTodayLog] = useState<NutritionLog | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -43,36 +46,48 @@ export const NutritionTracking = () => {
 
   const fetchNutritionData = async () => {
     try {
+      setIsLoading(true);
+      setError(null);
+      
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        setError("You must be logged in to view nutrition data");
+        return;
+      }
 
       // Fetch user's nutrition goals
-      const { data: goalsData } = await supabase
+      const { data: goalsData, error: goalsError } = await supabase
         .from('nutrition_goals')
         .select('*')
         .eq('user_id', user.id)
         .maybeSingle();
 
+      if (goalsError) throw goalsError;
+
       if (goalsData) {
         setGoals(goalsData);
       } else {
         // Create default goals if none exist
-        const { data: newGoals } = await supabase
+        const { data: newGoals, error: createError } = await supabase
           .from('nutrition_goals')
           .insert([{ user_id: user.id }])
           .select()
           .single();
+          
+        if (createError) throw createError;
         setGoals(newGoals);
       }
 
       // Fetch today's nutrition log
       const today = new Date().toISOString().split('T')[0];
-      const { data: logData } = await supabase
+      const { data: logData, error: logError } = await supabase
         .from('nutrition_logs')
         .select('*')
         .eq('user_id', user.id)
         .eq('log_date', today)
         .maybeSingle();
+
+      if (logError) throw logError;
 
       if (logData) {
         // Ensure meals is an array and handle potential null values
@@ -102,11 +117,14 @@ export const NutritionTracking = () => {
         });
       }
     } catch (error: any) {
+      setError(error.message);
       toast({
         variant: "destructive",
         title: "Error fetching nutrition data",
         description: error.message,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -114,8 +132,66 @@ export const NutritionTracking = () => {
     return Math.min((current / goal) * 100, 100);
   };
 
+  if (error) {
+    return (
+      <Card className="border-destructive">
+        <CardHeader>
+          <div className="flex items-center gap-2 text-destructive">
+            <AlertCircle className="h-5 w-5" />
+            <CardTitle>Error Loading Nutrition Data</CardTitle>
+          </div>
+          <CardDescription>{error}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button onClick={fetchNutritionData} variant="outline" className="w-full">
+            Try Again
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <Skeleton className="h-8 w-[300px]" />
+          <Skeleton className="h-4 w-[250px] mt-2" />
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-4 w-4 rounded-full" />
+                    <Skeleton className="h-4 w-[100px]" />
+                  </div>
+                  <Skeleton className="h-4 w-[80px]" />
+                </div>
+                <Skeleton className="h-2 w-full" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   if (!goals || !todayLog) {
-    return <div>Loading...</div>;
+    return (
+      <Card className="border-dashed">
+        <CardHeader className="space-y-4">
+          <div className="flex items-center justify-center">
+            <AlertCircle className="h-8 w-8 text-muted-foreground" />
+          </div>
+          <CardTitle className="text-center">No Nutrition Data</CardTitle>
+          <CardDescription className="text-center">
+            Start tracking your nutrition by adding your first log
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
   }
 
   return (
@@ -200,3 +276,4 @@ export const NutritionTracking = () => {
     </div>
   );
 };
+
