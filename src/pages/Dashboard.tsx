@@ -6,7 +6,6 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { Routes, Route } from "react-router-dom";
 import DailyCheckin from "@/components/DailyCheckin";
-import MindfulnessTracker from "@/components/MindfulnessTracker";
 import HealthSummary from "@/components/HealthSummary";
 import MoodChart from "@/components/MoodChart";
 import AddictionTracker from "@/components/AddictionTracker";
@@ -46,7 +45,6 @@ const DashboardPage = () => {
                   <h2 className="text-2xl font-bold mb-6">Health Statistics Dashboard</h2>
                   <div className="grid grid-cols-1 gap-6">
                     <HealthSummary />
-                    <MindfulnessTracker />
                   </div>
                 </div>
               } />

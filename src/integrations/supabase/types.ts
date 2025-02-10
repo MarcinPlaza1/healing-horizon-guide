@@ -144,7 +144,6 @@ export type Database = {
           created_at: string
           id: string
           journal_entries: number | null
-          mindfulness_minutes: number | null
           mood_average: string | null
           summary_date: string
           user_id: string
@@ -153,7 +152,6 @@ export type Database = {
           created_at?: string
           id?: string
           journal_entries?: number | null
-          mindfulness_minutes?: number | null
           mood_average?: string | null
           summary_date?: string
           user_id: string
@@ -162,7 +160,6 @@ export type Database = {
           created_at?: string
           id?: string
           journal_entries?: number | null
-          mindfulness_minutes?: number | null
           mood_average?: string | null
           summary_date?: string
           user_id?: string
@@ -239,7 +236,6 @@ export type Database = {
           id: string
           last_check_in: string | null
           longest_streak: number | null
-          mindfulness_settings: Json | null
           preferences: Json | null
           privacy_settings: Json | null
           recovery_start_date: string | null
@@ -258,7 +254,6 @@ export type Database = {
           id: string
           last_check_in?: string | null
           longest_streak?: number | null
-          mindfulness_settings?: Json | null
           preferences?: Json | null
           privacy_settings?: Json | null
           recovery_start_date?: string | null
@@ -277,7 +272,6 @@ export type Database = {
           id?: string
           last_check_in?: string | null
           longest_streak?: number | null
-          mindfulness_settings?: Json | null
           preferences?: Json | null
           privacy_settings?: Json | null
           recovery_start_date?: string | null
