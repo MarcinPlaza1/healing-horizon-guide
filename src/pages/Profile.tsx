@@ -62,7 +62,23 @@ const Profile = () => {
         });
         return null;
       }
-      return data as Profile;
+
+      // Transform the raw data to match the Profile interface
+      const transformedData: Profile = {
+        id: data.id,
+        created_at: data.created_at,
+        username: data.username,
+        full_name: data.full_name,
+        avatar_url: data.avatar_url,
+        recovery_start_date: data.recovery_start_date,
+        bio: data.bio,
+        website: data.website,
+        privacy_settings: data.privacy_settings as Profile['privacy_settings'],
+        preferences: data.preferences as Profile['preferences'],
+        social_links: data.social_links as Profile['social_links'],
+      };
+
+      return transformedData;
     },
     enabled: !!userId,
   });

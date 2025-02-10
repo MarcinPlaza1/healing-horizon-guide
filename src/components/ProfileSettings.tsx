@@ -12,11 +12,35 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
-import { CalendarIcon, Globe, Lock, Bell } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+interface Profile {
+  id: string;
+  created_at: string;
+  username: string | null;
+  full_name: string | null;
+  avatar_url: string | null;
+  recovery_start_date: string | null;
+  bio: string | null;
+  website: string | null;
+  privacy_settings: {
+    email_visible: boolean;
+    profile_public: boolean;
+  };
+  preferences: {
+    notifications: boolean;
+    theme: 'light' | 'dark';
+  };
+  social_links: {
+    twitter: string | null;
+    linkedin: string | null;
+    instagram: string | null;
+  };
+}
+
 interface ProfileSettingsProps {
-  profile: any;
+  profile: Profile | null;
 }
 
 const ProfileSettings = ({ profile }: ProfileSettingsProps) => {
@@ -35,16 +59,18 @@ const ProfileSettings = ({ profile }: ProfileSettingsProps) => {
   });
   const [preferences, setPreferences] = useState(profile?.preferences || {
     notifications: true,
-    theme: 'light',
+    theme: 'light' as const,
   });
   const [socialLinks, setSocialLinks] = useState(profile?.social_links || {
-    twitter: "",
-    linkedin: "",
-    instagram: "",
+    twitter: null,
+    linkedin: null,
+    instagram: null,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!profile?.id) return;
+    
     setLoading(true);
 
     try {
@@ -78,6 +104,19 @@ const ProfileSettings = ({ profile }: ProfileSettingsProps) => {
       setLoading(false);
     }
   };
+
+  if (!profile) {
+    return (
+      <Card className="max-w-2xl mx-auto">
+        <CardHeader>
+          <CardTitle>Profile not found</CardTitle>
+          <CardDescription>
+            Unable to load profile information
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
 
   return (
     <Card className="max-w-2xl mx-auto fade-in">
