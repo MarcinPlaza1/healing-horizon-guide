@@ -30,7 +30,7 @@ interface WidgetConfig {
   id: string;
   title: string;
   component: React.ComponentType;
-  section: "progress" | "learning" | "notifications" | "profile";
+  section: "progress" | "learning" | "notifications";
 }
 
 const widgetConfigs: WidgetConfig[] = [
@@ -60,13 +60,13 @@ const Dashboard = () => {
         .single();
 
       if (data?.dashboard_preferences) {
-        const prefs = data.dashboard_preferences as any;
+        const prefs = data.dashboard_preferences as unknown as DashboardPreferences;
         if (
           Array.isArray(prefs.widget_order) &&
           Array.isArray(prefs.favorite_widgets) &&
           Array.isArray(prefs.expanded_widgets)
         ) {
-          setPreferences(prefs as DashboardPreferences);
+          setPreferences(prefs);
         }
       }
     };
@@ -91,11 +91,7 @@ const Dashboard = () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const jsonPreferences: Json = {
-      widget_order: newPreferences.widget_order,
-      favorite_widgets: newPreferences.favorite_widgets,
-      expanded_widgets: newPreferences.expanded_widgets
-    };
+    const jsonPreferences = newPreferences as unknown as Json;
 
     const { error } = await supabase
       .from('profiles')
@@ -126,11 +122,7 @@ const Dashboard = () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const jsonPreferences: Json = {
-      widget_order: newPreferences.widget_order,
-      favorite_widgets: newPreferences.favorite_widgets,
-      expanded_widgets: newPreferences.expanded_widgets
-    };
+    const jsonPreferences = newPreferences as unknown as Json;
 
     const { error } = await supabase
       .from('profiles')
@@ -161,7 +153,7 @@ const Dashboard = () => {
             Your Wellness Dashboard
           </h1>
           <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto">
-            {["progress", "learning", "notifications", "profile"].map((section) => (
+            {["progress", "learning", "notifications"].map((section) => (
               <Button
                 key={section}
                 variant={activeSection === section ? "default" : "outline"}
@@ -180,7 +172,7 @@ const Dashboard = () => {
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
               >
                 {filteredWidgets.map((widget, index) => {
                   if (!widget) return null;
