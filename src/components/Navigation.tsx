@@ -1,6 +1,6 @@
 
 import { Link, useNavigate } from "react-router-dom";
-import { Heart, Users, Calendar, LogOut } from "lucide-react";
+import { Heart, Users, Calendar, LogOut, UserCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
@@ -39,6 +39,10 @@ const Navigation = () => {
             <Link to="/dashboard" className="flex items-center space-x-1 text-sm font-medium hover:text-primary transition-colors">
               <Users className="w-4 h-4" />
               <span>Community</span>
+            </Link>
+            <Link to="/profile" className="flex items-center space-x-1 text-sm font-medium hover:text-primary transition-colors">
+              <UserCircle className="w-4 h-4" />
+              <span>Profile</span>
             </Link>
             <Button
               variant="ghost"
