@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
-    <section className="relative pt-32 pb-16 px-4 overflow-hidden">
+    <section className="relative pt-32 pb-16 px-4 overflow-hidden min-h-[90vh] flex items-center">
       <div className="absolute inset-0 bg-gradient-to-r from-purple-50 to-blue-50 opacity-50" />
-      <div className="absolute inset-0 bg-[url('/photo-1506744038136-46273834b3fb')] bg-cover bg-center opacity-10" />
+      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1649972904349-6e44c42644a7')] bg-cover bg-center opacity-10" />
       
       <div className="container mx-auto text-center relative z-10">
         <span className="inline-block px-4 py-1.5 text-sm font-medium bg-primary/10 text-primary rounded-full mb-6 slide-up">
