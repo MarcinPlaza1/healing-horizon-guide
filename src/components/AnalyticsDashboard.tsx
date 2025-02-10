@@ -56,6 +56,21 @@ interface AnalyticsSummary {
 
 const COLORS = ['#22c55e', '#3b82f6', '#f59e0b', '#ef4444', '#6b7280'];
 
+const DEFAULT_MOOD_TRENDS = {
+  great: 0,
+  good: 0,
+  okay: 0,
+  difficult: 0,
+  struggling: 0,
+};
+
+const DEFAULT_MILESTONE_COUNTS = {
+  weekly: 0,
+  monthly: 0,
+  quarterly: 0,
+  yearly: 0,
+};
+
 const AnalyticsDashboard = () => {
   const [analytics, setAnalytics] = useState<AnalyticsSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -79,10 +94,15 @@ const AnalyticsDashboard = () => {
         if (data) {
           // Convert the JSON data to match our AnalyticsSummary interface
           const formattedData: AnalyticsSummary = {
-            mood_trends: data.mood_trends as AnalyticsSummary['mood_trends'],
-            streak_data: data.streak_data as AnalyticsSummary['streak_data'],
-            recovery_stats: data.recovery_stats as AnalyticsSummary['recovery_stats'],
-            milestone_counts: data.milestone_counts as AnalyticsSummary['milestone_counts']
+            mood_trends: data.mood_trends || DEFAULT_MOOD_TRENDS,
+            streak_data: data.streak_data || { current: 0, longest: 0, weekly_average: 0 },
+            recovery_stats: data.recovery_stats || { 
+              total_clean_days: 0, 
+              active_records: 0, 
+              completed_records: 0, 
+              relapse_rate: 0 
+            },
+            milestone_counts: data.milestone_counts || DEFAULT_MILESTONE_COUNTS
           };
           setAnalytics(formattedData);
         }
@@ -131,12 +151,12 @@ const AnalyticsDashboard = () => {
     );
   }
 
-  const moodTrendsData = Object.entries(analytics.mood_trends).map(([mood, count]) => ({
+  const moodTrendsData = Object.entries(analytics.mood_trends || DEFAULT_MOOD_TRENDS).map(([mood, count]) => ({
     name: mood.charAt(0).toUpperCase() + mood.slice(1),
     value: count,
   }));
 
-  const milestoneData = Object.entries(analytics.milestone_counts).map(([period, count]) => ({
+  const milestoneData = Object.entries(analytics.milestone_counts || DEFAULT_MILESTONE_COUNTS).map(([period, count]) => ({
     name: period.charAt(0).toUpperCase() + period.slice(1),
     count,
   }));
@@ -265,4 +285,3 @@ const AnalyticsDashboard = () => {
 };
 
 export default AnalyticsDashboard;
-
