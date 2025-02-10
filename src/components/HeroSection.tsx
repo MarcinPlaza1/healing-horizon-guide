@@ -15,12 +15,12 @@ const HeroSection = () => {
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 hover:bg-primary/20 transition-colors duration-300 cursor-pointer group">
           <Heart className="w-4 h-4 animate-pulse" />
           <span className="text-sm font-medium group-hover:scale-105 transition-transform duration-300">
-            Rozpocznij swoją drogę do zdrowia
+            Begin Your Journey to Health
           </span>
         </div>
         
         <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 slide-up" style={{ animationDelay: "0.1s" }}>
-          Odmień swoje życie z
+          Transform Your Life with
           <br /> 
           <span className="text-primary relative inline-block mt-2">
             Mindful Recovery
@@ -29,14 +29,13 @@ const HeroSection = () => {
         </h1>
         
         <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto slide-up leading-relaxed" style={{ animationDelay: "0.2s" }}>
-          Przejmij kontrolę nad swoją podróżą dzięki naszej kompleksowej platformie
-          stworzonej, aby wspierać Twój rozwój osobisty.
+          Take control of your journey with our comprehensive platform designed to support your personal growth.
         </p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 slide-up" style={{ animationDelay: "0.3s" }}>
           <Link to="/auth">
             <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-6 bg-primary hover:bg-primary/90 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-primary/25">
-              Rozpocznij Teraz
+              Start Now
             </Button>
           </Link>
           <Button 
@@ -44,7 +43,7 @@ const HeroSection = () => {
             size="lg" 
             className="w-full sm:w-auto text-lg px-8 py-6 hover:bg-primary/5 transition-all duration-300 hover:scale-105 border-2 hover:border-primary"
           >
-            Dowiedz się Więcej
+            Learn More
           </Button>
         </div>
       </div>
