@@ -1,11 +1,12 @@
-
 import { useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
-import { ChartLine, Target, Trophy, TrendingUp, Clock, Activity, Star, Award, Calendar, Zap } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { MilestoneProgressChart } from "./analytics/MilestoneProgressChart";
+import { KeyMetrics } from "./progress/KeyMetrics";
+import { RecentMilestones } from "./progress/RecentMilestones";
+import { RecoveryStreaks } from "./progress/RecoveryStreaks";
+import { ProgressTracking } from "./progress/ProgressTracking";
+import { MoodDistribution } from "./progress/MoodDistribution";
 
 interface ProgressStats {
   streak_count: number;
@@ -50,7 +51,6 @@ const ProgressDashboard = () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        // Fetch profile stats
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('streak_count, longest_streak, last_check_in, weekly_mood_counts')
@@ -59,7 +59,6 @@ const ProgressDashboard = () => {
 
         if (profileError) throw profileError;
 
-        // Fetch addiction stats with milestones
         const { data: addictionData, error: addictionError } = await supabase
           .from('addictions')
           .select(`
@@ -105,7 +104,6 @@ const ProgressDashboard = () => {
           }
         });
 
-        // Sort milestones by date and get the 5 most recent
         recent_milestones.sort((a, b) => new Date(b.milestone_date).getTime() - new Date(a.milestone_date).getTime());
         const latest_milestones = recent_milestones.slice(0, 5);
 
@@ -164,11 +162,6 @@ const ProgressDashboard = () => {
     yearly: stats.addiction_stats?.recent_milestones.filter(m => m.days_clean <= 365).length || 0
   };
 
-  const totalMoods = Object.values(stats.weekly_mood_counts).reduce((a, b) => a + b, 0);
-  const positivePercentage = totalMoods > 0 
-    ? ((stats.weekly_mood_counts.great + stats.weekly_mood_counts.good) / totalMoods) * 100
-    : 0;
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/10">
       <div className="container mx-auto px-4 py-8">
@@ -181,171 +174,35 @@ const ProgressDashboard = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="p-6 glass-card">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Current Streak</p>
-                <h3 className="text-2xl font-bold mt-1">{stats.streak_count} days</h3>
-              </div>
-              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <TrendingUp className="h-4 w-4 text-primary" />
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 glass-card">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Longest Clean Streak</p>
-                <h3 className="text-2xl font-bold mt-1">{stats.addiction_stats?.longest_clean_streak || 0} days</h3>
-              </div>
-              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Trophy className="h-4 w-4 text-primary" />
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 glass-card">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Recovery Rate</p>
-                <h3 className="text-2xl font-bold mt-1">
-                  {Math.round(stats.addiction_stats?.recovery_rate || 0)}%
-                </h3>
-              </div>
-              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <ChartLine className="h-4 w-4 text-primary" />
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 glass-card">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Total Milestones</p>
-                <h3 className="text-2xl font-bold mt-1">{stats.addiction_stats?.total_milestones || 0}</h3>
-              </div>
-              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Star className="h-4 w-4 text-primary" />
-              </div>
-            </div>
-          </Card>
-        </div>
+        <KeyMetrics 
+          streak_count={stats.streak_count}
+          longest_clean_streak={stats.addiction_stats?.longest_clean_streak || 0}
+          recovery_rate={stats.addiction_stats?.recovery_rate || 0}
+          total_milestones={stats.addiction_stats?.total_milestones || 0}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <Card className="p-6 glass-card">
-            <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <Trophy className="h-5 w-5 mr-2" />
-              Recent Milestones
-            </h3>
-            <div className="space-y-4">
-              {stats.addiction_stats?.recent_milestones.map((milestone, index) => (
-                <div key={index} className="border-l-2 border-primary pl-4 py-2">
-                  <h4 className="font-medium text-sm">{milestone.milestone_type}</h4>
-                  <p className="text-sm text-muted-foreground">{milestone.description}</p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {new Date(milestone.milestone_date).toLocaleDateString()}
-                  </p>
-                </div>
-              ))}
-              {(!stats.addiction_stats?.recent_milestones || stats.addiction_stats.recent_milestones.length === 0) && (
-                <p className="text-muted-foreground text-sm">No milestones recorded yet. Keep going!</p>
-              )}
-            </div>
-          </Card>
-
-          <Card className="p-6 glass-card">
-            <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <Clock className="h-5 w-5 mr-2" />
-              Active Recovery Streaks
-            </h3>
-            <div className="space-y-4">
-              {stats.addiction_stats?.addiction_streaks.map((streak, index) => (
-                <div key={index}>
-                  <div className="flex justify-between mb-2">
-                    <span className="text-sm font-medium">{streak.name}</span>
-                    <span className="text-sm text-muted-foreground">{streak.days_clean} days clean</span>
-                  </div>
-                  <Progress 
-                    value={Math.min((streak.days_clean / 365) * 100, 100)} 
-                    className="h-2" 
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Clean since: {new Date(streak.clean_since).toLocaleDateString()}
-                  </p>
-                </div>
-              ))}
-              {(!stats.addiction_stats?.addiction_streaks || stats.addiction_stats.addiction_streaks.length === 0) && (
-                <p className="text-muted-foreground text-sm">No active recovery streaks. Start your journey today!</p>
-              )}
-            </div>
-          </Card>
+          <RecentMilestones 
+            milestones={stats.addiction_stats?.recent_milestones || []}
+          />
+          <RecoveryStreaks 
+            streaks={stats.addiction_stats?.addiction_streaks || []}
+          />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="p-6 glass-card">
-            <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <Target className="h-5 w-5 mr-2" />
-              Progress Tracking
-            </h3>
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Daily Check-in Streak</span>
-                  <span className="text-sm font-medium">{stats.streak_count} days</span>
-                </div>
-                <Progress 
-                  value={(stats.streak_count / Math.max(stats.longest_streak, 7)) * 100} 
-                  className="h-2" 
-                />
-              </div>
-              <div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Current Clean Streak</span>
-                  <span className="text-sm font-medium">{stats.addiction_stats?.current_clean_streak || 0} days</span>
-                </div>
-                <Progress 
-                  value={(stats.addiction_stats?.current_clean_streak || 0) / 
-                    Math.max(stats.addiction_stats?.longest_clean_streak || 1, 7) * 100} 
-                  className="h-2" 
-                />
-              </div>
-              <div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Recovery Progress</span>
-                  <span className="text-sm font-medium">
-                    {stats.addiction_stats?.total_recovered || 0} / {(stats.addiction_stats?.total_active || 0) + (stats.addiction_stats?.total_recovered || 0)} recovered
-                  </span>
-                </div>
-                <Progress 
-                  value={stats.addiction_stats?.recovery_rate || 0}
-                  className="h-2" 
-                />
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 glass-card">
-            <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <Activity className="h-5 w-5 mr-2" />
-              Weekly Mood Distribution
-            </h3>
-            <div className="space-y-4">
-              {Object.entries(stats.weekly_mood_counts).map(([mood, count]) => (
-                <div key={mood}>
-                  <div className="flex justify-between mb-2">
-                    <span className="text-sm text-muted-foreground capitalize">{mood}</span>
-                    <span className="text-sm font-medium">{count} check-ins</span>
-                  </div>
-                  <Progress 
-                    value={(count / Math.max(totalMoods, 1)) * 100} 
-                    className="h-2" 
-                  />
-                </div>
-              ))}
-            </div>
-          </Card>
+          <ProgressTracking 
+            streak_count={stats.streak_count}
+            longest_streak={stats.longest_streak}
+            current_clean_streak={stats.addiction_stats?.current_clean_streak || 0}
+            longest_clean_streak={stats.addiction_stats?.longest_clean_streak || 0}
+            total_recovered={stats.addiction_stats?.total_recovered || 0}
+            total_active={stats.addiction_stats?.total_active || 0}
+            recovery_rate={stats.addiction_stats?.recovery_rate || 0}
+          />
+          <MoodDistribution 
+            weekly_mood_counts={stats.weekly_mood_counts}
+          />
         </div>
 
         <div className="mt-8">
