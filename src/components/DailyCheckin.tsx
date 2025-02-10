@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
@@ -33,6 +34,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useQuery } from "@tanstack/react-query";
+import { heart, Heart } from "lucide-react";
 
 const formSchema = z.object({
   mood: z.enum(["great", "good", "okay", "difficult", "struggling"]),
@@ -130,9 +132,12 @@ const DailyCheckin = () => {
   return (
     <div className="space-y-6">
       {lastCheckin && (
-        <Card className="bg-muted/50">
-          <CardHeader>
-            <CardTitle>Last Check-in</CardTitle>
+        <Card className="bg-muted/50 hover:bg-muted/70 transition-colors duration-200">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2">
+              <Heart className="h-5 w-5 text-primary" />
+              Last Check-in
+            </CardTitle>
             <CardDescription>
               {new Date(lastCheckin.created_at).toLocaleDateString()} at{" "}
               {new Date(lastCheckin.created_at).toLocaleTimeString()}
@@ -141,17 +146,20 @@ const DailyCheckin = () => {
           <CardContent>
             <div className="flex items-center space-x-2">
               <span className="text-2xl">{getMoodEmoji(lastCheckin.mood)}</span>
-              <span className="capitalize">{lastCheckin.mood}</span>
+              <span className="capitalize text-sm text-muted-foreground">{lastCheckin.mood}</span>
             </div>
           </CardContent>
         </Card>
       )}
 
-      <Card className="p-6">
+      <Card className="border-primary/20">
         <CardHeader>
-          <CardTitle>Daily Check-in</CardTitle>
+          <CardTitle className="flex items-center gap-2 text-xl">
+            <Heart className="h-5 w-5 text-primary" />
+            How are you feeling today?
+          </CardTitle>
           <CardDescription>
-            Take a moment to reflect on how you're feeling today
+            Take a moment to reflect on your mental and emotional state
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -162,13 +170,13 @@ const DailyCheckin = () => {
                 name="mood"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>How are you feeling today?</FormLabel>
+                    <FormLabel>Current Mood</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select your mood" />
                         </SelectTrigger>
                       </FormControl>
@@ -199,6 +207,7 @@ const DailyCheckin = () => {
                             onValueChange={(value) => field.onChange(value[0])}
                             max={10}
                             step={1}
+                            className="w-full"
                           />
                           <div className="flex justify-between text-xs text-muted-foreground">
                             <span>Low</span>
@@ -225,6 +234,7 @@ const DailyCheckin = () => {
                             onValueChange={(value) => field.onChange(value[0])}
                             max={10}
                             step={1}
+                            className="w-full"
                           />
                           <div className="flex justify-between text-xs text-muted-foreground">
                             <span>Low</span>
@@ -267,60 +277,69 @@ const DailyCheckin = () => {
                 />
               </div>
 
-              <Separator className="my-4" />
+              <Separator className="my-6" />
 
-              <FormField
-                control={form.control}
-                name="triggers"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Any triggers today? (optional)</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Describe any triggers or challenges..."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="triggers"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Any triggers today? (optional)</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Describe any triggers or challenges..."
+                          className="min-h-[80px] resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="coping_strategies"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Coping Strategies Used (optional)</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="What strategies helped you cope today?"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="coping_strategies"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Coping Strategies Used (optional)</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="What strategies helped you cope today?"
+                          className="min-h-[80px] resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="notes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Additional notes (optional)</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Add any additional thoughts..."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="notes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Additional notes (optional)</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Add any additional thoughts..."
+                          className="min-h-[80px] resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
+              <Button 
+                type="submit" 
+                className="w-full"
+                disabled={isSubmitting}
+              >
                 {isSubmitting ? "Submitting..." : "Submit Check-in"}
               </Button>
             </form>
