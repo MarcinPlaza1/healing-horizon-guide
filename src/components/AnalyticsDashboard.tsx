@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
@@ -71,6 +70,19 @@ const DEFAULT_MILESTONE_COUNTS = {
   yearly: 0,
 };
 
+const DEFAULT_STREAK_DATA = {
+  current: 0,
+  longest: 0,
+  weekly_average: 0,
+};
+
+const DEFAULT_RECOVERY_STATS = {
+  total_clean_days: 0,
+  active_records: 0,
+  completed_records: 0,
+  relapse_rate: 0,
+};
+
 const AnalyticsDashboard = () => {
   const [analytics, setAnalytics] = useState<AnalyticsSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -94,15 +106,18 @@ const AnalyticsDashboard = () => {
         if (data) {
           // Convert the JSON data to match our AnalyticsSummary interface
           const formattedData: AnalyticsSummary = {
-            mood_trends: data.mood_trends || DEFAULT_MOOD_TRENDS,
-            streak_data: data.streak_data || { current: 0, longest: 0, weekly_average: 0 },
-            recovery_stats: data.recovery_stats || { 
-              total_clean_days: 0, 
-              active_records: 0, 
-              completed_records: 0, 
-              relapse_rate: 0 
-            },
-            milestone_counts: data.milestone_counts || DEFAULT_MILESTONE_COUNTS
+            mood_trends: (typeof data.mood_trends === 'object' && data.mood_trends !== null) 
+              ? { ...DEFAULT_MOOD_TRENDS, ...data.mood_trends as Record<string, number> }
+              : DEFAULT_MOOD_TRENDS,
+            streak_data: (typeof data.streak_data === 'object' && data.streak_data !== null)
+              ? { ...DEFAULT_STREAK_DATA, ...data.streak_data as Record<string, number> }
+              : DEFAULT_STREAK_DATA,
+            recovery_stats: (typeof data.recovery_stats === 'object' && data.recovery_stats !== null)
+              ? { ...DEFAULT_RECOVERY_STATS, ...data.recovery_stats as Record<string, number> }
+              : DEFAULT_RECOVERY_STATS,
+            milestone_counts: (typeof data.milestone_counts === 'object' && data.milestone_counts !== null)
+              ? { ...DEFAULT_MILESTONE_COUNTS, ...data.milestone_counts as Record<string, number> }
+              : DEFAULT_MILESTONE_COUNTS
           };
           setAnalytics(formattedData);
         }
@@ -151,12 +166,12 @@ const AnalyticsDashboard = () => {
     );
   }
 
-  const moodTrendsData = Object.entries(analytics.mood_trends || DEFAULT_MOOD_TRENDS).map(([mood, count]) => ({
+  const moodTrendsData = Object.entries(analytics?.mood_trends || DEFAULT_MOOD_TRENDS).map(([mood, count]) => ({
     name: mood.charAt(0).toUpperCase() + mood.slice(1),
     value: count,
   }));
 
-  const milestoneData = Object.entries(analytics.milestone_counts || DEFAULT_MILESTONE_COUNTS).map(([period, count]) => ({
+  const milestoneData = Object.entries(analytics?.milestone_counts || DEFAULT_MILESTONE_COUNTS).map(([period, count]) => ({
     name: period.charAt(0).toUpperCase() + period.slice(1),
     count,
   }));
