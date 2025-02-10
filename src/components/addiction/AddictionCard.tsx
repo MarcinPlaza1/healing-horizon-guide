@@ -66,32 +66,32 @@ export const AddictionCard = ({
   };
 
   return (
-    <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg">
+    <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-xl">
       <div className={cn(
-        "absolute inset-0 w-1",
+        "absolute inset-0 w-2",
         getStatusColor(addiction.status)
       )} />
       
-      <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-2">
-            <h4 className="text-xl font-semibold tracking-tight">{addiction.name}</h4>
+      <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-4 pl-8">
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <h4 className="text-2xl font-semibold tracking-tight">{addiction.name}</h4>
             <span className={cn(
-              "inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium",
+              "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium",
               getStatusColor(addiction.status)
             )}>
               {getStatusIcon(addiction.status)}
               {addiction.status}
             </span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <Target className="h-3.5 w-3.5" />
+          <div className="flex items-center gap-3 text-sm text-muted-foreground">
+            <div className="flex items-center gap-1.5">
+              <Target className="h-4 w-4" />
               {addiction.type}
             </div>
             <span>•</span>
-            <div className="flex items-center gap-1">
-              <Calendar className="h-3.5 w-3.5" />
+            <div className="flex items-center gap-1.5">
+              <Calendar className="h-4 w-4" />
               Started {format(new Date(addiction.start_date), "PPP")}
             </div>
           </div>
@@ -99,10 +99,10 @@ export const AddictionCard = ({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
-              <MoreVertical className="h-4 w-4" />
+              <MoreVertical className="h-5 w-5" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuContent align="end" className="w-52">
             <DropdownMenuItem onClick={() => onUpdateStatus(addiction, 'active')}>
               <Clock className="mr-2 h-4 w-4" />
               Mark Active
@@ -127,11 +127,11 @@ export const AddictionCard = ({
         </DropdownMenu>
       </CardHeader>
 
-      <CardContent>
-        <div className="space-y-4">
+      <CardContent className="pl-8">
+        <div className="space-y-6">
           {addiction.clean_since && (
-            <div className="rounded-lg bg-green-500/5 border border-green-500/10 p-3">
-              <p className="text-lg font-semibold text-green-500">
+            <div className="rounded-lg bg-green-500/5 border border-green-500/10 p-4">
+              <p className="text-xl font-semibold text-green-500">
                 {calculateCleanDays(addiction.clean_since)} days clean
               </p>
               <p className="text-sm text-muted-foreground">
@@ -141,14 +141,14 @@ export const AddictionCard = ({
           )}
 
           {addiction.notes && (
-            <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
-              <FileText className="h-4 w-4 text-muted-foreground mt-0.5" />
+            <div className="flex items-start gap-3 rounded-lg bg-muted/50 p-4">
+              <FileText className="h-5 w-5 text-muted-foreground mt-0.5" />
               <p className="text-sm text-muted-foreground">{addiction.notes}</p>
             </div>
           )}
           
           {addiction.triggers && addiction.triggers.length > 0 && (
-            <div className="space-y-2">
+            <div className="space-y-3">
               <h5 className="text-sm font-medium flex items-center gap-2">
                 <Target className="h-4 w-4" />
                 Known Triggers
@@ -157,7 +157,7 @@ export const AddictionCard = ({
                 {addiction.triggers.map((trigger, index) => (
                   <span
                     key={index}
-                    className="inline-flex items-center rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium transition-colors hover:bg-muted/80"
+                    className="inline-flex items-center rounded-full bg-muted px-3 py-1 text-sm font-medium transition-colors hover:bg-muted/80"
                   >
                     {trigger}
                   </span>
@@ -169,26 +169,26 @@ export const AddictionCard = ({
           <div className="flex items-center justify-between pt-2">
             <Button
               variant="secondary"
-              size="sm"
+              size="lg"
               onClick={() => onAddMilestone(addiction)}
               className="w-full"
             >
-              <Trophy className="h-4 w-4 mr-2" />
+              <Trophy className="h-5 w-5 mr-2" />
               Add Milestone
             </Button>
           </div>
           
           {milestones?.length > 0 && (
-            <div className="space-y-2 pt-2">
+            <div className="space-y-3 pt-2">
               <h5 className="text-sm font-medium flex items-center gap-2">
                 <Trophy className="h-4 w-4 text-yellow-500" />
                 Recovery Milestones
               </h5>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {milestones.map((milestone) => (
                   <div
                     key={milestone.id}
-                    className="flex items-center gap-3 rounded-lg border bg-card p-3 transition-colors hover:bg-muted/50"
+                    className="flex items-center gap-4 rounded-lg border bg-card p-4 transition-colors hover:bg-muted/50"
                   >
                     <div className="flex-1 min-w-0 space-y-1">
                       <p className="text-sm font-medium truncate">

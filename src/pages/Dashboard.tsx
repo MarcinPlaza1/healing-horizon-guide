@@ -32,7 +32,7 @@ const DashboardPage = () => {
               } />
               <Route path="addiction" element={
                 <div className="container mx-auto p-6">
-                  <div className="max-w-[1600px] mx-auto">
+                  <div className="max-w-[1800px] mx-auto">
                     <h2 className="text-3xl font-bold mb-2">Recovery Dashboard</h2>
                     <p className="text-muted-foreground mb-6">
                       Track your progress, celebrate milestones, and stay committed to your recovery journey

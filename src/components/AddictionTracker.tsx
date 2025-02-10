@@ -157,9 +157,9 @@ const AddictionTracker = () => {
   const statusCounts = getStatusCounts();
 
   return (
-    <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
+    <div className="space-y-8">
+      <div className="grid gap-6 md:grid-cols-3">
+        <Card className="shadow-md hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Records</CardTitle>
             <AlertTriangle className="h-4 w-4 text-yellow-500" />
@@ -168,7 +168,7 @@ const AddictionTracker = () => {
             <div className="text-2xl font-bold">{statusCounts.active}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="shadow-md hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Recovered</CardTitle>
             <CheckCircle className="h-4 w-4 text-green-500" />
@@ -177,7 +177,7 @@ const AddictionTracker = () => {
             <div className="text-2xl font-bold">{statusCounts.recovered}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="shadow-md hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Milestones</CardTitle>
             <Trophy className="h-4 w-4 text-yellow-500" />
@@ -188,16 +188,16 @@ const AddictionTracker = () => {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+      <Card className="shadow-lg">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
           <div>
             <CardTitle>Recovery Records</CardTitle>
             <CardDescription>Track and manage your recovery journey</CardDescription>
           </div>
           <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
             <DialogTrigger asChild>
-              <Button>
-                <PlusCircle className="h-4 w-4 mr-2" />
+              <Button size="lg" className="px-6">
+                <PlusCircle className="h-5 w-5 mr-2" />
                 Add Record
               </Button>
             </DialogTrigger>
@@ -219,14 +219,14 @@ const AddictionTracker = () => {
           </Dialog>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2">
             {addictions?.length === 0 && (
-              <div className="md:col-span-2 lg:col-span-3 flex flex-col items-center justify-center text-center py-12 text-muted-foreground">
-                <PlusCircle className="h-12 w-12 mb-4 text-muted-foreground/50" />
-                <p className="text-lg font-medium mb-2">No records added yet</p>
-                <p className="text-sm mb-4">Start tracking your recovery journey by adding a record.</p>
+              <div className="md:col-span-1 lg:col-span-2 xl:col-span-2 flex flex-col items-center justify-center text-center py-16 text-muted-foreground">
+                <PlusCircle className="h-16 w-16 mb-6 text-muted-foreground/50" />
+                <p className="text-xl font-medium mb-3">No records added yet</p>
+                <p className="text-sm mb-6">Start tracking your recovery journey by adding a record.</p>
                 <DialogTrigger asChild>
-                  <Button onClick={() => setAddDialogOpen(true)}>
+                  <Button size="lg" onClick={() => setAddDialogOpen(true)}>
                     Add Your First Record
                   </Button>
                 </DialogTrigger>
