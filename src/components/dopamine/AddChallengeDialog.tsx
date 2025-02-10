@@ -14,22 +14,32 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 
+type ChallengeType = 
+  | "social_media_break"
+  | "digital_sunset"
+  | "morning_routine"
+  | "mindful_browsing"
+  | "app_limits"
+  | "notification_detox"
+  | "device_free_meals"
+  | "reading_time";
+
 const challengeTypes = [
-  { value: "social_media_break", label: "Social Media Break" },
-  { value: "digital_sunset", label: "Digital Sunset" },
-  { value: "morning_routine", label: "Morning Routine" },
-  { value: "mindful_browsing", label: "Mindful Browsing" },
-  { value: "app_limits", label: "App Limits" },
-  { value: "notification_detox", label: "Notification Detox" },
-  { value: "device_free_meals", label: "Device-Free Meals" },
-  { value: "reading_time", label: "Reading Time" },
+  { value: "social_media_break" as const, label: "Social Media Break" },
+  { value: "digital_sunset" as const, label: "Digital Sunset" },
+  { value: "morning_routine" as const, label: "Morning Routine" },
+  { value: "mindful_browsing" as const, label: "Mindful Browsing" },
+  { value: "app_limits" as const, label: "App Limits" },
+  { value: "notification_detox" as const, label: "Notification Detox" },
+  { value: "device_free_meals" as const, label: "Device-Free Meals" },
+  { value: "reading_time" as const, label: "Reading Time" },
 ];
 
 export function AddChallengeDialog() {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [challengeType, setChallengeType] = useState<string>("");
+  const [challengeType, setChallengeType] = useState<ChallengeType | "">("");
   const [startDate, setStartDate] = useState<Date>();
   const [durationDays, setDurationDays] = useState("");
   const { toast } = useToast();
@@ -56,9 +66,9 @@ export function AddChallengeDialog() {
       const { error } = await supabase
         .from('dopamine_detox_challenges')
         .insert({
+          challenge_type: challengeType,
           name,
           description,
-          challenge_type: challengeType,
           start_date: startDate.toISOString(),
           end_date: endDate.toISOString(),
           duration_days: parseInt(durationDays),
@@ -113,7 +123,7 @@ export function AddChallengeDialog() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="type">Challenge Type</Label>
-            <Select value={challengeType} onValueChange={setChallengeType}>
+            <Select value={challengeType} onValueChange={(value: ChallengeType) => setChallengeType(value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select challenge type" />
               </SelectTrigger>
