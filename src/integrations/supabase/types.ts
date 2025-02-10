@@ -9,6 +9,53 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      activity_notes: {
+        Row: {
+          addiction_id: string
+          content: string
+          coping_strategies: string[] | null
+          created_at: string
+          id: string
+          mood: string | null
+          note_date: string
+          triggers: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          addiction_id: string
+          content: string
+          coping_strategies?: string[] | null
+          created_at?: string
+          id?: string
+          mood?: string | null
+          note_date?: string
+          triggers?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          addiction_id?: string
+          content?: string
+          coping_strategies?: string[] | null
+          created_at?: string
+          id?: string
+          mood?: string | null
+          note_date?: string
+          triggers?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_notes_addiction_id_fkey"
+            columns: ["addiction_id"]
+            isOneToOne: false
+            referencedRelation: "addictions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       addiction_activity_logs: {
         Row: {
           activity_date: string
