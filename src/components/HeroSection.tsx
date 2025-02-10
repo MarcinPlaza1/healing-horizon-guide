@@ -1,25 +1,33 @@
 
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
-    <section className="pt-32 pb-16 px-4">
-      <div className="container mx-auto text-center">
-        <span className="inline-block px-3 py-1 text-sm font-medium bg-primary/10 text-primary rounded-full mb-4 slide-up">
+    <section className="relative pt-32 pb-16 px-4 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-50 to-blue-50 opacity-50" />
+      <div className="absolute inset-0 bg-[url('/photo-1506744038136-46273834b3fb')] bg-cover bg-center opacity-10" />
+      
+      <div className="container mx-auto text-center relative z-10">
+        <span className="inline-block px-4 py-1.5 text-sm font-medium bg-primary/10 text-primary rounded-full mb-6 slide-up">
           Your Journey to Wellness Starts Here
         </span>
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 slide-up" style={{ animationDelay: "0.1s" }}>
-          Transform Your Life with Mindful Recovery
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 slide-up bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent" style={{ animationDelay: "0.1s" }}>
+          Transform Your Life with
+          <br /> 
+          Mindful Recovery
         </h1>
-        <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto slide-up" style={{ animationDelay: "0.2s" }}>
-          Join a supportive community dedicated to helping you overcome challenges and build lasting positive changes in your life.
+        <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto slide-up leading-relaxed" style={{ animationDelay: "0.2s" }}>
+          Join a supportive community dedicated to helping you overcome challenges 
+          and build lasting positive changes in your life.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 slide-up" style={{ animationDelay: "0.3s" }}>
-          <Button size="lg" className="w-full sm:w-auto">
-            Start Your Journey
-          </Button>
-          <Button variant="outline" size="lg" className="w-full sm:w-auto">
+          <Link to="/auth">
+            <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-6 bg-primary hover:bg-primary/90">
+              Start Your Journey
+            </Button>
+          </Link>
+          <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8 py-6">
             Learn More
           </Button>
         </div>
