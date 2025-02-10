@@ -8,7 +8,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
-export function DailyLogForm() {
+interface DailyLogFormProps {
+  onLogSubmitted?: () => void;
+}
+
+export function DailyLogForm({ onLogSubmitted }: DailyLogFormProps) {
   const [screenTime, setScreenTime] = useState("");
   const [tasks, setTasks] = useState("");
   const [notes, setNotes] = useState("");
@@ -30,7 +34,7 @@ export function DailyLogForm() {
           screen_time_minutes: parseInt(screenTime),
           completed_tasks: tasks.split(',').map(task => task.trim()).filter(Boolean),
           notes,
-          activity_date: new Date().toISOString()
+          activity_date: new Date().toISOString().split('T')[0]
         });
 
       if (error) throw error;
@@ -44,6 +48,9 @@ export function DailyLogForm() {
       setScreenTime("");
       setTasks("");
       setNotes("");
+      
+      // Trigger parent update
+      onLogSubmitted?.();
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -99,7 +106,7 @@ export function DailyLogForm() {
             />
           </div>
 
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? "Submitting..." : "Submit Log"}
           </Button>
         </form>
