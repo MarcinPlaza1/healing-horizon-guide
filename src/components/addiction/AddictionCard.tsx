@@ -8,13 +8,26 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Addiction, Milestone } from "@/types/addiction";
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface AddictionCardProps {
   addiction: Addiction;
@@ -31,6 +44,10 @@ export const AddictionCard = ({
   onAddMilestone,
   onDelete,
 }: AddictionCardProps) => {
+  const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
+  const [newGoal, setNewGoal] = useState({ title: "", target_date: "" });
+  const { toast } = useToast();
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
@@ -63,6 +80,79 @@ export const AddictionCard = ({
     const now = new Date();
     const diffTime = Math.abs(now.getTime() - start.getTime());
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  };
+
+  const handleAddGoal = async () => {
+    if (!newGoal.title) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Please enter a goal title",
+      });
+      return;
+    }
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      const updatedGoals = [
+        ...(addiction.goals || []),
+        { ...newGoal, completed: false }
+      ];
+
+      const { error } = await supabase
+        .from('addictions')
+        .update({ goals: updatedGoals })
+        .eq('id', addiction.id)
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Goal Added",
+        description: "Your new recovery goal has been added.",
+      });
+
+      setNewGoal({ title: "", target_date: "" });
+      setIsAddGoalOpen(false);
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error adding goal",
+        description: error.message,
+      });
+    }
+  };
+
+  const toggleGoal = async (goalIndex: number) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      const updatedGoals = addiction.goals?.map((goal, index) =>
+        index === goalIndex ? { ...goal, completed: !goal.completed } : goal
+      ) || [];
+
+      const { error } = await supabase
+        .from('addictions')
+        .update({ goals: updatedGoals })
+        .eq('id', addiction.id)
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Goal Updated",
+        description: "Your goal has been updated.",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error updating goal",
+        description: error.message,
+      });
+    }
   };
 
   return (
@@ -154,15 +244,54 @@ export const AddictionCard = ({
                 <Goal className="h-4 w-4" />
                 Recovery Goals
               </h5>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 px-2"
-                onClick={() => {/* TODO: Implement add goal */}}
-              >
-                <Plus className="h-4 w-4" />
-                Add Goal
-              </Button>
+              <Dialog open={isAddGoalOpen} onOpenChange={setIsAddGoalOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 px-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    Add Goal
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Add Recovery Goal</DialogTitle>
+                    <DialogDescription>
+                      Set a new goal for your recovery journey
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="title">Goal Title</Label>
+                      <Input
+                        id="title"
+                        placeholder="Enter your goal"
+                        value={newGoal.title}
+                        onChange={(e) => setNewGoal(prev => ({ ...prev, title: e.target.value }))}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="target_date">Target Date (Optional)</Label>
+                      <Input
+                        id="target_date"
+                        type="date"
+                        value={newGoal.target_date}
+                        onChange={(e) => setNewGoal(prev => ({ ...prev, target_date: e.target.value }))}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-3">
+                    <Button variant="outline" onClick={() => setIsAddGoalOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleAddGoal}>
+                      Add Goal
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="space-y-2">
               {addiction.goals?.map((goal, index) => (
@@ -180,7 +309,7 @@ export const AddictionCard = ({
                       "h-5 w-5 p-0",
                       goal.completed && "text-green-500"
                     )}
-                    onClick={() => {/* TODO: Implement toggle goal */}}
+                    onClick={() => toggleGoal(index)}
                   >
                     <CheckCircle className="h-4 w-4" />
                   </Button>
