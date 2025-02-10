@@ -4,6 +4,7 @@ import HeroSection from "@/components/HeroSection";
 import FeatureCard from "@/components/FeatureCard";
 import DailyInspiration from "@/components/DailyInspiration";
 import ProgressPreview from "@/components/ProgressPreview";
+import DailyCheckin from "@/components/DailyCheckin";
 import { Heart, Users, Calendar } from "lucide-react";
 
 const Index = () => {
@@ -39,8 +40,11 @@ const Index = () => {
         <section className="py-16 px-4 bg-secondary/30">
           <div className="container mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <DailyInspiration />
-              <ProgressPreview />
+              <DailyCheckin />
+              <div className="space-y-8">
+                <DailyInspiration />
+                <ProgressPreview />
+              </div>
             </div>
           </div>
         </section>
