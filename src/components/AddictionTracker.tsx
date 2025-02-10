@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { PlusCircle, Trophy, AlertTriangle, CheckCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -52,7 +51,14 @@ const AddictionTracker = () => {
         return [];
       }
 
-      return data as Addiction[];
+      return (data || []).map(item => ({
+        ...item,
+        goals: (item.goals as any[] || []).map(goal => ({
+          title: goal.title,
+          completed: goal.completed,
+          target_date: goal.target_date
+        }))
+      })) as Addiction[];
     },
   });
 
