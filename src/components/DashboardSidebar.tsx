@@ -1,5 +1,5 @@
 
-import { ChevronRight, Heart, Calendar, Settings2, LayoutDashboard } from "lucide-react";
+import { ChevronRight, Heart, Calendar, Settings2, LayoutDashboard, TrendingUp } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -18,6 +18,11 @@ const menuItems = [
     title: "Main Dashboard",
     icon: LayoutDashboard,
     section: "dashboard",
+  },
+  {
+    title: "Progress",
+    icon: TrendingUp,
+    section: "progress",
   },
   {
     title: "Wellness",
