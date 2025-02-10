@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
@@ -61,7 +60,7 @@ const DailyCheckin = () => {
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
 
       return data;
     },
@@ -333,4 +332,3 @@ const DailyCheckin = () => {
 };
 
 export default DailyCheckin;
-
