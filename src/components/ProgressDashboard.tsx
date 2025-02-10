@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { ChartLine, Target, Trophy, TrendingUp, Clock, Activity, Star, Award, Calendar, Zap } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { MilestoneProgressChart } from "./analytics/MilestoneProgressChart";
 
 interface ProgressStats {
   streak_count: number;
@@ -155,6 +156,13 @@ const ProgressDashboard = () => {
   }, [toast]);
 
   if (!stats) return null;
+
+  const milestonesByPeriod = {
+    weekly: stats.addiction_stats?.recent_milestones.filter(m => m.days_clean <= 7).length || 0,
+    monthly: stats.addiction_stats?.recent_milestones.filter(m => m.days_clean <= 30).length || 0,
+    quarterly: stats.addiction_stats?.recent_milestones.filter(m => m.days_clean <= 90).length || 0,
+    yearly: stats.addiction_stats?.recent_milestones.filter(m => m.days_clean <= 365).length || 0
+  };
 
   const totalMoods = Object.values(stats.weekly_mood_counts).reduce((a, b) => a + b, 0);
   const positivePercentage = totalMoods > 0 
@@ -338,6 +346,10 @@ const ProgressDashboard = () => {
               ))}
             </div>
           </Card>
+        </div>
+
+        <div className="mt-8">
+          <MilestoneProgressChart milestoneCounts={milestonesByPeriod} />
         </div>
       </div>
     </div>
