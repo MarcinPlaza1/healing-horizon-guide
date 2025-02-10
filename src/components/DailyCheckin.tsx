@@ -1,40 +1,20 @@
 
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { Slider } from "@/components/ui/slider";
+import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Card as CardPrimitive,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useQuery } from "@tanstack/react-query";
-import { heart, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
+import LastCheckin from "./daily-checkin/LastCheckin";
+import MoodSelection from "./daily-checkin/MoodSelection";
+import WellnessMetrics from "./daily-checkin/WellnessMetrics";
+import OptionalNotes from "./daily-checkin/OptionalNotes";
 
 const formSchema = z.object({
   mood: z.enum(["great", "good", "okay", "difficult", "struggling"]),
@@ -132,24 +112,7 @@ const DailyCheckin = () => {
   return (
     <div className="space-y-6">
       {lastCheckin && (
-        <Card className="bg-muted/50 hover:bg-muted/70 transition-colors duration-200">
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2">
-              <Heart className="h-5 w-5 text-primary" />
-              Last Check-in
-            </CardTitle>
-            <CardDescription>
-              {new Date(lastCheckin.created_at).toLocaleDateString()} at{" "}
-              {new Date(lastCheckin.created_at).toLocaleTimeString()}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center space-x-2">
-              <span className="text-2xl">{getMoodEmoji(lastCheckin.mood)}</span>
-              <span className="capitalize text-sm text-muted-foreground">{lastCheckin.mood}</span>
-            </div>
-          </CardContent>
-        </Card>
+        <LastCheckin lastCheckin={lastCheckin} getMoodEmoji={getMoodEmoji} />
       )}
 
       <Card className="border-primary/20">
@@ -165,175 +128,15 @@ const DailyCheckin = () => {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="mood"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Current Mood</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select your mood" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="great">Great {getMoodEmoji("great")}</SelectItem>
-                        <SelectItem value="good">Good {getMoodEmoji("good")}</SelectItem>
-                        <SelectItem value="okay">Okay {getMoodEmoji("okay")}</SelectItem>
-                        <SelectItem value="difficult">Difficult {getMoodEmoji("difficult")}</SelectItem>
-                        <SelectItem value="struggling">Struggling {getMoodEmoji("struggling")}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
+              <MoodSelection control={form.control} getMoodEmoji={getMoodEmoji} />
+              
               <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="anxiety_level"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Anxiety Level</FormLabel>
-                      <FormControl>
-                        <div className="space-y-2">
-                          <Slider
-                            value={[field.value]}
-                            onValueChange={(value) => field.onChange(value[0])}
-                            max={10}
-                            step={1}
-                            className="w-full"
-                          />
-                          <div className="flex justify-between text-xs text-muted-foreground">
-                            <span>Low</span>
-                            <span>High</span>
-                          </div>
-                        </div>
-                      </FormControl>
-                      <FormDescription>Rate your anxiety level from 0 to 10</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="stress_level"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Stress Level</FormLabel>
-                      <FormControl>
-                        <div className="space-y-2">
-                          <Slider
-                            value={[field.value]}
-                            onValueChange={(value) => field.onChange(value[0])}
-                            max={10}
-                            step={1}
-                            className="w-full"
-                          />
-                          <div className="flex justify-between text-xs text-muted-foreground">
-                            <span>Low</span>
-                            <span>High</span>
-                          </div>
-                        </div>
-                      </FormControl>
-                      <FormDescription>Rate your stress level from 0 to 10</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="sleep_quality"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Sleep Quality</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select sleep quality" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="excellent">Excellent</SelectItem>
-                          <SelectItem value="good">Good</SelectItem>
-                          <SelectItem value="fair">Fair</SelectItem>
-                          <SelectItem value="poor">Poor</SelectItem>
-                          <SelectItem value="very_poor">Very Poor</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <WellnessMetrics control={form.control} />
               </div>
 
               <Separator className="my-6" />
 
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="triggers"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Any triggers today? (optional)</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Describe any triggers or challenges..."
-                          className="min-h-[80px] resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="coping_strategies"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Coping Strategies Used (optional)</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="What strategies helped you cope today?"
-                          className="min-h-[80px] resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="notes"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Additional notes (optional)</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Add any additional thoughts..."
-                          className="min-h-[80px] resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <OptionalNotes control={form.control} />
 
               <Button 
                 type="submit" 
