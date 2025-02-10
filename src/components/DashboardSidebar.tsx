@@ -1,4 +1,3 @@
-
 import { ChevronRight, Heart, Calendar, Settings2, LayoutDashboard, TrendingUp, CheckSquare, Pill, BarChart, LineChart, Brain, Apple, Activity, Grid3X3, Target, RotateCcw } from "lucide-react";
 import {
   Sidebar,
@@ -6,7 +5,6 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarGroupMenuItem,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
