@@ -40,7 +40,7 @@ export function AddChallengeDialog() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [challengeType, setChallengeType] = useState<ChallengeType | "">("");
-  const [startDate, setStartDate] = useState<Date>();
+  const [startDate, setStartDate] = useState<Date>(new Date());
   const [durationDays, setDurationDays] = useState("");
   const { toast } = useToast();
 
@@ -98,13 +98,14 @@ export function AddChallengeDialog() {
     setName("");
     setDescription("");
     setChallengeType("");
-    setStartDate(undefined);
+    setStartDate(new Date());
     setDurationDays("");
   };
 
   const handleDateSelect = (date: Date | undefined) => {
-    console.log("Selected date:", date);
-    setStartDate(date);
+    if (date) {
+      setStartDate(date);
+    }
   };
 
   return (
