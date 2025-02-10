@@ -1,66 +1,23 @@
 
-import Navigation from "@/components/Navigation";
-import Dashboard from "@/components/Dashboard";
-import ProgressDashboard from "@/components/ProgressDashboard";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { Routes, Route } from "react-router-dom";
-import DailyCheckin from "@/components/DailyCheckin";
-import HealthSummary from "@/components/HealthSummary";
-import MoodChart from "@/components/MoodChart";
-import AddictionTracker from "@/components/AddictionTracker";
-import AnalyticsDashboard from "@/components/AnalyticsDashboard";
-import CalendarDashboard from "@/components/CalendarDashboard";
-import DopamineDetox from "@/components/dopamine/DopamineDetox";
+import { DashboardLayout } from "@/components/layouts/DashboardLayout";
+import { dashboardRoutes } from "@/routes/dashboardRoutes";
 
 const DashboardPage = () => {
   return (
-    <SidebarProvider>
-      <div className="min-h-screen bg-background flex w-full">
-        <DashboardSidebar />
-        <div className="flex-1">
-          <Navigation />
-          <main className="pt-16">
-            <Routes>
-              <Route path="progress" element={<ProgressDashboard />} />
-              <Route path="analytics" element={<AnalyticsDashboard />} />
-              <Route path="calendar" element={<CalendarDashboard />} />
-              <Route path="dopamine-detox" element={<DopamineDetox />} />
-              <Route path="daily-checkin" element={
-                <div className="container mx-auto p-6">
-                  <h2 className="text-2xl font-bold mb-6">Daily Check-In Dashboard</h2>
-                  <div className="grid grid-cols-1 gap-6">
-                    <DailyCheckin />
-                    <MoodChart />
-                  </div>
-                </div>
-              } />
-              <Route path="addiction" element={
-                <div className="container mx-auto p-6">
-                  <div className="max-w-[1800px] mx-auto">
-                    <h2 className="text-3xl font-bold mb-2">Recovery Dashboard</h2>
-                    <p className="text-muted-foreground mb-6">
-                      Track your progress, celebrate milestones, and stay committed to your recovery journey
-                    </p>
-                    <AddictionTracker />
-                  </div>
-                </div>
-              } />
-              <Route path="stats" element={
-                <div className="container mx-auto p-6">
-                  <h2 className="text-2xl font-bold mb-6">Health Statistics Dashboard</h2>
-                  <div className="grid grid-cols-1 gap-6">
-                    <HealthSummary />
-                  </div>
-                </div>
-              } />
-              <Route path="*" element={<Dashboard />} />
-            </Routes>
-          </main>
-        </div>
-      </div>
-    </SidebarProvider>
+    <Routes>
+      <Route element={<DashboardLayout />}>
+        {dashboardRoutes.map((route) => (
+          <Route
+            key={route.path}
+            path={route.path}
+            element={route.element}
+          />
+        ))}
+      </Route>
+    </Routes>
   );
 };
 
 export default DashboardPage;
+
