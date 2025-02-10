@@ -1,4 +1,3 @@
-
 import { Brain, Target, Clock, Battery, Trophy, ListTodo, BarChart3 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -81,6 +80,10 @@ export const DopamineDetox = () => {
     }
   };
 
+  const handleChallengeUpdate = () => {
+    fetchStats();
+  };
+
   return (
     <div className="container mx-auto p-6 animate-fade-in">
       <div className="max-w-[1800px] mx-auto">
@@ -151,10 +154,10 @@ export const DopamineDetox = () => {
                   <CardTitle>Active Challenges</CardTitle>
                   <CardDescription>Your ongoing dopamine detox challenges</CardDescription>
                 </div>
-                <AddChallengeDialog />
+                <AddChallengeDialog onChallengeCreated={handleChallengeUpdate} />
               </CardHeader>
               <CardContent>
-                <ChallengeList />
+                <ChallengeList onChallengeUpdate={handleChallengeUpdate} />
               </CardContent>
             </Card>
 

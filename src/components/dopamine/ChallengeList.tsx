@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -19,14 +18,10 @@ interface Challenge {
   status: string;
 }
 
-export function ChallengeList() {
+export function ChallengeList({ onChallengeUpdate }: { onChallengeUpdate?: () => void }) {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
-
-  useEffect(() => {
-    fetchChallenges();
-  }, []);
 
   const fetchChallenges = async () => {
     try {
@@ -42,8 +37,10 @@ export function ChallengeList() {
 
       if (error) throw error;
 
+      console.log("Fetched challenges:", data); // Debug log
       setChallenges(data || []);
     } catch (error: any) {
+      console.error("Error fetching challenges:", error); // Debug log
       toast({
         variant: "destructive",
         title: "Error fetching challenges",
@@ -53,6 +50,10 @@ export function ChallengeList() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchChallenges();
+  }, []);
 
   const calculateProgress = (startDate: string, endDate: string) => {
     const start = new Date(startDate);
@@ -78,6 +79,9 @@ export function ChallengeList() {
       });
 
       fetchChallenges();
+      if (onChallengeUpdate) {
+        onChallengeUpdate();
+      }
     } catch (error: any) {
       toast({
         variant: "destructive",

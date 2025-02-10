@@ -35,7 +35,11 @@ const challengeTypes = [
   { value: "reading_time" as const, label: "Reading Time" },
 ];
 
-export function AddChallengeDialog() {
+interface AddChallengeDialogProps {
+  onChallengeCreated?: () => void;
+}
+
+export function AddChallengeDialog({ onChallengeCreated }: AddChallengeDialogProps) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -83,9 +87,14 @@ export function AddChallengeDialog() {
         description: "Your new dopamine detox challenge has been created.",
       });
 
+      if (onChallengeCreated) {
+        onChallengeCreated();
+      }
+
       setOpen(false);
       resetForm();
     } catch (error: any) {
+      console.error("Error creating challenge:", error); // Debug log
       toast({
         variant: "destructive",
         title: "Error creating challenge",
