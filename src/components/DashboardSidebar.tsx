@@ -1,5 +1,5 @@
 
-import { ChevronRight, Heart, Calendar, Settings2, LayoutDashboard, TrendingUp } from "lucide-react";
+import { ChevronRight, Heart, Calendar, Settings2, LayoutDashboard, TrendingUp, CheckSquare, Pill, BarChart } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -26,9 +26,19 @@ const menuItems = [
     to: "/dashboard/progress",
   },
   {
-    title: "Wellness",
-    icon: Heart,
-    to: "/dashboard/wellness",
+    title: "Daily Check-in",
+    icon: CheckSquare,
+    to: "/dashboard/daily-checkin",
+  },
+  {
+    title: "Addiction Recovery",
+    icon: Pill,
+    to: "/dashboard/addiction",
+  },
+  {
+    title: "Health Statistics",
+    icon: BarChart,
+    to: "/dashboard/stats",
   },
   {
     title: "Calendar",

@@ -21,15 +21,29 @@ const DashboardPage = () => {
           <main className="pt-16">
             <Routes>
               <Route path="progress" element={<ProgressDashboard />} />
-              <Route path="wellness" element={
-                <div className="container mx-auto p-6 space-y-6">
-                  <h2 className="text-2xl font-bold">Wellness Dashboard</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Route path="daily-checkin" element={
+                <div className="container mx-auto p-6">
+                  <h2 className="text-2xl font-bold mb-6">Daily Check-In Dashboard</h2>
+                  <div className="grid grid-cols-1 gap-6">
                     <DailyCheckin />
-                    <MindfulnessTracker />
-                    <HealthSummary />
                     <MoodChart />
+                  </div>
+                </div>
+              } />
+              <Route path="addiction" element={
+                <div className="container mx-auto p-6">
+                  <h2 className="text-2xl font-bold mb-6">Addiction Recovery Dashboard</h2>
+                  <div className="grid grid-cols-1 gap-6">
                     <AddictionTracker />
+                  </div>
+                </div>
+              } />
+              <Route path="stats" element={
+                <div className="container mx-auto p-6">
+                  <h2 className="text-2xl font-bold mb-6">Health Statistics Dashboard</h2>
+                  <div className="grid grid-cols-1 gap-6">
+                    <HealthSummary />
+                    <MindfulnessTracker />
                   </div>
                 </div>
               } />
