@@ -48,7 +48,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={!session ? <Auth /> : <Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={session ? <Dashboard /> : <Navigate to="/auth" replace />} />
+            <Route path="/dashboard/*" element={session ? <Dashboard /> : <Navigate to="/auth" replace />} />
             <Route path="/profile" element={session ? <Profile /> : <Navigate to="/auth" replace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
