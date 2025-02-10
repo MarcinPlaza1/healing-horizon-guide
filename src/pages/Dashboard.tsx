@@ -1,7 +1,7 @@
+
 import Navigation from "@/components/Navigation";
 import Dashboard from "@/components/Dashboard";
 import ProgressDashboard from "@/components/ProgressDashboard";
-import WellnessSection from "@/components/WellnessSection";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { Routes, Route } from "react-router-dom";
