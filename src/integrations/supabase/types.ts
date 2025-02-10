@@ -94,26 +94,38 @@ export type Database = {
       }
       daily_checkins: {
         Row: {
+          anxiety_level: number | null
+          coping_strategies: string | null
           created_at: string
           id: string
           mood: string
           notes: string | null
+          sleep_quality: string | null
+          stress_level: number | null
           triggers: string | null
           user_id: string
         }
         Insert: {
+          anxiety_level?: number | null
+          coping_strategies?: string | null
           created_at?: string
           id?: string
           mood: string
           notes?: string | null
+          sleep_quality?: string | null
+          stress_level?: number | null
           triggers?: string | null
           user_id: string
         }
         Update: {
+          anxiety_level?: number | null
+          coping_strategies?: string | null
           created_at?: string
           id?: string
           mood?: string
           notes?: string | null
+          sleep_quality?: string | null
+          stress_level?: number | null
           triggers?: string | null
           user_id?: string
         }
