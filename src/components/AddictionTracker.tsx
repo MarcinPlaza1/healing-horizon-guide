@@ -34,9 +34,13 @@ const AddictionTracker = () => {
   const { data: addictions, refetch: refetchAddictions } = useQuery({
     queryKey: ['addictions'],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
       const { data, error } = await supabase
         .from('addictions')
         .select('*')
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -55,9 +59,13 @@ const AddictionTracker = () => {
   const { data: milestones, refetch: refetchMilestones } = useQuery({
     queryKey: ['milestones'],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
       const { data, error } = await supabase
         .from('recovery_milestones')
         .select('*')
+        .eq('user_id', user.id)
         .order('milestone_date', { ascending: false });
 
       if (error) {
@@ -75,16 +83,22 @@ const AddictionTracker = () => {
 
   const updateAddictionStatus = async (addiction: Addiction, newStatus: string) => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
       const updates = {
         status: newStatus,
         last_relapse_date: newStatus === 'relapsed' ? new Date().toISOString() : addiction.last_relapse_date,
-        clean_since: newStatus === 'relapsed' ? new Date().toISOString() : addiction.clean_since,
+        clean_since: newStatus === 'relapsed' ? new Date().toISOString() : 
+                    newStatus === 'recovered' ? new Date().toISOString() : 
+                    addiction.clean_since,
       };
 
       const { error } = await supabase
         .from('addictions')
         .update(updates)
-        .eq('id', addiction.id);
+        .eq('id', addiction.id)
+        .eq('user_id', user.id);
 
       if (error) throw error;
 
@@ -103,6 +117,35 @@ const AddictionTracker = () => {
     }
   };
 
+  const deleteAddiction = async (addiction: Addiction) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      const { error } = await supabase
+        .from('addictions')
+        .delete()
+        .eq('id', addiction.id)
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Addiction Deleted",
+        description: "The record has been permanently deleted.",
+      });
+
+      refetchAddictions();
+      refetchMilestones();
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error deleting addiction",
+        description: error.message,
+      });
+    }
+  };
+
   return (
     <div className="space-y-6">
       <Card>
@@ -113,8 +156,9 @@ const AddictionTracker = () => {
           </div>
           <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
             <DialogTrigger asChild>
-              <Button size="icon">
-                <PlusCircle className="h-4 w-4" />
+              <Button>
+                <PlusCircle className="h-4 w-4 mr-2" />
+                Add Record
               </Button>
             </DialogTrigger>
             <DialogContent>
@@ -135,9 +179,9 @@ const AddictionTracker = () => {
           </Dialog>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {addictions?.length === 0 && (
-              <div className="text-center text-muted-foreground py-8">
+              <div className="md:col-span-2 lg:col-span-3 text-center text-muted-foreground py-8">
                 No records added yet. Click the + button to add one.
               </div>
             )}
@@ -151,6 +195,7 @@ const AddictionTracker = () => {
                   setSelectedAddiction(addiction);
                   setMilestoneDialogOpen(true);
                 }}
+                onDelete={deleteAddiction}
               />
             ))}
           </div>
