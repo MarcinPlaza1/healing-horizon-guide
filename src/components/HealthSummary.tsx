@@ -27,52 +27,110 @@ const HealthSummary = () => {
     total_milestones: 0,
     clean_days: 0,
   });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          setError("Please sign in to view your health summary");
+          return;
+        }
 
-      // Fetch health summary
-      const { data: healthData } = await supabase
-        .from('health_summaries')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('summary_date', new Date().toISOString().split('T')[0])
-        .maybeSingle();
+        // Fetch health summary
+        const { data: healthData, error: healthError } = await supabase
+          .from('health_summaries')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('summary_date', new Date().toISOString().split('T')[0])
+          .maybeSingle();
 
-      if (healthData) {
-        setSummary(healthData);
-      }
+        if (healthError) {
+          console.error('Error fetching health summary:', healthError);
+          setError("Failed to load health summary");
+          return;
+        }
 
-      // Fetch addiction statistics
-      const { data: addictionData } = await supabase
-        .from('addictions')
-        .select('status, clean_since, last_relapse_date')
-        .eq('user_id', user.id);
+        if (healthData) {
+          setSummary(healthData);
+        } else {
+          // If no data exists for today, create a default summary
+          setSummary({
+            mood_average: null,
+            journal_entries: 0
+          });
+        }
 
-      const { data: milestoneData } = await supabase
-        .from('recovery_milestones')
-        .select('id')
-        .eq('user_id', user.id);
+        // Fetch addiction statistics
+        const { data: addictionData, error: addictionError } = await supabase
+          .from('addictions')
+          .select('status, clean_since, last_relapse_date')
+          .eq('user_id', user.id);
 
-      if (addictionData) {
-        const stats = addictionData.reduce((acc, curr) => ({
-          ...acc,
-          [curr.status]: (acc[curr.status as keyof typeof acc] || 0) + 1,
-          clean_days: acc.clean_days + (curr.clean_since ? 
-            Math.floor((new Date().getTime() - new Date(curr.clean_since).getTime()) / (1000 * 60 * 60 * 24)) : 0)
-        }), { active: 0, recovered: 0, relapsed: 0, clean_days: 0 });
+        if (addictionError) {
+          console.error('Error fetching addiction data:', addictionError);
+          return;
+        }
 
-        setAddictionStats({
-          ...stats,
-          total_milestones: milestoneData?.length || 0
-        });
+        const { data: milestoneData } = await supabase
+          .from('recovery_milestones')
+          .select('id')
+          .eq('user_id', user.id);
+
+        if (addictionData) {
+          const stats = addictionData.reduce((acc, curr) => ({
+            ...acc,
+            [curr.status]: (acc[curr.status as keyof typeof acc] || 0) + 1,
+            clean_days: acc.clean_days + (curr.clean_since ? 
+              Math.floor((new Date().getTime() - new Date(curr.clean_since).getTime()) / (1000 * 60 * 60 * 24)) : 0)
+          }), { active: 0, recovered: 0, relapsed: 0, clean_days: 0 });
+
+          setAddictionStats({
+            ...stats,
+            total_milestones: milestoneData?.length || 0
+          });
+        }
+      } catch (err) {
+        console.error('Error in fetchData:', err);
+        setError("An unexpected error occurred");
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchData();
   }, []);
+
+  if (isLoading) {
+    return (
+      <Card className="p-6 glass-card fade-in">
+        <div className="animate-pulse space-y-4">
+          <div className="h-6 bg-primary/10 rounded w-1/4"></div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-20 bg-primary/5 rounded"></div>
+            ))}
+          </div>
+          <div className="h-40 bg-primary/5 rounded"></div>
+        </div>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="p-6 glass-card fade-in">
+        <div className="text-center text-muted-foreground">
+          <p>{error}</p>
+        </div>
+      </Card>
+    );
+  }
 
   if (!summary) return null;
 
