@@ -141,12 +141,17 @@ const Dashboard = () => {
     .filter(widget => widget);
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20">
+    <section className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/10">
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-foreground/90 mb-4 md:mb-0">
-            Your Wellness Dashboard
-          </h1>
+          <div>
+            <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60 mb-2">
+              Your Wellness Dashboard
+            </h1>
+            <p className="text-muted-foreground">
+              Track your progress and maintain your well-being journey
+            </p>
+          </div>
         </div>
 
         <DragDropContext onDragEnd={handleDragEnd}>
@@ -173,26 +178,31 @@ const Dashboard = () => {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           className={`
-                            group relative rounded-lg transition-all duration-200
-                            ${snapshot.isDragging ? "scale-102 shadow-lg" : ""}
+                            group relative rounded-xl transition-all duration-300 
+                            hover:shadow-lg hover:shadow-primary/5
+                            ${snapshot.isDragging ? "scale-102 shadow-xl ring-2 ring-primary/20" : ""}
                           `}
                         >
                           <div 
                             {...provided.dragHandleProps}
-                            className="absolute right-2 top-2 p-1.5 rounded-md bg-background/50 backdrop-blur-sm 
-                              opacity-0 group-hover:opacity-100 transition-opacity cursor-grab z-10"
+                            className="absolute right-2 top-2 p-1.5 rounded-md bg-background/80 backdrop-blur-sm 
+                              opacity-0 group-hover:opacity-100 transition-opacity cursor-grab z-10
+                              hover:bg-secondary"
                           >
                             <Grip className="h-4 w-4 text-muted-foreground" />
                           </div>
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="absolute left-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                            className="absolute left-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity z-10
+                              hover:bg-secondary"
                             onClick={() => toggleFavorite(widget.id)}
                           >
                             <Settings2 className="h-4 w-4 text-muted-foreground" />
                           </Button>
-                          <Widget />
+                          <div className="transform transition-transform duration-300 hover:scale-[1.02]">
+                            <Widget />
+                          </div>
                         </div>
                       )}
                     </Draggable>
