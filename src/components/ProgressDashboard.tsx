@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
-import { ChartLine, Target, Trophy, TrendingUp } from "lucide-react";
+import { ChartLine, Target, Trophy, TrendingUp, Clock, Activity } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 interface ProgressStats {
@@ -17,6 +17,12 @@ interface ProgressStats {
     difficult: number;
     struggling: number;
   };
+  addiction_stats?: {
+    total_active: number;
+    total_recovered: number;
+    longest_clean_streak: number;
+    current_clean_streak: number;
+  };
 }
 
 const ProgressDashboard = () => {
@@ -29,15 +35,44 @@ const ProgressDashboard = () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        const { data, error } = await supabase
+        // Fetch profile stats
+        const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('streak_count, longest_streak, last_check_in, weekly_mood_counts')
           .eq('id', user.id)
           .maybeSingle();
 
-        if (error) throw error;
-        if (data) {
-          setStats(data as ProgressStats);
+        if (profileError) throw profileError;
+
+        // Fetch addiction stats
+        const { data: addictionData, error: addictionError } = await supabase
+          .from('addictions')
+          .select('clean_since, status')
+          .eq('user_id', user.id);
+
+        if (addictionError) throw addictionError;
+
+        let longest_clean_streak = 0;
+        let current_clean_streak = 0;
+        const now = new Date();
+
+        addictionData?.forEach(addiction => {
+          if (addiction.clean_since) {
+            const cleanDays = Math.floor((now.getTime() - new Date(addiction.clean_since).getTime()) / (1000 * 60 * 60 * 24));
+            current_clean_streak = Math.max(current_clean_streak, cleanDays);
+            longest_clean_streak = Math.max(longest_clean_streak, cleanDays);
+          }
+        });
+
+        const addiction_stats = {
+          total_active: addictionData?.filter(a => a.status === 'active').length || 0,
+          total_recovered: addictionData?.filter(a => a.status === 'recovered').length || 0,
+          longest_clean_streak,
+          current_clean_streak,
+        };
+
+        if (profileData) {
+          setStats({ ...profileData, addiction_stats });
         }
       } catch (error) {
         toast({
@@ -86,11 +121,11 @@ const ProgressDashboard = () => {
           <Card className="p-6 glass-card">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Longest Streak</p>
-                <h3 className="text-2xl font-bold mt-1">{stats.longest_streak} days</h3>
+                <p className="text-sm font-medium text-muted-foreground">Clean Streak</p>
+                <h3 className="text-2xl font-bold mt-1">{stats.addiction_stats?.current_clean_streak || 0} days</h3>
               </div>
               <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Trophy className="h-4 w-4 text-primary" />
+                <Clock className="h-4 w-4 text-primary" />
               </div>
             </div>
           </Card>
@@ -110,11 +145,15 @@ const ProgressDashboard = () => {
           <Card className="p-6 glass-card">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Check-ins</p>
-                <h3 className="text-2xl font-bold mt-1">{totalMoods}</h3>
+                <p className="text-sm font-medium text-muted-foreground">Recovery Rate</p>
+                <h3 className="text-2xl font-bold mt-1">
+                  {stats.addiction_stats ? 
+                    Math.round((stats.addiction_stats.total_recovered / 
+                      (stats.addiction_stats.total_recovered + stats.addiction_stats.total_active)) * 100) : 0}%
+                </h3>
               </div>
               <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Target className="h-4 w-4 text-primary" />
+                <Activity className="h-4 w-4 text-primary" />
               </div>
             </div>
           </Card>
@@ -140,6 +179,17 @@ const ProgressDashboard = () => {
                   <span className="text-sm font-medium">{stats.longest_streak} days</span>
                 </div>
                 <Progress value={100} className="h-2" />
+              </div>
+              <div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-sm text-muted-foreground">Clean Streak</span>
+                  <span className="text-sm font-medium">{stats.addiction_stats?.current_clean_streak || 0} days</span>
+                </div>
+                <Progress 
+                  value={(stats.addiction_stats?.current_clean_streak || 0) / 
+                    Math.max(stats.addiction_stats?.longest_clean_streak || 1, 7) * 100} 
+                  className="h-2" 
+                />
               </div>
             </div>
           </Card>

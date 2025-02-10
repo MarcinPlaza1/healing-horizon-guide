@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Clock, BookText, Trophy } from "lucide-react";
+import { Brain, Clock, BookText, Trophy, Target, Pill, Activity } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface HealthSummaryData {
@@ -16,6 +16,7 @@ interface AddictionStats {
   recovered: number;
   relapsed: number;
   total_milestones: number;
+  clean_days: number;
 }
 
 const HealthSummary = () => {
@@ -25,6 +26,7 @@ const HealthSummary = () => {
     recovered: 0,
     relapsed: 0,
     total_milestones: 0,
+    clean_days: 0,
   });
 
   useEffect(() => {
@@ -47,7 +49,7 @@ const HealthSummary = () => {
       // Fetch addiction statistics
       const { data: addictionData } = await supabase
         .from('addictions')
-        .select('status')
+        .select('status, clean_since, last_relapse_date')
         .eq('user_id', user.id);
 
       const { data: milestoneData } = await supabase
@@ -58,8 +60,10 @@ const HealthSummary = () => {
       if (addictionData) {
         const stats = addictionData.reduce((acc, curr) => ({
           ...acc,
-          [curr.status]: (acc[curr.status as keyof typeof acc] || 0) + 1
-        }), { active: 0, recovered: 0, relapsed: 0 });
+          [curr.status]: (acc[curr.status as keyof typeof acc] || 0) + 1,
+          clean_days: acc.clean_days + (curr.clean_since ? 
+            Math.floor((new Date().getTime() - new Date(curr.clean_since).getTime()) / (1000 * 60 * 60 * 24)) : 0)
+        }), { active: 0, recovered: 0, relapsed: 0, clean_days: 0 });
 
         setAddictionStats({
           ...stats,
@@ -128,18 +132,37 @@ const HealthSummary = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mt-4">
-        <div className="text-center">
-          <p className="text-sm text-muted-foreground">Active Records</p>
-          <p className="font-medium text-lg">{addictionStats.active}</p>
-        </div>
-        <div className="text-center">
-          <p className="text-sm text-muted-foreground">Recovered</p>
-          <p className="font-medium text-lg">{addictionStats.recovered}</p>
-        </div>
-        <div className="text-center">
-          <p className="text-sm text-muted-foreground">Need Support</p>
-          <p className="font-medium text-lg">{addictionStats.relapsed}</p>
+      <div className="mt-6">
+        <h4 className="text-md font-semibold mb-3">Recovery Overview</h4>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="p-3 bg-secondary/10 rounded-lg">
+            <div className="flex items-center gap-2 mb-1">
+              <Activity className="h-4 w-4 text-primary" />
+              <p className="text-sm text-muted-foreground">Active Records</p>
+            </div>
+            <p className="font-medium text-lg">{addictionStats.active}</p>
+          </div>
+          <div className="p-3 bg-secondary/10 rounded-lg">
+            <div className="flex items-center gap-2 mb-1">
+              <Target className="h-4 w-4 text-primary" />
+              <p className="text-sm text-muted-foreground">Recovered</p>
+            </div>
+            <p className="font-medium text-lg">{addictionStats.recovered}</p>
+          </div>
+          <div className="p-3 bg-secondary/10 rounded-lg">
+            <div className="flex items-center gap-2 mb-1">
+              <Pill className="h-4 w-4 text-primary" />
+              <p className="text-sm text-muted-foreground">Need Support</p>
+            </div>
+            <p className="font-medium text-lg">{addictionStats.relapsed}</p>
+          </div>
+          <div className="p-3 bg-secondary/10 rounded-lg">
+            <div className="flex items-center gap-2 mb-1">
+              <Clock className="h-4 w-4 text-primary" />
+              <p className="text-sm text-muted-foreground">Total Clean Days</p>
+            </div>
+            <p className="font-medium text-lg">{addictionStats.clean_days}</p>
+          </div>
         </div>
       </div>
     </Card>
