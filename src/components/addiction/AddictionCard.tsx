@@ -27,6 +27,9 @@ import { Addiction, Milestone } from "@/types/addiction";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface AddictionCardProps {
   addiction: Addiction;
@@ -43,6 +46,7 @@ export const AddictionCard = ({
 }: AddictionCardProps) => {
   const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
   const [newGoal, setNewGoal] = useState({ title: "", target_date: "" });
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const { toast } = useToast();
 
   const getStatusColor = (status: string) => {
@@ -157,6 +161,62 @@ export const AddictionCard = ({
       });
     }
   };
+
+  const logActivity = async (date: Date) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      const { error } = await supabase
+        .from('addiction_activity_logs')
+        .insert({
+          addiction_id: addiction.id,
+          user_id: user.id,
+          activity_date: format(date, 'yyyy-MM-dd'),
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Activity Logged",
+        description: "Your activity has been recorded and the counter has been reset.",
+      });
+
+      // Refresh the data
+      window.location.reload();
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error logging activity",
+        description: error.message,
+      });
+    }
+  };
+
+  const [activityDates, setActivityDates] = useState<Date[]>([]);
+
+  // Fetch activity logs when component mounts
+  useEffect(() => {
+    const fetchActivityLogs = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from('addiction_activity_logs')
+        .select('activity_date')
+        .eq('addiction_id', addiction.id)
+        .eq('user_id', user.id);
+
+      if (error) {
+        console.error('Error fetching activity logs:', error);
+        return;
+      }
+
+      setActivityDates(data.map(log => new Date(log.activity_date)));
+    };
+
+    fetchActivityLogs();
+  }, [addiction.id]);
 
   return (
     <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-xl">

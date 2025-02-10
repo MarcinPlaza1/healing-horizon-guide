@@ -9,6 +9,38 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      addiction_activity_logs: {
+        Row: {
+          activity_date: string
+          addiction_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          activity_date: string
+          addiction_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          activity_date?: string
+          addiction_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "addiction_activity_logs_addiction_id_fkey"
+            columns: ["addiction_id"]
+            isOneToOne: false
+            referencedRelation: "addictions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       addiction_types: {
         Row: {
           category: Database["public"]["Enums"]["addiction_category"]
