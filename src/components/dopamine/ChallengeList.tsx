@@ -46,7 +46,14 @@ export function ChallengeList({ onChallengeUpdate }: { onChallengeUpdate?: () =>
       if (error) throw error;
 
       console.log("Fetched challenges:", data);
-      setChallenges(data || []);
+      
+      // Transform the data to ensure difficulty_level is of the correct type
+      const transformedData = (data || []).map(challenge => ({
+        ...challenge,
+        difficulty_level: (challenge.difficulty_level || 'medium') as 'easy' | 'medium' | 'hard'
+      }));
+
+      setChallenges(transformedData);
     } catch (error: any) {
       console.error("Error fetching challenges:", error);
       toast({
