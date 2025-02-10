@@ -3,6 +3,7 @@ import DailyInspiration from "@/components/DailyInspiration";
 import ProgressPreview from "@/components/ProgressPreview";
 import DailyCheckin from "@/components/DailyCheckin";
 import MoodChart from "@/components/MoodChart";
+import MindfulnessTracker from "@/components/MindfulnessTracker";
 
 const Dashboard = () => {
   return (
@@ -12,6 +13,7 @@ const Dashboard = () => {
           <div className="space-y-8">
             <DailyCheckin />
             <MoodChart />
+            <MindfulnessTracker />
           </div>
           <div className="space-y-8">
             <DailyInspiration />

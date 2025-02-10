@@ -68,6 +68,42 @@ export type Database = {
         }
         Relationships: []
       }
+      mindfulness_activities: {
+        Row: {
+          activity_type: string
+          completed_at: string | null
+          created_at: string
+          duration: number
+          id: string
+          mood_after: string | null
+          mood_before: string | null
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          activity_type: string
+          completed_at?: string | null
+          created_at?: string
+          duration: number
+          id?: string
+          mood_after?: string | null
+          mood_before?: string | null
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          activity_type?: string
+          completed_at?: string | null
+          created_at?: string
+          duration?: number
+          id?: string
+          mood_after?: string | null
+          mood_before?: string | null
+          notes?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -77,6 +113,7 @@ export type Database = {
           id: string
           last_check_in: string | null
           longest_streak: number | null
+          mindfulness_settings: Json | null
           preferences: Json | null
           privacy_settings: Json | null
           recovery_start_date: string | null
@@ -94,6 +131,7 @@ export type Database = {
           id: string
           last_check_in?: string | null
           longest_streak?: number | null
+          mindfulness_settings?: Json | null
           preferences?: Json | null
           privacy_settings?: Json | null
           recovery_start_date?: string | null
@@ -111,6 +149,7 @@ export type Database = {
           id?: string
           last_check_in?: string | null
           longest_streak?: number | null
+          mindfulness_settings?: Json | null
           preferences?: Json | null
           privacy_settings?: Json | null
           recovery_start_date?: string | null
