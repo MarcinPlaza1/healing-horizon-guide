@@ -44,7 +44,7 @@ export const AddictionCard = ({
   };
 
   return (
-    <Card className="relative">
+    <Card className="relative hover:shadow-md transition-shadow duration-200">
       <CardContent className="pt-6">
         <div className="flex items-center justify-between mb-4">
           <div className="space-y-1">
@@ -66,13 +66,26 @@ export const AddictionCard = ({
               {addiction.status}
             </div>
             <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onUpdateStatus(addiction, 'recovered')}
-              >
-                Mark Recovered
-              </Button>
+              {addiction.status !== 'recovered' && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onUpdateStatus(addiction, 'recovered')}
+                  className="hover:bg-green-500/10 hover:text-green-500"
+                >
+                  Mark Recovered
+                </Button>
+              )}
+              {addiction.status === 'recovered' && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onUpdateStatus(addiction, 'relapsed')}
+                  className="hover:bg-red-500/10 hover:text-red-500"
+                >
+                  Mark Relapsed
+                </Button>
+              )}
               <Button
                 variant="outline"
                 size="sm"
@@ -84,7 +97,9 @@ export const AddictionCard = ({
           </div>
         </div>
         {addiction.notes && (
-          <p className="text-sm text-muted-foreground mt-2">{addiction.notes}</p>
+          <p className="text-sm text-muted-foreground mt-2 bg-muted/50 p-3 rounded-md">
+            {addiction.notes}
+          </p>
         )}
         
         {/* Milestones section */}
@@ -93,7 +108,10 @@ export const AddictionCard = ({
             <h5 className="text-sm font-medium mb-2">Recovery Milestones</h5>
             <div className="space-y-2">
               {milestones.map((milestone) => (
-                <div key={milestone.id} className="flex items-center gap-2 text-sm">
+                <div 
+                  key={milestone.id} 
+                  className="flex items-center gap-2 text-sm bg-primary/5 p-2 rounded-md"
+                >
                   <Trophy className="h-4 w-4 text-yellow-500" />
                   <span className="font-medium">{milestone.milestone_type}</span>
                   <span className="text-muted-foreground">
@@ -108,3 +126,4 @@ export const AddictionCard = ({
     </Card>
   );
 };
+
