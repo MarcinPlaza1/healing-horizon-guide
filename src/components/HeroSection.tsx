@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Sparkles, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 
 const HeroSection = () => {
   return (
@@ -15,7 +15,7 @@ const HeroSection = () => {
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 hover:bg-primary/20 transition-colors duration-300 cursor-pointer group">
           <Heart className="w-4 h-4 animate-pulse" />
           <span className="text-sm font-medium group-hover:scale-105 transition-transform duration-300">
-            Begin Your Journey to Health
+            Your Journey to Wellness Starts Here
           </span>
         </div>
         
@@ -29,13 +29,13 @@ const HeroSection = () => {
         </h1>
         
         <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto slide-up leading-relaxed" style={{ animationDelay: "0.2s" }}>
-          Take control of your journey with our comprehensive platform designed to support your personal growth.
+          A comprehensive wellness platform offering personalized recovery tracking, nutrition management, mood monitoring, and community support.
         </p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 slide-up" style={{ animationDelay: "0.3s" }}>
           <Link to="/auth">
             <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-6 bg-primary hover:bg-primary/90 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-primary/25">
-              Start Now
+              Start Your Journey
             </Button>
           </Link>
           <Button 
@@ -43,7 +43,7 @@ const HeroSection = () => {
             size="lg" 
             className="w-full sm:w-auto text-lg px-8 py-6 hover:bg-primary/5 transition-all duration-300 hover:scale-105 border-2 hover:border-primary"
           >
-            Learn More
+            Explore Features
           </Button>
         </div>
       </div>
