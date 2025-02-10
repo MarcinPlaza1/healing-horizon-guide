@@ -77,7 +77,14 @@ const AnalyticsDashboard = () => {
         if (error) throw error;
 
         if (data) {
-          setAnalytics(data);
+          // Convert the JSON data to match our AnalyticsSummary interface
+          const formattedData: AnalyticsSummary = {
+            mood_trends: data.mood_trends as AnalyticsSummary['mood_trends'],
+            streak_data: data.streak_data as AnalyticsSummary['streak_data'],
+            recovery_stats: data.recovery_stats as AnalyticsSummary['recovery_stats'],
+            milestone_counts: data.milestone_counts as AnalyticsSummary['milestone_counts']
+          };
+          setAnalytics(formattedData);
         }
       } catch (error) {
         console.error('Error fetching analytics:', error);
@@ -258,3 +265,4 @@ const AnalyticsDashboard = () => {
 };
 
 export default AnalyticsDashboard;
+
