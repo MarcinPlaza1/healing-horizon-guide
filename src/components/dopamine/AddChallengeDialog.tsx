@@ -151,14 +151,13 @@ export function AddChallengeDialog() {
                   {startDate ? format(startDate, "PPP") : "Pick a date"}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent align="start" className="w-auto p-0">
                 <Calendar
                   mode="single"
                   selected={startDate}
-                  onSelect={(date) => {
-                    setStartDate(date);
-                  }}
+                  onSelect={(date) => setStartDate(date || undefined)}
                   disabled={(date) => date < new Date()}
+                  fromDate={new Date()}
                   initialFocus
                 />
               </PopoverContent>
