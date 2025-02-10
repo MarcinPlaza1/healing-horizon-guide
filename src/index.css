@@ -49,7 +49,7 @@
 
 @layer utilities {
   .glass-card {
-    @apply backdrop-blur-md bg-white/80 border border-white/20 shadow-sm;
+    @apply backdrop-blur-md bg-white/90 border border-white/20 shadow-sm;
   }
   
   .fade-in {
@@ -58,6 +58,12 @@
   
   .slide-up {
     @apply animate-[slideUp_0.5s_ease-in-out];
+  }
+
+  .scale-102 {
+    --tw-scale-x: 1.02;
+    --tw-scale-y: 1.02;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
   }
 }
 
@@ -69,4 +75,14 @@
 @keyframes slideUp {
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.floating {
+  animation: float 3s ease-in-out infinite;
 }
