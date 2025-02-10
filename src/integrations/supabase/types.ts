@@ -92,6 +92,39 @@ export type Database = {
           },
         ]
       }
+      analytics_summaries: {
+        Row: {
+          created_at: string
+          id: string
+          milestone_counts: Json | null
+          mood_trends: Json | null
+          recovery_stats: Json | null
+          streak_data: Json | null
+          summary_date: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          milestone_counts?: Json | null
+          mood_trends?: Json | null
+          recovery_stats?: Json | null
+          streak_data?: Json | null
+          summary_date?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          milestone_counts?: Json | null
+          mood_trends?: Json | null
+          recovery_stats?: Json | null
+          streak_data?: Json | null
+          summary_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       daily_checkins: {
         Row: {
           anxiety_level: number | null
