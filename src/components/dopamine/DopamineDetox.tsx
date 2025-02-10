@@ -1,9 +1,11 @@
+
 import { Brain, Target, Clock, Battery, Trophy, ListTodo, BarChart3 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { AddChallengeDialog } from "./AddChallengeDialog";
 import { ChallengeList } from "./ChallengeList";
 import { DailyLogForm } from "./DailyLogForm";
+import { NutritionTracking } from "../nutrition/NutritionTracking";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -193,6 +195,7 @@ export const DopamineDetox = () => {
 
           <div className="space-y-6">
             <DailyLogForm onLogSubmitted={fetchStats} />
+            <NutritionTracking />
           </div>
         </div>
       </div>

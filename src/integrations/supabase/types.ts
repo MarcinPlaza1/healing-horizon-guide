@@ -513,6 +513,109 @@ export type Database = {
         }
         Relationships: []
       }
+      nutrition_goals: {
+        Row: {
+          created_at: string
+          daily_calories: number | null
+          daily_carbs_grams: number | null
+          daily_fat_grams: number | null
+          daily_protein_grams: number | null
+          daily_sugar_grams: number | null
+          daily_water_ml: number | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          daily_calories?: number | null
+          daily_carbs_grams?: number | null
+          daily_fat_grams?: number | null
+          daily_protein_grams?: number | null
+          daily_sugar_grams?: number | null
+          daily_water_ml?: number | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          daily_calories?: number | null
+          daily_carbs_grams?: number | null
+          daily_fat_grams?: number | null
+          daily_protein_grams?: number | null
+          daily_sugar_grams?: number | null
+          daily_water_ml?: number | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nutrition_goals_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nutrition_logs: {
+        Row: {
+          calories: number | null
+          carbs_grams: number | null
+          created_at: string
+          fat_grams: number | null
+          id: string
+          log_date: string
+          meals: Json | null
+          notes: string | null
+          protein_grams: number | null
+          sugar_grams: number | null
+          updated_at: string
+          user_id: string
+          water_ml: number | null
+        }
+        Insert: {
+          calories?: number | null
+          carbs_grams?: number | null
+          created_at?: string
+          fat_grams?: number | null
+          id?: string
+          log_date?: string
+          meals?: Json | null
+          notes?: string | null
+          protein_grams?: number | null
+          sugar_grams?: number | null
+          updated_at?: string
+          user_id: string
+          water_ml?: number | null
+        }
+        Update: {
+          calories?: number | null
+          carbs_grams?: number | null
+          created_at?: string
+          fat_grams?: number | null
+          id?: string
+          log_date?: string
+          meals?: Json | null
+          notes?: string | null
+          protein_grams?: number | null
+          sugar_grams?: number | null
+          updated_at?: string
+          user_id?: string
+          water_ml?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nutrition_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
