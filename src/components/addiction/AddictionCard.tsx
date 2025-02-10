@@ -1,6 +1,5 @@
-
 import { format } from "date-fns";
-import { AlertTriangle, CheckCircle, Clock, MoreVertical, Calendar, Target, FileText, Plus, Goal } from "lucide-react";
+import { AlertTriangle, CheckCircle, Clock, MoreVertical, Calendar, Target, FileText, Plus, Goal, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
