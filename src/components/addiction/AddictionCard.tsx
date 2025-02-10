@@ -1,6 +1,6 @@
 
 import { format } from "date-fns";
-import { Trophy, AlertTriangle, CheckCircle, Clock, MoreVertical, Calendar, Target, FileText } from "lucide-react";
+import { Trophy, AlertTriangle, CheckCircle, Clock, MoreVertical, Calendar, Target, FileText, Plus, Goal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -146,6 +146,68 @@ export const AddictionCard = ({
               <p className="text-sm text-muted-foreground">{addiction.notes}</p>
             </div>
           )}
+
+          {/* Goals Section */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h5 className="text-sm font-medium flex items-center gap-2">
+                <Goal className="h-4 w-4" />
+                Recovery Goals
+              </h5>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 px-2"
+                onClick={() => {/* TODO: Implement add goal */}}
+              >
+                <Plus className="h-4 w-4" />
+                Add Goal
+              </Button>
+            </div>
+            <div className="space-y-2">
+              {addiction.goals?.map((goal, index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg border p-3 transition-colors",
+                    goal.completed ? "bg-green-500/5 border-green-500/20" : "bg-card hover:bg-muted/50"
+                  )}
+                >
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className={cn(
+                      "h-5 w-5 p-0",
+                      goal.completed && "text-green-500"
+                    )}
+                    onClick={() => {/* TODO: Implement toggle goal */}}
+                  >
+                    <CheckCircle className="h-4 w-4" />
+                  </Button>
+                  <div className="flex-1 min-w-0">
+                    <p className={cn(
+                      "text-sm font-medium",
+                      goal.completed && "text-muted-foreground line-through"
+                    )}>
+                      {goal.title}
+                    </p>
+                    {goal.target_date && (
+                      <p className="text-xs text-muted-foreground">
+                        Target: {format(new Date(goal.target_date), "PPP")}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {(!addiction.goals || addiction.goals.length === 0) && (
+                <div className="text-center py-6 text-muted-foreground">
+                  <Goal className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                  <p className="text-sm">No goals set yet</p>
+                  <p className="text-xs">Add your first recovery goal to track your progress</p>
+                </div>
+              )}
+            </div>
+          </div>
           
           {addiction.triggers && addiction.triggers.length > 0 && (
             <div className="space-y-3">

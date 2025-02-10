@@ -41,6 +41,7 @@ export type Database = {
           addiction_type_id: string | null
           clean_since: string | null
           created_at: string
+          goals: Json | null
           id: string
           last_relapse_date: string | null
           name: string
@@ -55,6 +56,7 @@ export type Database = {
           addiction_type_id?: string | null
           clean_since?: string | null
           created_at?: string
+          goals?: Json | null
           id?: string
           last_relapse_date?: string | null
           name: string
@@ -69,6 +71,7 @@ export type Database = {
           addiction_type_id?: string | null
           clean_since?: string | null
           created_at?: string
+          goals?: Json | null
           id?: string
           last_relapse_date?: string | null
           name?: string

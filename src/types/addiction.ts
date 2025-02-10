@@ -10,6 +10,11 @@ export interface Addiction {
   clean_since?: string;
   last_relapse_date?: string;
   addiction_type_id: string;
+  goals?: {
+    title: string;
+    completed: boolean;
+    target_date?: string;
+  }[];
 }
 
 export interface AddictionType {
