@@ -68,4 +68,3 @@ export const dashboardRoutes = [
     element: <Dashboard />
   }
 ];
-

@@ -75,7 +75,10 @@ export const NutritionTracking = () => {
         .maybeSingle();
 
       if (logData) {
-        setTodayLog(logData);
+        setTodayLog({
+          ...logData,
+          meals: logData.meals || []
+        });
       }
     } catch (error: any) {
       toast({
