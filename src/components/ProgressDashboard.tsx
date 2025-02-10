@@ -72,18 +72,19 @@ const ProgressDashboard = () => {
         };
 
         if (profileData) {
-          // Ensure weekly_mood_counts is properly typed
-          const weekly_mood_counts = profileData.weekly_mood_counts as ProgressStats['weekly_mood_counts'] || {
+          // Ensure weekly_mood_counts is properly typed with default values
+          const weekly_mood_counts: ProgressStats['weekly_mood_counts'] = {
             great: 0,
             good: 0,
             okay: 0,
             difficult: 0,
-            struggling: 0
+            struggling: 0,
+            ...profileData.weekly_mood_counts as Record<string, number>
           };
 
           setStats({
-            streak_count: profileData.streak_count,
-            longest_streak: profileData.longest_streak,
+            streak_count: profileData.streak_count || 0,
+            longest_streak: profileData.longest_streak || 0,
             last_check_in: profileData.last_check_in,
             weekly_mood_counts,
             addiction_stats
@@ -233,4 +234,3 @@ const ProgressDashboard = () => {
 };
 
 export default ProgressDashboard;
-
