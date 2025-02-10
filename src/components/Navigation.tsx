@@ -1,8 +1,28 @@
 
-import { Link } from "react-router-dom";
-import { Heart, Users, Calendar } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Heart, Users, Calendar, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 
 const Navigation = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleSignOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      navigate("/auth");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error signing out",
+        description: error.message,
+      });
+    }
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-card py-4">
       <div className="container mx-auto px-4">
@@ -20,6 +40,15 @@ const Navigation = () => {
               <Calendar className="w-4 h-4" />
               <span>Progress</span>
             </Link>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex items-center space-x-1"
+              onClick={handleSignOut}
+            >
+              <LogOut className="w-4 h-4" />
+              <span>Sign Out</span>
+            </Button>
           </div>
         </div>
       </div>
