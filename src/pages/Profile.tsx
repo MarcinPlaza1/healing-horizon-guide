@@ -6,6 +6,30 @@ import ProfileSettings from "@/components/ProfileSettings";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 
+interface Profile {
+  id: string;
+  created_at: string;
+  username: string | null;
+  full_name: string | null;
+  avatar_url: string | null;
+  recovery_start_date: string | null;
+  bio: string | null;
+  website: string | null;
+  privacy_settings: {
+    email_visible: boolean;
+    profile_public: boolean;
+  };
+  preferences: {
+    notifications: boolean;
+    theme: 'light' | 'dark';
+  };
+  social_links: {
+    twitter: string | null;
+    linkedin: string | null;
+    instagram: string | null;
+  };
+}
+
 const Profile = () => {
   const { toast } = useToast();
   const [userId, setUserId] = useState<string | null>(null);
@@ -38,7 +62,7 @@ const Profile = () => {
         });
         return null;
       }
-      return data;
+      return data as Profile;
     },
     enabled: !!userId,
   });
