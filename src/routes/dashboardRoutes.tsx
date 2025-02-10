@@ -8,6 +8,7 @@ import ProgressDashboard from "@/components/ProgressDashboard";
 import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import CalendarDashboard from "@/components/CalendarDashboard";
 import DopamineDetox from "@/components/dopamine/DopamineDetox";
+import { NutritionTracking } from "@/components/nutrition/NutritionTracking";
 
 export const dashboardRoutes = [
   {
@@ -25,6 +26,20 @@ export const dashboardRoutes = [
   {
     path: "dopamine-detox",
     element: <DopamineDetox />
+  },
+  {
+    path: "nutrition",
+    element: (
+      <div className="container mx-auto p-6">
+        <div className="max-w-[1800px] mx-auto">
+          <h2 className="text-3xl font-bold mb-2">Nutrition Dashboard</h2>
+          <p className="text-muted-foreground mb-6">
+            Track your daily nutrition, water intake, and maintain healthy eating habits
+          </p>
+          <NutritionTracking />
+        </div>
+      </div>
+    )
   },
   {
     path: "daily-checkin",

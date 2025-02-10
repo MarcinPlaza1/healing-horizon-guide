@@ -75,9 +75,30 @@ export const NutritionTracking = () => {
         .maybeSingle();
 
       if (logData) {
+        // Ensure meals is an array and handle potential null values
+        const meals = Array.isArray(logData.meals) ? logData.meals : [];
         setTodayLog({
           ...logData,
-          meals: logData.meals || []
+          meals,
+          water_ml: logData.water_ml || 0,
+          calories: logData.calories || 0,
+          sugar_grams: logData.sugar_grams || 0,
+          fat_grams: logData.fat_grams || 0,
+          protein_grams: logData.protein_grams || 0,
+          carbs_grams: logData.carbs_grams || 0,
+          notes: logData.notes || ''
+        });
+      } else {
+        // Set default values if no log exists
+        setTodayLog({
+          water_ml: 0,
+          calories: 0,
+          sugar_grams: 0,
+          fat_grams: 0,
+          protein_grams: 0,
+          carbs_grams: 0,
+          meals: [],
+          notes: ''
         });
       }
     } catch (error: any) {
