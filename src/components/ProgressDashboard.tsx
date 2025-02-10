@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
-import { ChartLine, Target, Trophy, TrendingUp, Clock, Activity } from "lucide-react";
+import { ChartLine, Target, Trophy, TrendingUp, Clock, Activity, Star } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 interface ProgressStats {
@@ -22,6 +22,8 @@ interface ProgressStats {
     total_recovered: number;
     longest_clean_streak: number;
     current_clean_streak: number;
+    total_milestones: number;
+    recovery_rate: number;
   };
 }
 
@@ -44,17 +46,25 @@ const ProgressDashboard = () => {
 
         if (profileError) throw profileError;
 
-        // Fetch addiction stats
+        // Fetch addiction stats with milestones
         const { data: addictionData, error: addictionError } = await supabase
           .from('addictions')
-          .select('clean_since, status')
+          .select(`
+            id,
+            clean_since,
+            status,
+            recovery_milestones (
+              id
+            )
+          `)
           .eq('user_id', user.id);
 
         if (addictionError) throw addictionError;
 
+        const now = new Date();
         let longest_clean_streak = 0;
         let current_clean_streak = 0;
-        const now = new Date();
+        let total_milestones = 0;
 
         addictionData?.forEach(addiction => {
           if (addiction.clean_since) {
@@ -62,17 +72,26 @@ const ProgressDashboard = () => {
             current_clean_streak = Math.max(current_clean_streak, cleanDays);
             longest_clean_streak = Math.max(longest_clean_streak, cleanDays);
           }
+          if (addiction.recovery_milestones) {
+            total_milestones += addiction.recovery_milestones.length;
+          }
         });
 
+        const total_active = addictionData?.filter(a => a.status === 'active').length || 0;
+        const total_recovered = addictionData?.filter(a => a.status === 'recovered').length || 0;
+        const total = total_active + total_recovered;
+        const recovery_rate = total > 0 ? (total_recovered / total) * 100 : 0;
+
         const addiction_stats = {
-          total_active: addictionData?.filter(a => a.status === 'active').length || 0,
-          total_recovered: addictionData?.filter(a => a.status === 'recovered').length || 0,
+          total_active,
+          total_recovered,
           longest_clean_streak,
           current_clean_streak,
+          total_milestones,
+          recovery_rate
         };
 
         if (profileData) {
-          // Ensure weekly_mood_counts is properly typed with default values
           const weekly_mood_counts: ProgressStats['weekly_mood_counts'] = {
             great: 0,
             good: 0,
@@ -117,7 +136,7 @@ const ProgressDashboard = () => {
             Your Progress Journey
           </h1>
           <p className="text-muted-foreground">
-            Track your wellness achievements and growth over time
+            Track your wellness achievements and recovery milestones
           </p>
         </div>
 
@@ -125,7 +144,7 @@ const ProgressDashboard = () => {
           <Card className="p-6 glass-card">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Current Streak</p>
+                <p className="text-sm font-medium text-muted-foreground">Daily Streak</p>
                 <h3 className="text-2xl font-bold mt-1">{stats.streak_count} days</h3>
               </div>
               <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -149,23 +168,9 @@ const ProgressDashboard = () => {
           <Card className="p-6 glass-card">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Weekly Progress</p>
-                <h3 className="text-2xl font-bold mt-1">{Math.round(positivePercentage)}%</h3>
-              </div>
-              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <ChartLine className="h-4 w-4 text-primary" />
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 glass-card">
-            <div className="flex items-start justify-between">
-              <div>
                 <p className="text-sm font-medium text-muted-foreground">Recovery Rate</p>
                 <h3 className="text-2xl font-bold mt-1">
-                  {stats.addiction_stats ? 
-                    Math.round((stats.addiction_stats.total_recovered / 
-                      (stats.addiction_stats.total_recovered + stats.addiction_stats.total_active)) * 100) : 0}%
+                  {Math.round(stats.addiction_stats?.recovery_rate || 0)}%
                 </h3>
               </div>
               <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -173,15 +178,27 @@ const ProgressDashboard = () => {
               </div>
             </div>
           </Card>
+
+          <Card className="p-6 glass-card">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Total Milestones</p>
+                <h3 className="text-2xl font-bold mt-1">{stats.addiction_stats?.total_milestones || 0}</h3>
+              </div>
+              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Trophy className="h-4 w-4 text-primary" />
+              </div>
+            </div>
+          </Card>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card className="p-6 glass-card">
-            <h3 className="text-lg font-semibold mb-4">Streak Progress</h3>
+            <h3 className="text-lg font-semibold mb-4">Progress Tracking</h3>
             <div className="space-y-4">
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Current Streak</span>
+                  <span className="text-sm text-muted-foreground">Daily Check-in Streak</span>
                   <span className="text-sm font-medium">{stats.streak_count} days</span>
                 </div>
                 <Progress 
@@ -191,19 +208,31 @@ const ProgressDashboard = () => {
               </div>
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Best Streak</span>
-                  <span className="text-sm font-medium">{stats.longest_streak} days</span>
+                  <span className="text-sm text-muted-foreground">Longest Clean Streak</span>
+                  <span className="text-sm font-medium">{stats.addiction_stats?.longest_clean_streak || 0} days</span>
                 </div>
                 <Progress value={100} className="h-2" />
               </div>
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Clean Streak</span>
+                  <span className="text-sm text-muted-foreground">Current Clean Streak</span>
                   <span className="text-sm font-medium">{stats.addiction_stats?.current_clean_streak || 0} days</span>
                 </div>
                 <Progress 
                   value={(stats.addiction_stats?.current_clean_streak || 0) / 
                     Math.max(stats.addiction_stats?.longest_clean_streak || 1, 7) * 100} 
+                  className="h-2" 
+                />
+              </div>
+              <div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-sm text-muted-foreground">Recovery Progress</span>
+                  <span className="text-sm font-medium">
+                    {stats.addiction_stats?.total_recovered || 0} / {(stats.addiction_stats?.total_active || 0) + (stats.addiction_stats?.total_recovered || 0)} recovered
+                  </span>
+                </div>
+                <Progress 
+                  value={stats.addiction_stats?.recovery_rate || 0}
                   className="h-2" 
                 />
               </div>
