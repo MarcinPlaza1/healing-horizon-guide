@@ -46,7 +46,12 @@ const DailyCheckin = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsSubmitting(true);
+      
+      const { data: { user }} = await supabase.auth.getUser();
+      if (!user) throw new Error("User not found");
+
       const { error } = await supabase.from("daily_checkins").insert({
+        user_id: user.id,
         mood: values.mood,
         triggers: values.triggers,
         notes: values.notes,
