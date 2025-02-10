@@ -2,7 +2,7 @@
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
-import { DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Addiction, Milestone } from "@/types/addiction";
 import { AddictionCard } from "./AddictionCard";
 
@@ -31,11 +31,13 @@ export const AddictionList = ({
         <p className="text-sm mb-6 max-w-md">
           Start tracking your recovery journey by adding your first record. We're here to support you every step of the way.
         </p>
-        <DialogTrigger asChild>
-          <Button size="lg" onClick={() => setAddDialogOpen(true)}>
-            Add Your First Record
-          </Button>
-        </DialogTrigger>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button size="lg" onClick={() => setAddDialogOpen(true)}>
+              Add Your First Record
+            </Button>
+          </DialogTrigger>
+        </Dialog>
       </div>
     );
   }
@@ -56,4 +58,3 @@ export const AddictionList = ({
     </CardContent>
   );
 };
-

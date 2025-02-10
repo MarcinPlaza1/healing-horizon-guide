@@ -20,6 +20,7 @@ interface Goal {
   title: string;
   completed: boolean;
   target_date?: string;
+  [key: string]: string | boolean | undefined; // Add index signature to match Json type
 }
 
 interface AddictionGoalsProps {
@@ -50,7 +51,7 @@ export const AddictionGoals = ({ goals = [], addictionId, onGoalsUpdate }: Addic
       const updatedGoals = [
         ...goals,
         { ...newGoal, completed: false }
-      ];
+      ] as Goal[];
 
       const { error } = await supabase
         .from('addictions')
@@ -84,7 +85,7 @@ export const AddictionGoals = ({ goals = [], addictionId, onGoalsUpdate }: Addic
 
       const updatedGoals = goals.map((goal, index) =>
         index === goalIndex ? { ...goal, completed: !goal.completed } : goal
-      );
+      ) as Goal[];
 
       const { error } = await supabase
         .from('addictions')
