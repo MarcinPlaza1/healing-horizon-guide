@@ -16,6 +16,12 @@ interface DashboardPreferences {
   expanded_widgets: string[];
 }
 
+const DEFAULT_PREFERENCES: DashboardPreferences = {
+  widget_order: ["health_summary", "daily_inspiration", "progress", "daily_checkin", "mood_chart", "mindfulness"],
+  favorite_widgets: ["health_summary", "mood_chart", "mindfulness"],
+  expanded_widgets: ["health_summary"]
+};
+
 const widgetComponents: { [key: string]: React.ComponentType } = {
   health_summary: HealthSummary,
   daily_inspiration: DailyInspiration,
@@ -26,7 +32,7 @@ const widgetComponents: { [key: string]: React.ComponentType } = {
 };
 
 const Dashboard = () => {
-  const [preferences, setPreferences] = useState<DashboardPreferences | null>(null);
+  const [preferences, setPreferences] = useState<DashboardPreferences>(DEFAULT_PREFERENCES);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -41,7 +47,7 @@ const Dashboard = () => {
         .single();
 
       if (data?.dashboard_preferences) {
-        setPreferences(data.dashboard_preferences);
+        setPreferences(data.dashboard_preferences as DashboardPreferences);
       }
     };
 
@@ -49,13 +55,13 @@ const Dashboard = () => {
   }, []);
 
   const handleDragEnd = async (result: any) => {
-    if (!result.destination || !preferences) return;
+    if (!result.destination) return;
 
     const newOrder = Array.from(preferences.widget_order);
     const [reorderedItem] = newOrder.splice(result.source.index, 1);
     newOrder.splice(result.destination.index, 0, reorderedItem);
 
-    const newPreferences = {
+    const newPreferences: DashboardPreferences = {
       ...preferences,
       widget_order: newOrder,
     };
@@ -74,16 +80,17 @@ const Dashboard = () => {
       toast({
         variant: "destructive",
         title: "Error saving preferences",
-        description: "Your widget order couldn't be saved.",
+        description: "Your widget order couldn't be saved. Please try again.",
       });
     }
   };
 
-  if (!preferences) return null;
-
   return (
-    <section className="py-16 px-4 bg-secondary/30">
+    <section className="py-16 px-4 min-h-screen bg-gradient-to-br from-secondary/30 to-background">
       <div className="container mx-auto">
+        <h1 className="text-3xl font-bold text-foreground/90 mb-8 text-center">
+          Your Wellness Dashboard
+        </h1>
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId="widgets">
             {(provided) => (
@@ -98,11 +105,14 @@ const Dashboard = () => {
 
                   return (
                     <Draggable key={widgetId} draggableId={widgetId} index={index}>
-                      {(provided) => (
+                      {(provided, snapshot) => (
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
+                          className={`transition-transform duration-200 ${
+                            snapshot.isDragging ? "scale-102 shadow-lg" : ""
+                          }`}
                         >
                           <Widget />
                         </div>
