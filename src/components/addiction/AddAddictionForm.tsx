@@ -49,10 +49,18 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
 
   const onSubmit = async (values: any) => {
     try {
+      // Get the current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error("You must be logged in to add an addiction record");
+      }
+
       const { error } = await supabase
         .from('addictions')
         .insert([{
           ...values,
+          user_id: user.id, // Add the user_id to the record
           start_date: values.start_date.toISOString(),
           clean_since: values.start_date.toISOString(),
         }]);
