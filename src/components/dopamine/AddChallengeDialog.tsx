@@ -102,6 +102,11 @@ export function AddChallengeDialog() {
     setDurationDays("");
   };
 
+  const handleDateSelect = (date: Date | undefined) => {
+    console.log("Selected date:", date);
+    setStartDate(date);
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -151,14 +156,17 @@ export function AddChallengeDialog() {
                   {startDate ? format(startDate, "PPP") : "Pick a date"}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent align="start" className="w-auto p-0">
+              <PopoverContent className="w-auto p-0">
                 <Calendar
                   mode="single"
                   selected={startDate}
-                  onSelect={(date) => setStartDate(date || undefined)}
-                  disabled={(date) => date < new Date()}
-                  fromDate={new Date()}
+                  onSelect={handleDateSelect}
                   initialFocus
+                  disabled={(date) => {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    return date < today;
+                  }}
                 />
               </PopoverContent>
             </Popover>
