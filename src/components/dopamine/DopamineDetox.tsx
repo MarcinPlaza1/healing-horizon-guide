@@ -1,8 +1,10 @@
+
 import { Brain, Target, Clock, Battery, Trophy } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { AddChallengeDialog } from "./AddChallengeDialog";
 import { ChallengeList } from "./ChallengeList";
+import { DailyLogForm } from "./DailyLogForm";
 
 export const DopamineDetox = () => {
   return (
@@ -64,43 +66,53 @@ export const DopamineDetox = () => {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
-          <Card className="bg-card/50 backdrop-blur-sm">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle>Active Challenges</CardTitle>
-                <CardDescription>Your ongoing dopamine detox challenges</CardDescription>
-              </div>
-              <AddChallengeDialog />
-            </CardHeader>
-            <CardContent>
-              <ChallengeList />
-            </CardContent>
-          </Card>
+          <div className="space-y-6">
+            <Card className="bg-card/50 backdrop-blur-sm">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Active Challenges</CardTitle>
+                  <CardDescription>Your ongoing dopamine detox challenges</CardDescription>
+                </div>
+                <AddChallengeDialog />
+              </CardHeader>
+              <CardContent>
+                <ChallengeList />
+              </CardContent>
+            </Card>
 
-          <Card className="bg-card/50 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle>Recent Achievements</CardTitle>
-              <CardDescription>Milestones in your detox journey</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <Trophy className="h-8 w-8 text-primary/60" />
-                  <div>
-                    <p className="font-medium">First Day Complete</p>
-                    <p className="text-sm text-muted-foreground">Completed a full day of digital detox</p>
+            <Card className="bg-card/50 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle>Recent Achievements</CardTitle>
+                <CardDescription>Milestones in your detox journey</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4">
+                    <Trophy className="h-8 w-8 text-primary/60" />
+                    <div>
+                      <p className="font-medium">First Day Complete</p>
+                      <p className="text-sm text-muted-foreground">
+                        Completed a full day of digital detox
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <Trophy className="h-8 w-8 text-primary/60" />
+                    <div>
+                      <p className="font-medium">Early Bird</p>
+                      <p className="text-sm text-muted-foreground">
+                        Avoided screens for the first hour after waking
+                      </p>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <Trophy className="h-8 w-8 text-primary/60" />
-                  <div>
-                    <p className="font-medium">Early Bird</p>
-                    <p className="text-sm text-muted-foreground">Avoided screens for the first hour after waking</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="space-y-6">
+            <DailyLogForm />
+          </div>
         </div>
       </div>
     </div>

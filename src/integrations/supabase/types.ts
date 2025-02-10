@@ -341,9 +341,14 @@ export type Database = {
           completed_tasks: string[] | null
           created_at: string
           digital_wellness_score: number | null
+          focus_challenges: string[] | null
           focus_score: number | null
           id: string
+          improvement_areas: string[] | null
+          mood_rating: string | null
           notes: string | null
+          screen_time_minutes: number | null
+          success_factors: string[] | null
           triggers: string[] | null
           user_id: string
         }
@@ -353,9 +358,14 @@ export type Database = {
           completed_tasks?: string[] | null
           created_at?: string
           digital_wellness_score?: number | null
+          focus_challenges?: string[] | null
           focus_score?: number | null
           id?: string
+          improvement_areas?: string[] | null
+          mood_rating?: string | null
           notes?: string | null
+          screen_time_minutes?: number | null
+          success_factors?: string[] | null
           triggers?: string[] | null
           user_id: string
         }
@@ -365,9 +375,14 @@ export type Database = {
           completed_tasks?: string[] | null
           created_at?: string
           digital_wellness_score?: number | null
+          focus_challenges?: string[] | null
           focus_score?: number | null
           id?: string
+          improvement_areas?: string[] | null
+          mood_rating?: string | null
           notes?: string | null
+          screen_time_minutes?: number | null
+          success_factors?: string[] | null
           triggers?: string[] | null
           user_id?: string
         }
