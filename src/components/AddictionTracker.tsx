@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { PlusCircle, Trophy, AlertTriangle, CheckCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -52,14 +51,17 @@ const AddictionTracker = () => {
         return [];
       }
 
-      return (data || []).map(item => ({
-        ...item,
-        goals: Array.isArray(item.goals) ? item.goals.map(goal => ({
-          title: String(goal.title || ''),
-          completed: Boolean(goal.completed || false),
-          target_date: goal.target_date ? String(goal.target_date) : undefined
-        })) : []
-      })) as Addiction[];
+      return (data || []).map(item => {
+        const rawGoals = item.goals as Array<{ title?: string; completed?: boolean; target_date?: string }> || [];
+        return {
+          ...item,
+          goals: rawGoals.map(goal => ({
+            title: String(goal?.title || ''),
+            completed: Boolean(goal?.completed || false),
+            target_date: goal?.target_date ? String(goal.target_date) : undefined
+          }))
+        } as Addiction;
+      });
     },
   });
 
@@ -115,7 +117,7 @@ const AddictionTracker = () => {
       });
 
       refetchAddictions();
-      refetchMilestones(); // Refresh milestones as they might have changed
+      refetchMilestones();
     } catch (error: any) {
       toast({
         variant: "destructive",
