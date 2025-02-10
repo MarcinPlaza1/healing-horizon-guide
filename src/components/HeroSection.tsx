@@ -7,6 +7,8 @@ const HeroSection = () => {
     <section className="relative pt-32 pb-16 px-4 overflow-hidden min-h-[90vh] flex items-center">
       <div className="absolute inset-0 bg-gradient-to-r from-purple-50 to-blue-50 opacity-50" />
       <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1649972904349-6e44c42644a7')] bg-cover bg-center opacity-10" />
+      <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/30 rounded-full blur-3xl" />
+      <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-400/30 rounded-full blur-3xl" />
       
       <div className="container mx-auto text-center relative z-10">
         <span className="inline-block px-4 py-1.5 text-sm font-medium bg-primary/10 text-primary rounded-full mb-6 slide-up">
@@ -23,11 +25,11 @@ const HeroSection = () => {
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 slide-up" style={{ animationDelay: "0.3s" }}>
           <Link to="/auth">
-            <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-6 bg-primary hover:bg-primary/90">
+            <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-6 bg-primary hover:bg-primary/90 transition-all duration-300">
               Start Your Journey
             </Button>
           </Link>
-          <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8 py-6">
+          <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8 py-6 hover:bg-primary/5 transition-all duration-300">
             Learn More
           </Button>
         </div>
