@@ -10,6 +10,7 @@ import { NutritionLoadingState } from "./components/NutritionLoadingState";
 import { NutritionErrorState } from "./components/NutritionErrorState";
 import { NutritionEmptyState } from "./components/NutritionEmptyState";
 import { NutritionProgressTracker } from "./components/NutritionProgressTracker";
+import { PhysicalParamsForm } from "./components/PhysicalParamsForm";
 
 interface NutritionGoals {
   daily_water_ml: number;
@@ -18,6 +19,11 @@ interface NutritionGoals {
   daily_protein_grams: number;
   daily_fat_grams: number;
   daily_carbs_grams: number;
+  weight_kg: number | null;
+  height_cm: number | null;
+  age: number | null;
+  gender: "male" | "female" | "other" | null;
+  activity_level: "sedentary" | "light" | "moderate" | "very_active" | "extra_active" | null;
 }
 
 interface NutritionLog {
@@ -38,10 +44,6 @@ export const NutritionTracking = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
-
-  useEffect(() => {
-    fetchNutritionData();
-  }, []);
 
   const fetchNutritionData = async () => {
     try {
@@ -89,7 +91,6 @@ export const NutritionTracking = () => {
       if (logError) throw logError;
 
       if (logData) {
-        // Ensure meals is an array and handle potential null values
         const meals = Array.isArray(logData.meals) ? logData.meals : [];
         setTodayLog({
           ...logData,
@@ -103,7 +104,6 @@ export const NutritionTracking = () => {
           notes: logData.notes || ''
         });
       } else {
-        // Set default values if no log exists
         setTodayLog({
           water_ml: 0,
           calories: 0,
@@ -127,6 +127,10 @@ export const NutritionTracking = () => {
     }
   };
 
+  useEffect(() => {
+    fetchNutritionData();
+  }, []);
+
   if (isLoading) {
     return <NutritionLoadingState />;
   }
@@ -141,6 +145,17 @@ export const NutritionTracking = () => {
 
   return (
     <div className="space-y-6">
+      <PhysicalParamsForm
+        initialParams={{
+          weight_kg: goals.weight_kg,
+          height_cm: goals.height_cm,
+          age: goals.age,
+          gender: goals.gender,
+          activity_level: goals.activity_level,
+        }}
+        onParamsUpdated={fetchNutritionData}
+      />
+
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">

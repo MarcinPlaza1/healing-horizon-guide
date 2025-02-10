@@ -515,6 +515,8 @@ export type Database = {
       }
       nutrition_goals: {
         Row: {
+          activity_level: string | null
+          age: number | null
           created_at: string
           daily_calories: number | null
           daily_carbs_grams: number | null
@@ -522,11 +524,16 @@ export type Database = {
           daily_protein_grams: number | null
           daily_sugar_grams: number | null
           daily_water_ml: number | null
+          gender: string | null
+          height_cm: number | null
           id: string
           updated_at: string
           user_id: string
+          weight_kg: number | null
         }
         Insert: {
+          activity_level?: string | null
+          age?: number | null
           created_at?: string
           daily_calories?: number | null
           daily_carbs_grams?: number | null
@@ -534,11 +541,16 @@ export type Database = {
           daily_protein_grams?: number | null
           daily_sugar_grams?: number | null
           daily_water_ml?: number | null
+          gender?: string | null
+          height_cm?: number | null
           id?: string
           updated_at?: string
           user_id: string
+          weight_kg?: number | null
         }
         Update: {
+          activity_level?: string | null
+          age?: number | null
           created_at?: string
           daily_calories?: number | null
           daily_carbs_grams?: number | null
@@ -546,9 +558,12 @@ export type Database = {
           daily_protein_grams?: number | null
           daily_sugar_grams?: number | null
           daily_water_ml?: number | null
+          gender?: string | null
+          height_cm?: number | null
           id?: string
           updated_at?: string
           user_id?: string
+          weight_kg?: number | null
         }
         Relationships: [
           {
@@ -719,7 +734,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      calculate_daily_needs: {
+        Args: {
+          weight_kg: number
+          height_cm: number
+          age: number
+          gender: string
+          activity_level: string
+        }
+        Returns: {
+          daily_calories: number
+          daily_protein_grams: number
+          daily_fat_grams: number
+          daily_carbs_grams: number
+        }[]
+      }
     }
     Enums: {
       achievement_type:
