@@ -1,5 +1,5 @@
 
-import { ChevronRight, Heart, Calendar, Settings2 } from "lucide-react";
+import { ChevronRight, Heart, Calendar, Settings2, LayoutDashboard } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,6 +14,11 @@ import {
 import { cn } from "@/lib/utils";
 
 const menuItems = [
+  {
+    title: "Main Dashboard",
+    icon: LayoutDashboard,
+    section: "dashboard",
+  },
   {
     title: "Wellness",
     icon: Heart,
