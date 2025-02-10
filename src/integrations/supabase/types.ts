@@ -254,31 +254,46 @@ export type Database = {
       dopamine_detox_achievements: {
         Row: {
           achieved_at: string
+          achievement_type:
+            | Database["public"]["Enums"]["achievement_type"]
+            | null
           badge_type: string | null
           challenge_id: string | null
           created_at: string
           description: string | null
           id: string
+          level: number | null
+          points: number | null
           title: string
           user_id: string
         }
         Insert: {
           achieved_at?: string
+          achievement_type?:
+            | Database["public"]["Enums"]["achievement_type"]
+            | null
           badge_type?: string | null
           challenge_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
+          level?: number | null
+          points?: number | null
           title: string
           user_id: string
         }
         Update: {
           achieved_at?: string
+          achievement_type?:
+            | Database["public"]["Enums"]["achievement_type"]
+            | null
           badge_type?: string | null
           challenge_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
+          level?: number | null
+          points?: number | null
           title?: string
           user_id?: string
         }
@@ -294,9 +309,13 @@ export type Database = {
       }
       dopamine_detox_challenges: {
         Row: {
+          best_streak: number | null
           challenge_type: Database["public"]["Enums"]["dopamine_challenge_type"]
           created_at: string
+          current_streak: number | null
+          daily_goals: Json | null
           description: string | null
+          difficulty_level: string | null
           duration_days: number | null
           end_date: string | null
           id: string
@@ -304,12 +323,17 @@ export type Database = {
           progress: number | null
           start_date: string | null
           status: string | null
+          target_reduction_hours: number | null
           user_id: string
         }
         Insert: {
+          best_streak?: number | null
           challenge_type: Database["public"]["Enums"]["dopamine_challenge_type"]
           created_at?: string
+          current_streak?: number | null
+          daily_goals?: Json | null
           description?: string | null
+          difficulty_level?: string | null
           duration_days?: number | null
           end_date?: string | null
           id?: string
@@ -317,12 +341,17 @@ export type Database = {
           progress?: number | null
           start_date?: string | null
           status?: string | null
+          target_reduction_hours?: number | null
           user_id: string
         }
         Update: {
+          best_streak?: number | null
           challenge_type?: Database["public"]["Enums"]["dopamine_challenge_type"]
           created_at?: string
+          current_streak?: number | null
+          daily_goals?: Json | null
           description?: string | null
+          difficulty_level?: string | null
           duration_days?: number | null
           end_date?: string | null
           id?: string
@@ -330,6 +359,7 @@ export type Database = {
           progress?: number | null
           start_date?: string | null
           status?: string | null
+          target_reduction_hours?: number | null
           user_id?: string
         }
         Relationships: []
@@ -589,6 +619,12 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      achievement_type:
+        | "streak_milestone"
+        | "challenge_completed"
+        | "daily_goals_streak"
+        | "reduced_screen_time"
+        | "mindful_usage"
       addiction_category: "substance" | "behavioral"
       addiction_type: "substance" | "behavioral"
       dopamine_challenge_type:
