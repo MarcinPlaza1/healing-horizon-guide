@@ -41,7 +41,16 @@ const CalendarDashboard = () => {
         .eq('user_id', user.id);
 
       if (error) throw error;
-      return data as Addiction[];
+
+      // Map the raw data to match our Addiction type
+      return (data || []).map(item => ({
+        ...item,
+        goals: (item.goals as any[] || []).map(goal => ({
+          title: String(goal?.title || ''),
+          completed: Boolean(goal?.completed || false),
+          target_date: goal?.target_date ? String(goal.target_date) : undefined
+        }))
+      })) as Addiction[];
     },
   });
 
