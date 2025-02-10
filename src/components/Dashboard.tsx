@@ -30,21 +30,19 @@ interface WidgetConfig {
   id: string;
   title: string;
   component: React.ComponentType;
-  section: "progress" | "learning" | "notifications";
 }
 
 const widgetConfigs: WidgetConfig[] = [
-  { id: "health_summary", title: "Health Overview", component: HealthSummary, section: "progress" },
-  { id: "daily_inspiration", title: "Daily Inspiration", component: DailyInspiration, section: "learning" },
-  { id: "progress", title: "Progress Tracker", component: ProgressPreview, section: "progress" },
-  { id: "daily_checkin", title: "Daily Check-in", component: DailyCheckin, section: "notifications" },
-  { id: "mood_chart", title: "Mood Tracker", component: MoodChart, section: "progress" },
-  { id: "mindfulness", title: "Mindfulness Session", component: MindfulnessTracker, section: "learning" },
+  { id: "health_summary", title: "Health Overview", component: HealthSummary },
+  { id: "daily_inspiration", title: "Daily Inspiration", component: DailyInspiration },
+  { id: "progress", title: "Progress Tracker", component: ProgressPreview },
+  { id: "daily_checkin", title: "Daily Check-in", component: DailyCheckin },
+  { id: "mood_chart", title: "Mood Tracker", component: MoodChart },
+  { id: "mindfulness", title: "Mindfulness Session", component: MindfulnessTracker },
 ];
 
 const Dashboard = () => {
   const [preferences, setPreferences] = useState<DashboardPreferences>(DEFAULT_PREFERENCES);
-  const [activeSection, setActiveSection] = useState<string>("progress");
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
@@ -140,10 +138,7 @@ const Dashboard = () => {
 
   const filteredWidgets = preferences.widget_order
     .map(id => widgetConfigs.find(config => config.id === id))
-    .filter(widget => widget && (
-      activeSection === "all" || 
-      widget.section === activeSection
-    ));
+    .filter(widget => widget);
 
   return (
     <section className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20">
@@ -152,18 +147,6 @@ const Dashboard = () => {
           <h1 className="text-3xl font-bold text-foreground/90 mb-4 md:mb-0">
             Your Wellness Dashboard
           </h1>
-          <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto">
-            {["progress", "learning", "notifications"].map((section) => (
-              <Button
-                key={section}
-                variant={activeSection === section ? "default" : "outline"}
-                onClick={() => setActiveSection(section)}
-                className="capitalize whitespace-nowrap"
-              >
-                {section}
-              </Button>
-            ))}
-          </div>
         </div>
 
         <DragDropContext onDragEnd={handleDragEnd}>

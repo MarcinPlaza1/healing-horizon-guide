@@ -1,5 +1,5 @@
 
-import { Calendar, BarChart3, Brain, Bell, Settings2 } from "lucide-react";
+import { Calendar } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -12,21 +12,6 @@ import {
 } from "@/components/ui/sidebar";
 
 const menuItems = [
-  {
-    title: "Progress",
-    icon: BarChart3,
-    section: "progress"
-  },
-  {
-    title: "Learning",
-    icon: Brain,
-    section: "learning"
-  },
-  {
-    title: "Notifications",
-    icon: Bell,
-    section: "notifications"
-  },
   {
     title: "Calendar",
     icon: Calendar,
