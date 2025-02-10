@@ -66,7 +66,21 @@ export const NutritionTracking = () => {
       if (goalsError) throw goalsError;
 
       if (goalsData) {
-        setGoals(goalsData);
+        // Type cast the data to match our interface
+        const typedGoals: NutritionGoals = {
+          daily_water_ml: goalsData.daily_water_ml,
+          daily_calories: goalsData.daily_calories,
+          daily_sugar_grams: goalsData.daily_sugar_grams,
+          daily_protein_grams: goalsData.daily_protein_grams,
+          daily_fat_grams: goalsData.daily_fat_grams,
+          daily_carbs_grams: goalsData.daily_carbs_grams,
+          weight_kg: goalsData.weight_kg,
+          height_cm: goalsData.height_cm,
+          age: goalsData.age,
+          gender: goalsData.gender as "male" | "female" | "other" | null,
+          activity_level: goalsData.activity_level as "sedentary" | "light" | "moderate" | "very_active" | "extra_active" | null
+        };
+        setGoals(typedGoals);
       } else {
         // Create default goals if none exist
         const { data: newGoals, error: createError } = await supabase
@@ -76,7 +90,22 @@ export const NutritionTracking = () => {
           .single();
           
         if (createError) throw createError;
-        setGoals(newGoals);
+        
+        // Type cast the new goals
+        const typedNewGoals: NutritionGoals = {
+          daily_water_ml: newGoals.daily_water_ml,
+          daily_calories: newGoals.daily_calories,
+          daily_sugar_grams: newGoals.daily_sugar_grams,
+          daily_protein_grams: newGoals.daily_protein_grams,
+          daily_fat_grams: newGoals.daily_fat_grams,
+          daily_carbs_grams: newGoals.daily_carbs_grams,
+          weight_kg: newGoals.weight_kg,
+          height_cm: newGoals.height_cm,
+          age: newGoals.age,
+          gender: newGoals.gender as "male" | "female" | "other" | null,
+          activity_level: newGoals.activity_level as "sedentary" | "light" | "moderate" | "very_active" | "extra_active" | null
+        };
+        setGoals(typedNewGoals);
       }
 
       // Fetch today's nutrition log
