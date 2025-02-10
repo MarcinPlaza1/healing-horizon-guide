@@ -55,20 +55,24 @@ export const AddictionHeader = ({ addDialogOpen, setAddDialogOpen, onSuccess }: 
               Add New Record
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px] animate-scale-in">
-            <DialogHeader>
-              <DialogTitle className="text-2xl">Add New Record</DialogTitle>
-              <DialogDescription className="text-base">
-                Track a new addiction or dependency for your recovery journey. We're here to support you every step of the way.
+          <DialogContent className="max-w-[450px] p-0 gap-0 overflow-hidden rounded-xl animate-scale-in">
+            <DialogHeader className="p-6 pb-4 bg-gradient-to-r from-primary/10 to-primary/5">
+              <DialogTitle className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
+                New Recovery Journey
+              </DialogTitle>
+              <DialogDescription className="text-base text-muted-foreground/80">
+                Take the first step towards positive change. We're here to support you.
               </DialogDescription>
             </DialogHeader>
-            <AddAddictionForm
-              onSuccess={() => {
-                setAddDialogOpen(false);
-                onSuccess();
-              }}
-              onCancel={() => setAddDialogOpen(false)}
-            />
+            <div className="px-6 pb-6 pt-2">
+              <AddAddictionForm
+                onSuccess={() => {
+                  setAddDialogOpen(false);
+                  onSuccess();
+                }}
+                onCancel={() => setAddDialogOpen(false)}
+              />
+            </div>
           </DialogContent>
         </Dialog>
       </div>
