@@ -10,6 +10,7 @@ import HealthSummary from "@/components/HealthSummary";
 import MoodChart from "@/components/MoodChart";
 import AddictionTracker from "@/components/AddictionTracker";
 import AnalyticsDashboard from "@/components/AnalyticsDashboard";
+import CalendarDashboard from "@/components/CalendarDashboard";
 
 const DashboardPage = () => {
   return (
@@ -22,6 +23,7 @@ const DashboardPage = () => {
             <Routes>
               <Route path="progress" element={<ProgressDashboard />} />
               <Route path="analytics" element={<AnalyticsDashboard />} />
+              <Route path="calendar" element={<CalendarDashboard />} />
               <Route path="daily-checkin" element={
                 <div className="container mx-auto p-6">
                   <h2 className="text-2xl font-bold mb-6">Daily Check-In Dashboard</h2>
