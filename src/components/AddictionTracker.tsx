@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Trophy, AlertTriangle, CheckCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -131,7 +131,7 @@ const AddictionTracker = () => {
       if (error) throw error;
 
       toast({
-        title: "Addiction Deleted",
+        title: "Record Deleted",
         description: "The record has been permanently deleted.",
       });
 
@@ -140,18 +140,58 @@ const AddictionTracker = () => {
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Error deleting addiction",
+        title: "Error deleting record",
         description: error.message,
       });
     }
   };
 
+  const getStatusCounts = () => {
+    if (!addictions) return { active: 0, recovered: 0, relapsed: 0 };
+    return addictions.reduce((acc, addiction) => ({
+      ...acc,
+      [addiction.status]: (acc[addiction.status as keyof typeof acc] || 0) + 1
+    }), { active: 0, recovered: 0, relapsed: 0 });
+  };
+
+  const statusCounts = getStatusCounts();
+
   return (
     <div className="space-y-6">
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Records</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-yellow-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{statusCounts.active}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Recovered</CardTitle>
+            <CheckCircle className="h-4 w-4 text-green-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{statusCounts.recovered}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Milestones</CardTitle>
+            <Trophy className="h-4 w-4 text-yellow-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{milestones?.length || 0}</div>
+          </CardContent>
+        </Card>
+      </div>
+
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <div>
-            <CardTitle>Addiction Tracker</CardTitle>
+            <CardTitle>Recovery Records</CardTitle>
             <CardDescription>Track and manage your recovery journey</CardDescription>
           </div>
           <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
@@ -181,8 +221,15 @@ const AddictionTracker = () => {
         <CardContent>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {addictions?.length === 0 && (
-              <div className="md:col-span-2 lg:col-span-3 text-center text-muted-foreground py-8">
-                No records added yet. Click the + button to add one.
+              <div className="md:col-span-2 lg:col-span-3 flex flex-col items-center justify-center text-center py-12 text-muted-foreground">
+                <PlusCircle className="h-12 w-12 mb-4 text-muted-foreground/50" />
+                <p className="text-lg font-medium mb-2">No records added yet</p>
+                <p className="text-sm mb-4">Start tracking your recovery journey by adding a record.</p>
+                <DialogTrigger asChild>
+                  <Button onClick={() => setAddDialogOpen(true)}>
+                    Add Your First Record
+                  </Button>
+                </DialogTrigger>
               </div>
             )}
             {addictions?.map((addiction) => (
