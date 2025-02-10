@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import Navigation from "@/components/Navigation";
-import ProfileSettings from "@/components/ProfileSettings";
+import ProfileSettings from "@/components/profile";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 
