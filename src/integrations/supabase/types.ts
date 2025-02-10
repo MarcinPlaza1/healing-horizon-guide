@@ -251,6 +251,136 @@ export type Database = {
           },
         ]
       }
+      dopamine_detox_achievements: {
+        Row: {
+          achieved_at: string
+          badge_type: string | null
+          challenge_id: string | null
+          created_at: string
+          description: string | null
+          id: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          achieved_at?: string
+          badge_type?: string | null
+          challenge_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          achieved_at?: string
+          badge_type?: string | null
+          challenge_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dopamine_detox_achievements_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "dopamine_detox_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dopamine_detox_challenges: {
+        Row: {
+          challenge_type: Database["public"]["Enums"]["dopamine_challenge_type"]
+          created_at: string
+          description: string | null
+          duration_days: number | null
+          end_date: string | null
+          id: string
+          name: string
+          progress: number | null
+          start_date: string | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          challenge_type: Database["public"]["Enums"]["dopamine_challenge_type"]
+          created_at?: string
+          description?: string | null
+          duration_days?: number | null
+          end_date?: string | null
+          id?: string
+          name: string
+          progress?: number | null
+          start_date?: string | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          challenge_type?: Database["public"]["Enums"]["dopamine_challenge_type"]
+          created_at?: string
+          description?: string | null
+          duration_days?: number | null
+          end_date?: string | null
+          id?: string
+          name?: string
+          progress?: number | null
+          start_date?: string | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      dopamine_detox_logs: {
+        Row: {
+          activity_date: string | null
+          challenge_id: string | null
+          completed_tasks: string[] | null
+          created_at: string
+          digital_wellness_score: number | null
+          focus_score: number | null
+          id: string
+          notes: string | null
+          triggers: string[] | null
+          user_id: string
+        }
+        Insert: {
+          activity_date?: string | null
+          challenge_id?: string | null
+          completed_tasks?: string[] | null
+          created_at?: string
+          digital_wellness_score?: number | null
+          focus_score?: number | null
+          id?: string
+          notes?: string | null
+          triggers?: string[] | null
+          user_id: string
+        }
+        Update: {
+          activity_date?: string | null
+          challenge_id?: string | null
+          completed_tasks?: string[] | null
+          created_at?: string
+          digital_wellness_score?: number | null
+          focus_score?: number | null
+          id?: string
+          notes?: string | null
+          triggers?: string[] | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dopamine_detox_logs_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "dopamine_detox_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       health_summaries: {
         Row: {
           created_at: string
@@ -446,6 +576,15 @@ export type Database = {
     Enums: {
       addiction_category: "substance" | "behavioral"
       addiction_type: "substance" | "behavioral"
+      dopamine_challenge_type:
+        | "social_media_break"
+        | "digital_sunset"
+        | "morning_routine"
+        | "mindful_browsing"
+        | "app_limits"
+        | "notification_detox"
+        | "device_free_meals"
+        | "reading_time"
     }
     CompositeTypes: {
       [_ in never]: never
