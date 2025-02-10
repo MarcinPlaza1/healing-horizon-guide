@@ -8,8 +8,10 @@ import { useProgressStats } from "@/hooks/useProgressStats";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import HealthSummary from "./HealthSummary";
+import { useTranslation } from "react-i18next";
 
 const QuickStats = () => {
+  const { t } = useTranslation();
   const { data: addictions } = useQuery({
     queryKey: ['dashboard-addictions'],
     queryFn: async () => {
@@ -70,9 +72,9 @@ const QuickStats = () => {
       <Card className="p-6 glass-card">
         <div className="flex justify-between items-start">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Active Recovery</p>
+            <p className="text-sm font-medium text-muted-foreground">{t('dashboard.quickStats.activeRecovery')}</p>
             <h3 className="text-2xl font-bold mt-2">{activeAddictions}</h3>
-            <p className="text-xs text-muted-foreground mt-1">Records being tracked</p>
+            <p className="text-xs text-muted-foreground mt-1">{t('dashboard.quickStats.recordsTracked')}</p>
           </div>
           <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
             <Brain className="h-4 w-4 text-primary" />
@@ -83,11 +85,11 @@ const QuickStats = () => {
       <Card className="p-6 glass-card">
         <div className="flex justify-between items-start">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Recovery Rate</p>
+            <p className="text-sm font-medium text-muted-foreground">{t('dashboard.quickStats.recoveryRate')}</p>
             <h3 className="text-2xl font-bold mt-2">
               {Math.round((totalRecovered / (totalRecovered + activeAddictions)) * 100)}%
             </h3>
-            <p className="text-xs text-muted-foreground mt-1">{totalRecovered} recovered</p>
+            <p className="text-xs text-muted-foreground mt-1">{totalRecovered} {t('dashboard.quickStats.recovered')}</p>
           </div>
           <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
             <Target className="h-4 w-4 text-primary" />
@@ -98,9 +100,9 @@ const QuickStats = () => {
       <Card className="p-6 glass-card">
         <div className="flex justify-between items-start">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Active Challenges</p>
+            <p className="text-sm font-medium text-muted-foreground">{t('dashboard.quickStats.activeChallenges')}</p>
             <h3 className="text-2xl font-bold mt-2">{activeChallenges}</h3>
-            <p className="text-xs text-muted-foreground mt-1">Dopamine detox</p>
+            <p className="text-xs text-muted-foreground mt-1">{t('dashboard.quickStats.dopamineDetox')}</p>
           </div>
           <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
             <Activity className="h-4 w-4 text-primary" />
@@ -111,9 +113,9 @@ const QuickStats = () => {
       <Card className="p-6 glass-card">
         <div className="flex justify-between items-start">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Current Streak</p>
-            <h3 className="text-2xl font-bold mt-2">{stats.streak_count} days</h3>
-            <p className="text-xs text-muted-foreground mt-1">Best: {stats.longest_streak} days</p>
+            <p className="text-sm font-medium text-muted-foreground">{t('dashboard.quickStats.currentStreak')}</p>
+            <h3 className="text-2xl font-bold mt-2">{stats.streak_count} {t('dashboard.quickStats.days')}</h3>
+            <p className="text-xs text-muted-foreground mt-1">{t('dashboard.quickStats.best')}: {stats.longest_streak} {t('dashboard.quickStats.days')}</p>
           </div>
           <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
             <Flame className="h-4 w-4 text-primary" />
@@ -125,6 +127,8 @@ const QuickStats = () => {
 };
 
 const Dashboard = () => {
+  const { t } = useTranslation();
+  
   return (
     <section className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/10">
       <div className="container mx-auto px-4 py-8">
@@ -135,10 +139,10 @@ const Dashboard = () => {
           className="mb-8"
         >
           <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60 mb-2">
-            Your Wellness Dashboard
+            {t('dashboard.title')}
           </h1>
           <p className="text-muted-foreground">
-            Track your progress and maintain your well-being journey
+            {t('dashboard.subtitle')}
           </p>
         </motion.div>
 

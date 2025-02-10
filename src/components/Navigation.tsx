@@ -12,11 +12,14 @@ import {
 import { NotificationsList } from "@/components/notifications/NotificationsList";
 import { useNotifications } from "@/hooks/use-notifications";
 import { cn } from "@/lib/utils";
+import { LanguageSelector } from "./LanguageSelector";
+import { useTranslation } from "react-i18next";
 
 const Navigation = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { unreadCount } = useNotifications();
+  const { t } = useTranslation();
 
   const handleSignOut = async () => {
     try {
@@ -38,12 +41,12 @@ const Navigation = () => {
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
             <Heart className="w-6 h-6 text-primary" />
-            <span className="text-xl font-semibold">MindfulRecovery</span>
+            <span className="text-xl font-semibold">{t('general.appName')}</span>
           </Link>
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/dashboard" className="flex items-center space-x-1 text-sm font-medium hover:text-primary transition-colors">
               <Calendar className="w-4 h-4" />
-              <span>Dashboard</span>
+              <span>{t('general.dashboard')}</span>
             </Link>
             <Link to="/dashboard" className="flex items-center space-x-1 text-sm font-medium hover:text-primary transition-colors">
               <Users className="w-4 h-4" />
@@ -53,6 +56,7 @@ const Navigation = () => {
               <UserCircle className="w-4 h-4" />
               <span>Profile</span>
             </Link>
+            <LanguageSelector />
             <Popover>
               <PopoverTrigger asChild>
                 <Button
