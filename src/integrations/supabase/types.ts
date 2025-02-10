@@ -44,6 +44,36 @@ export type Database = {
           },
         ]
       }
+      health_summaries: {
+        Row: {
+          created_at: string
+          id: string
+          journal_entries: number | null
+          mindfulness_minutes: number | null
+          mood_average: string | null
+          summary_date: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          journal_entries?: number | null
+          mindfulness_minutes?: number | null
+          mood_average?: string | null
+          summary_date?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          journal_entries?: number | null
+          mindfulness_minutes?: number | null
+          mood_average?: string | null
+          summary_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       inspirational_quotes: {
         Row: {
           author: string | null
@@ -109,6 +139,7 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           created_at: string
+          dashboard_preferences: Json | null
           full_name: string | null
           id: string
           last_check_in: string | null
@@ -127,6 +158,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          dashboard_preferences?: Json | null
           full_name?: string | null
           id: string
           last_check_in?: string | null
@@ -145,6 +177,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          dashboard_preferences?: Json | null
           full_name?: string | null
           id?: string
           last_check_in?: string | null
