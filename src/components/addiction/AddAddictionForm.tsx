@@ -2,6 +2,7 @@
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -29,6 +30,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { AddictionType } from "@/types/addiction";
 
 interface AddAddictionFormProps {
   onSuccess: () => void;
@@ -37,19 +39,36 @@ interface AddAddictionFormProps {
 
 export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps) => {
   const { toast } = useToast();
+  
+  // Fetch addiction types
+  const { data: addictionTypes } = useQuery({
+    queryKey: ['addiction-types'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('addiction_types')
+        .select('*');
+
+      if (error) throw error;
+      return data as AddictionType[];
+    },
+  });
+
   const form = useForm({
     defaultValues: {
       name: "",
-      type: "substance" as const,
+      addiction_type_id: "",
       start_date: new Date(),
       notes: "",
       status: "active" as const,
     },
   });
 
+  const selectedType = addictionTypes?.find(
+    (type) => type.id === form.watch('addiction_type_id')
+  );
+
   const onSubmit = async (values: any) => {
     try {
-      // Get the current user
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
@@ -59,10 +78,14 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
       const { error } = await supabase
         .from('addictions')
         .insert([{
-          ...values,
-          user_id: user.id, // Add the user_id to the record
+          name: selectedType?.name || values.name,
+          type: selectedType?.category || 'substance',
+          addiction_type_id: values.addiction_type_id,
           start_date: values.start_date.toISOString(),
           clean_since: values.start_date.toISOString(),
+          notes: values.notes,
+          status: values.status,
+          user_id: user.id,
         }]);
 
       if (error) throw error;
@@ -88,38 +111,45 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
-          name="name"
+          name="addiction_type_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Type</FormLabel>
+              <FormLabel>Addiction Type</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
+                    <SelectValue placeholder="Select addiction type" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="substance">Substance</SelectItem>
-                  <SelectItem value="behavioral">Behavioral</SelectItem>
+                  {addictionTypes?.map((type) => (
+                    <SelectItem key={type.id} value={type.id}>
+                      {type.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
             </FormItem>
           )}
         />
+
+        {selectedType && (
+          <div className="text-sm text-muted-foreground">
+            <p>{selectedType.description}</p>
+            {selectedType.common_triggers && selectedType.common_triggers.length > 0 && (
+              <div className="mt-2">
+                <p className="font-medium">Common triggers:</p>
+                <ul className="list-disc list-inside">
+                  {selectedType.common_triggers.map((trigger, index) => (
+                    <li key={index}>{trigger}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+
         <FormField
           control={form.control}
           name="start_date"
@@ -161,6 +191,7 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="notes"
@@ -177,6 +208,7 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
             </FormItem>
           )}
         />
+
         <div className="flex gap-2">
           <Button type="submit" className="flex-1">Add Record</Button>
           <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>

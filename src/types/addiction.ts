@@ -9,6 +9,15 @@ export interface Addiction {
   triggers?: string[];
   clean_since?: string;
   last_relapse_date?: string;
+  addiction_type_id: string;
+}
+
+export interface AddictionType {
+  id: string;
+  name: string;
+  category: 'substance' | 'behavioral';
+  description?: string;
+  common_triggers?: string[];
 }
 
 export interface Milestone {

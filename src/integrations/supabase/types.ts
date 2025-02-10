@@ -9,8 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      addiction_types: {
+        Row: {
+          category: Database["public"]["Enums"]["addiction_category"]
+          common_triggers: string[] | null
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["addiction_category"]
+          common_triggers?: string[] | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["addiction_category"]
+          common_triggers?: string[] | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       addictions: {
         Row: {
+          addiction_type_id: string | null
           clean_since: string | null
           created_at: string
           id: string
@@ -24,6 +52,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          addiction_type_id?: string | null
           clean_since?: string | null
           created_at?: string
           id?: string
@@ -37,6 +66,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          addiction_type_id?: string | null
           clean_since?: string | null
           created_at?: string
           id?: string
@@ -49,7 +79,15 @@ export type Database = {
           type?: Database["public"]["Enums"]["addiction_type"]
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "addictions_addiction_type_id_fkey"
+            columns: ["addiction_type_id"]
+            isOneToOne: false
+            referencedRelation: "addiction_types"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       daily_checkins: {
         Row: {
@@ -285,6 +323,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      addiction_category: "substance" | "behavioral"
       addiction_type: "substance" | "behavioral"
     }
     CompositeTypes: {
