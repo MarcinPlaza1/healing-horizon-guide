@@ -1,4 +1,5 @@
-import { ChevronRight, Heart, Calendar, Settings2, LayoutDashboard, TrendingUp, CheckSquare, Pill, BarChart, LineChart, Brain, Apple, Activity, Grid3X3, Target, RotateCcw } from "lucide-react";
+
+import { Heart, Calendar, Settings2, LayoutDashboard, CheckSquare, Apple, Target } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -21,21 +22,9 @@ export function DashboardSidebar() {
   const menuItems = [
     {
       title: t('sidebar.overview'),
-      icon: Grid3X3,
+      icon: LayoutDashboard,
       to: "/dashboard",
       description: t('sidebar.description.overview')
-    },
-    {
-      title: t('sidebar.activities'),
-      icon: Activity,
-      to: "/dashboard/progress",
-      description: t('sidebar.description.activities')
-    },
-    {
-      title: t('sidebar.analytics'),
-      icon: LineChart,
-      to: "/dashboard/analytics",
-      description: t('sidebar.description.analytics')
     },
     {
       title: t('sidebar.dailyCheckin'),
@@ -50,22 +39,10 @@ export function DashboardSidebar() {
       description: t('sidebar.description.recovery')
     },
     {
-      title: t('sidebar.dopamine'),
-      icon: RotateCcw,
-      to: "/dashboard/dopamine-detox",
-      description: t('sidebar.description.dopamine')
-    },
-    {
       title: t('sidebar.nutrition'),
       icon: Apple,
       to: "/dashboard/nutrition",
       description: t('sidebar.description.nutrition')
-    },
-    {
-      title: t('sidebar.stats'),
-      icon: BarChart,
-      to: "/dashboard/stats",
-      description: t('sidebar.description.stats')
     },
     {
       title: t('sidebar.calendar'),

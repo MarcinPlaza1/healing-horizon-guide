@@ -1,31 +1,15 @@
 
 import DailyCheckin from "@/components/DailyCheckin";
 import MoodChart from "@/components/MoodChart";
-import HealthSummary from "@/components/HealthSummary";
 import AddictionTracker from "@/components/AddictionTracker";
 import Dashboard from "@/components/Dashboard";
-import ProgressDashboard from "@/components/ProgressDashboard";
-import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import CalendarDashboard from "@/components/CalendarDashboard";
-import DopamineDetox from "@/components/dopamine/DopamineDetox";
 import { NutritionTracking } from "@/components/nutrition/NutritionTracking";
 
 export const dashboardRoutes = [
   {
-    path: "progress",
-    element: <ProgressDashboard />
-  },
-  {
-    path: "analytics",
-    element: <AnalyticsDashboard />
-  },
-  {
     path: "calendar",
     element: <CalendarDashboard />
-  },
-  {
-    path: "dopamine-detox",
-    element: <DopamineDetox />
   },
   {
     path: "nutrition",
@@ -63,17 +47,6 @@ export const dashboardRoutes = [
             Track your progress, celebrate milestones, and stay committed to your recovery journey
           </p>
           <AddictionTracker />
-        </div>
-      </div>
-    )
-  },
-  {
-    path: "stats",
-    element: (
-      <div className="container mx-auto p-6">
-        <h2 className="text-2xl font-bold mb-6">Health Statistics Dashboard</h2>
-        <div className="grid grid-cols-1 gap-6">
-          <HealthSummary />
         </div>
       </div>
     )
