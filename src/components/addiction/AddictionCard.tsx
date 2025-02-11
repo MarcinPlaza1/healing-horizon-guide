@@ -122,7 +122,11 @@ export const AddictionCard = ({
         />
 
         {addiction.goals && addiction.goals.length > 0 && (
-          <AddictionGoals addiction={addiction} />
+          <AddictionGoals 
+            addictionId={addiction.id}
+            goals={addiction.goals}
+            onGoalsUpdate={() => {}}
+          />
         )}
         
         <TriggersList triggers={addiction.triggers || []} />
