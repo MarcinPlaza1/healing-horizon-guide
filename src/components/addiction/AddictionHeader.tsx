@@ -49,22 +49,22 @@ export const AddictionHeader = ({ addDialogOpen, setAddDialogOpen, onSuccess }: 
           <DialogTrigger asChild>
             <Button 
               size="lg" 
-              className="px-6 py-5 rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-102 animate-fade-in"
+              className="px-6 py-5 rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/90"
             >
               <PlusCircle className="h-5 w-5 mr-2" />
-              Add New Record
+              New Journey
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-[380px] p-0 gap-0 overflow-hidden rounded-xl animate-scale-in">
-            <DialogHeader className="p-3 pb-2 bg-gradient-to-br from-primary/20 via-primary/10 to-transparent">
-              <DialogTitle className="text-lg font-medium bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
-                New Recovery Journey
+          <DialogContent className="max-w-[420px] p-0 gap-0 overflow-hidden rounded-xl animate-scale-in">
+            <DialogHeader className="p-6 pb-2 bg-gradient-to-br from-primary/20 via-primary/10 to-transparent">
+              <DialogTitle className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
+                Begin Your Recovery Journey
               </DialogTitle>
-              <DialogDescription className="text-xs text-muted-foreground/70">
-                Take the first step towards positive change
+              <DialogDescription className="text-sm text-muted-foreground/90 mt-2">
+                Take the first step towards positive change. We're here to support you every step of the way.
               </DialogDescription>
             </DialogHeader>
-            <div className="px-3 pb-3 pt-1">
+            <div className="p-6 pt-4">
               <AddAddictionForm
                 onSuccess={() => {
                   setAddDialogOpen(false);

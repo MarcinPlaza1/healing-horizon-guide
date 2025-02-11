@@ -4,8 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { Loader2 } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { Loader2, Rocket } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { AddictionType } from "@/types/addiction";
 import { AddictionTypeSelect } from "./form/AddictionTypeSelect";
 import { StartDatePicker } from "./form/StartDatePicker";
@@ -72,8 +72,9 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
       if (error) throw error;
 
       toast({
-        title: "Success",
-        description: "Record added successfully. You can now start tracking your recovery journey.",
+        title: "Journey Started",
+        description: "Your recovery journey has begun. Take it one day at a time.",
+        variant: "default",
       });
       
       onSuccess();
@@ -92,28 +93,33 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <AddictionTypeSelect 
-          control={form.control}
-          selectedType={selectedType}
-        />
-        
-        <StartDatePicker control={form.control} />
-        
-        <NotesField control={form.control} />
+        <div className="space-y-4">
+          <AddictionTypeSelect 
+            control={form.control}
+            selectedType={selectedType}
+          />
+          
+          <StartDatePicker control={form.control} />
+          
+          <NotesField control={form.control} />
+        </div>
 
-        <div className="flex gap-3 pt-2 animate-fade-in">
+        <div className="flex gap-3 pt-2">
           <Button 
             type="submit" 
-            className="flex-1 transition-all duration-300 hover:scale-102"
+            className="flex-1 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/90 transition-all duration-300 hover:scale-[1.02] shadow-md hover:shadow-lg"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Adding Record...
+                Starting Journey...
               </>
             ) : (
-              "Start Recovery Journey"
+              <>
+                <Rocket className="mr-2 h-4 w-4" />
+                Start Recovery Journey
+              </>
             )}
           </Button>
           <Button 
@@ -121,7 +127,7 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
             variant="outline" 
             onClick={onCancel}
             disabled={isSubmitting}
-            className="transition-all duration-200 hover:bg-destructive/5"
+            className="transition-all duration-200 hover:bg-destructive/5 border-primary/20"
           >
             Cancel
           </Button>
