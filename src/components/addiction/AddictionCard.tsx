@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { AlertTriangle, CheckCircle, Clock, MoreVertical, Target, FileText, Plus, Goal, Trophy, HeartPulse, Brain, PillBottle } from "lucide-react";
+import { AlertTriangle, CheckCircle, Clock, MoreVertical, Target, FileText, Plus, Goal, Trophy, HeartPulse, Brain, PillBottle, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -30,6 +30,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
 
 interface AddictionCardProps {
   addiction: Addiction;
@@ -47,6 +48,8 @@ export const AddictionCard = ({
   const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
   const [newGoal, setNewGoal] = useState({ title: "", target_date: "" });
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [activityNote, setActivityNote] = useState("");
+  const [isLogActivityOpen, setIsLogActivityOpen] = useState(false);
   const { toast } = useToast();
 
   const getStatusColor = (status: string) => {
@@ -173,27 +176,44 @@ export const AddictionCard = ({
     }
   };
 
-  const logActivity = async (date: Date) => {
+  const logActivity = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      const { error } = await supabase
+      // First log the activity
+      const { error: activityError } = await supabase
         .from('addiction_activity_logs')
         .insert({
           addiction_id: addiction.id,
           user_id: user.id,
-          activity_date: format(date, 'yyyy-MM-dd'),
+          activity_date: new Date().toISOString(),
         });
 
-      if (error) throw error;
+      if (activityError) throw activityError;
+
+      // Then add the note if provided
+      if (activityNote.trim()) {
+        const { error: noteError } = await supabase
+          .from('activity_notes')
+          .insert({
+            addiction_id: addiction.id,
+            user_id: user.id,
+            content: activityNote,
+          });
+
+        if (noteError) throw noteError;
+      }
 
       toast({
         title: "Activity Logged",
         description: "Your activity has been recorded and the counter has been reset.",
       });
 
-      // Refresh the data
+      setIsLogActivityOpen(false);
+      setActivityNote("");
+      
+      // Refresh the page to show the updated status
       window.location.reload();
     } catch (error: any) {
       toast({
@@ -307,7 +327,31 @@ export const AddictionCard = ({
           </div>
         )}
 
-        {/* Goals Section with updated design */}
+        <Dialog open={isLogActivityOpen} onOpenChange={setIsLogActivityOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Log Activity</DialogTitle>
+              <DialogDescription>
+                Record your activity and optionally add a note about what happened.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="note">Add a note (optional)</Label>
+                <Textarea
+                  id="note"
+                  placeholder="How are you feeling? What triggered this?"
+                  value={activityNote}
+                  onChange={(e) => setActivityNote(e.target.value)}
+                />
+              </div>
+              <Button onClick={logActivity} className="w-full">
+                Log Activity
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h5 className="text-sm font-medium flex items-center gap-2">
@@ -409,7 +453,6 @@ export const AddictionCard = ({
           </div>
         </div>
         
-        {/* Triggers Section with updated design */}
         {addiction.triggers && addiction.triggers.length > 0 && (
           <div className="space-y-3">
             <h5 className="text-sm font-medium flex items-center gap-2">
@@ -429,7 +472,6 @@ export const AddictionCard = ({
           </div>
         )}
 
-        {/* Milestones Section with updated design */}
         {milestones?.length > 0 && (
           <div className="space-y-3">
             <h5 className="text-sm font-medium flex items-center gap-2">
