@@ -59,7 +59,7 @@ export function DashboardSidebar() {
   ];
 
   return (
-    <Sidebar className="border-r border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <Sidebar className="border-r border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-x-hidden">
       <div className="flex h-16 items-center border-b border-border/50 px-6">
         <div className="relative">
           <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full" />
@@ -72,12 +72,12 @@ export function DashboardSidebar() {
           <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
         </SidebarTrigger>
       </div>
-      <SidebarContent className="px-2">
+      <SidebarContent className="px-2 overflow-x-hidden">
         <SidebarGroup>
           <SidebarGroupLabel className="text-xs uppercase tracking-wider text-muted-foreground/70 font-medium px-4 py-2">
             {t('general.dashboard')}
           </SidebarGroupLabel>
-          <SidebarGroupContent>
+          <SidebarGroupContent className="overflow-x-hidden">
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
