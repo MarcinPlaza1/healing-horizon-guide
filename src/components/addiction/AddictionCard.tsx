@@ -1,5 +1,6 @@
+
 import { format } from "date-fns";
-import { AlertTriangle, CheckCircle, Clock, MoreVertical, Target, FileText, Plus, Goal, Trophy, HeartPulse, Brain, PillBottle, Calendar } from "lucide-react";
+import { AlertTriangle, CheckCircle, Clock, MoreVertical, Target, FileText, Plus, Goal, Trophy, HeartPulse, Brain, PillBottle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -28,7 +29,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 
