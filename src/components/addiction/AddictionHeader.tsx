@@ -19,8 +19,8 @@ export const AddictionHeader = ({ addDialogOpen, setAddDialogOpen, onSuccess }: 
         </CardTitle>
         <CardDescription className="text-base mt-2">
           {addDialogOpen 
-            ? 'Take the first step towards positive change. We're here to support you every step of the way.'
-            : 'Track your progress and celebrate every milestone on your recovery journey'}
+            ? "Take the first step towards positive change. We're here to support you every step of the way."
+            : "Track your progress and celebrate every milestone on your recovery journey"}
         </CardDescription>
       </div>
       <div className={`flex items-center gap-6 transition-all duration-300 ${addDialogOpen ? 'opacity-0' : 'animate-fade-in'}`}>
