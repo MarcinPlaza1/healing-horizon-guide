@@ -1,3 +1,4 @@
+
 import { Heart, Calendar, Settings2, LayoutDashboard, CheckSquare, Apple, Target, ChevronRight } from "lucide-react";
 import {
   Sidebar,
@@ -80,7 +81,7 @@ export function DashboardSidebar() {
                   <SidebarMenuButton
                     asChild
                     className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all duration-200 relative group mx-2",
+                      "flex items-center gap-4 rounded-lg px-4 py-3 text-muted-foreground transition-all duration-200 relative group mx-2",
                       "hover:bg-primary/10 hover:text-primary hover:translate-x-1",
                       "focus:bg-primary/10 focus:text-primary",
                       "active:bg-primary/5",
@@ -90,7 +91,7 @@ export function DashboardSidebar() {
                     <Link to={item.to} className="flex items-center w-full">
                       <div className="relative">
                         <item.icon className={cn(
-                          "w-4 h-4 shrink-0",
+                          "w-5 h-5 shrink-0",
                           "transition-transform duration-200",
                           "group-hover:scale-110",
                           location.pathname === item.to && "scale-110"
@@ -99,10 +100,10 @@ export function DashboardSidebar() {
                           <div className="absolute -left-1 -right-1 -bottom-1 h-0.5 bg-primary rounded-full" />
                         )}
                       </div>
-                      <div className="ml-3 flex flex-col">
-                        <span className="font-medium text-sm">{item.title}</span>
+                      <div className="ml-4 flex flex-col">
+                        <span className="font-medium text-base">{item.title}</span>
                         <p className={cn(
-                          "text-[11px] text-muted-foreground/70",
+                          "text-sm text-muted-foreground/70",
                           "transition-all duration-200",
                           "opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0",
                           location.pathname === item.to && "opacity-100 translate-y-0"
