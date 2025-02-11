@@ -11,7 +11,7 @@ import { AddictionList } from "./AddictionList";
 import { AddAddictionForm } from "./AddAddictionForm";
 
 const AddictionTracker = () => {
-  const [isAddingMode, setIsAddingMode] = useState(false);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
   const { toast } = useToast();
   
   const { data: addictions, refetch: refetchAddictions } = useQuery({
@@ -141,30 +141,36 @@ const AddictionTracker = () => {
   return (
     <div className="space-y-8">
       <AddictionStats addictions={addictions} milestones={milestones} />
-      <Card className="shadow-lg">
+      <Card className="shadow-lg overflow-hidden">
         <AddictionHeader 
-          isAddingMode={isAddingMode}
-          setIsAddingMode={setIsAddingMode}
+          addDialogOpen={addDialogOpen}
+          setAddDialogOpen={setAddDialogOpen}
           onSuccess={refetchAddictions}
         />
-        <div className="p-6">
-          {isAddingMode ? (
-            <AddAddictionForm
-              onSuccess={() => {
-                setIsAddingMode(false);
-                refetchAddictions();
-              }}
-              onCancel={() => setIsAddingMode(false)}
-            />
-          ) : (
-            <AddictionList
-              addictions={addictions}
-              milestones={milestones}
-              onUpdateStatus={updateAddictionStatus}
-              onDelete={deleteAddiction}
-              setAddDialogOpen={setIsAddingMode}
-            />
-          )}
+        <div className={`transition-all duration-300 transform ${addDialogOpen ? 'translate-y-0' : '-translate-y-4'}`}>
+          <div className="p-6">
+            {addDialogOpen ? (
+              <div className="animate-fade-in">
+                <AddAddictionForm
+                  onSuccess={() => {
+                    setAddDialogOpen(false);
+                    refetchAddictions();
+                  }}
+                  onCancel={() => setAddDialogOpen(false)}
+                />
+              </div>
+            ) : (
+              <div className="animate-fade-in">
+                <AddictionList
+                  addictions={addictions}
+                  milestones={milestones}
+                  onUpdateStatus={updateAddictionStatus}
+                  onDelete={deleteAddiction}
+                  setAddDialogOpen={setAddDialogOpen}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </Card>
     </div>
