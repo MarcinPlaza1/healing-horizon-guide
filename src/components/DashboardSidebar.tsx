@@ -60,18 +60,21 @@ export function DashboardSidebar() {
 
   return (
     <Sidebar className="border-r border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex h-16 items-center border-b border-border/50 px-6 bg-primary/5">
-        <Heart className="w-6 h-6 text-primary mr-2 animate-pulse" />
-        <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
+      <div className="flex h-16 items-center border-b border-border/50 px-6">
+        <div className="relative">
+          <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full" />
+          <Heart className="w-6 h-6 text-primary mr-2 animate-pulse relative" />
+        </div>
+        <span className="font-semibold text-lg bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/80 to-primary/60">
           {t('general.appName')}
         </span>
-        <SidebarTrigger className="ml-auto h-8 w-8 hover:bg-primary/10 transition-colors rounded-lg">
-          <ChevronRight className="h-4 w-4" />
+        <SidebarTrigger className="ml-auto h-8 w-8 hover:bg-primary/10 transition-colors rounded-lg group">
+          <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
         </SidebarTrigger>
       </div>
-      <SidebarContent>
+      <SidebarContent className="px-2">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs uppercase tracking-wider text-muted-foreground/70 font-medium px-6 py-2">
+          <SidebarGroupLabel className="text-xs uppercase tracking-wider text-muted-foreground/70 font-medium px-4 py-2">
             {t('general.dashboard')}
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -81,38 +84,43 @@ export function DashboardSidebar() {
                   <SidebarMenuButton
                     asChild
                     className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-muted-foreground transition-all duration-300 relative group mx-2",
+                      "flex items-center gap-3 rounded-lg px-4 py-3 text-muted-foreground transition-all duration-300 relative group",
                       "hover:bg-primary/10 hover:text-primary hover:translate-x-1",
-                      "focus:bg-primary/10 focus:text-primary",
+                      "focus:bg-primary/10 focus:text-primary focus:translate-x-1",
                       "active:bg-primary/5",
                       location.pathname === item.to && [
                         "bg-primary/10 text-primary translate-x-1",
                         "before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2",
-                        "before:w-1 before:h-8 before:bg-primary before:rounded-r-full"
+                        "before:w-1 before:h-8 before:bg-primary before:rounded-r-full",
+                        "after:absolute after:inset-0 after:bg-primary/5 after:rounded-lg after:-z-10"
                       ]
                     )}
                   >
                     <Link to={item.to} className="flex items-center w-full">
-                      <div className="relative">
+                      <div className="relative flex items-center justify-center w-10 h-10">
                         <item.icon className={cn(
                           "w-5 h-5 shrink-0",
                           "transition-all duration-300",
                           "group-hover:scale-110 group-hover:rotate-3",
-                          location.pathname === item.to && "scale-110 text-primary"
+                          location.pathname === item.to && [
+                            "scale-110 text-primary",
+                            "drop-shadow-[0_0_6px_rgba(var(--primary),0.4)]"
+                          ]
                         )} />
                         {location.pathname === item.to && (
-                          <div className="absolute -inset-2 bg-primary/10 rounded-full -z-10 animate-pulse" />
+                          <div className="absolute inset-0 bg-primary/10 rounded-full -z-10 animate-pulse" />
                         )}
                       </div>
-                      <div className="ml-3 flex flex-col">
+                      <div className="flex flex-col min-w-0">
                         <span className={cn(
-                          "font-medium text-sm",
+                          "font-medium text-sm truncate",
+                          "transition-all duration-300",
                           location.pathname === item.to && "font-semibold"
                         )}>
                           {item.title}
                         </span>
                         <p className={cn(
-                          "text-[11px] text-muted-foreground/70",
+                          "text-[11px] text-muted-foreground/70 truncate",
                           "transition-all duration-300",
                           "opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0",
                           location.pathname === item.to && "opacity-100 translate-y-0"
