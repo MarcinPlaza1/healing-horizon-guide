@@ -104,20 +104,20 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
           <NotesField control={form.control} />
         </div>
 
-        <div className="flex gap-3 pt-2">
+        <div className="flex gap-3 pt-6">
           <Button 
             type="submit" 
-            className="flex-1 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/90 transition-all duration-300 hover:scale-[1.02] shadow-md hover:shadow-lg"
+            className="flex-1 bg-primary hover:bg-primary/90 text-white font-medium py-6"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                 Starting Journey...
               </>
             ) : (
               <>
-                <Rocket className="mr-2 h-4 w-4" />
+                <Rocket className="mr-2 h-5 w-5" />
                 Start Recovery Journey
               </>
             )}
@@ -127,7 +127,7 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
             variant="outline" 
             onClick={onCancel}
             disabled={isSubmitting}
-            className="transition-all duration-200 hover:bg-destructive/5 border-primary/20"
+            className="border-primary/20 hover:bg-primary/5 py-6"
           >
             Cancel
           </Button>

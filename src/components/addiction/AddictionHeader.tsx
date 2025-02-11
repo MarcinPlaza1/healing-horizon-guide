@@ -64,7 +64,7 @@ export const AddictionHeader = ({ addDialogOpen, setAddDialogOpen, onSuccess }: 
                 Take the first step towards positive change. We're here to support you every step of the way.
               </DialogDescription>
             </DialogHeader>
-            <div className="p-6 pt-4">
+            <div className="p-6 pt-4 pb-8">
               <AddAddictionForm
                 onSuccess={() => {
                   setAddDialogOpen(false);
