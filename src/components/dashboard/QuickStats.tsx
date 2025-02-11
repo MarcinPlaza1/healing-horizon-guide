@@ -1,7 +1,7 @@
 
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { Brain, Target, Activity, Flame } from "lucide-react";
+import { Brain, Target, Flame } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
@@ -56,26 +56,10 @@ export const QuickStats = () => {
     }
   });
 
-  const { data: detoxChallenges } = useQuery({
-    queryKey: ['dashboard-detox'],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return null;
-
-      const { data } = await supabase
-        .from('dopamine_detox_challenges')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('status', 'active');
-
-      return data;
-    }
-  });
-
-  if (!addictions || !detoxChallenges || !progressStats) {
+  if (!addictions || !progressStats) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[...Array(4)].map((_, i) => (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {[...Array(3)].map((_, i) => (
           <Card key={i} className="p-6 animate-pulse bg-background/50 backdrop-blur-lg border border-primary/10">
             <div className="flex justify-between items-start">
               <div className="space-y-2">
@@ -91,11 +75,13 @@ export const QuickStats = () => {
   }
 
   const activeAddictions = addictions.filter(a => a.status === 'active').length;
-  const activeChallenges = detoxChallenges.length;
   const totalRecovered = addictions.filter(a => a.status === 'recovered').length;
+  const recoveryRate = totalRecovered + activeAddictions > 0 
+    ? Math.round((totalRecovered / (totalRecovered + activeAddictions)) * 100) 
+    : 0;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <StatCard
         title={t('dashboard.quickStats.activeRecovery')}
         value={activeAddictions}
@@ -104,15 +90,9 @@ export const QuickStats = () => {
       />
       <StatCard
         title={t('dashboard.quickStats.recoveryRate')}
-        value={`${Math.round((totalRecovered / (totalRecovered + activeAddictions)) * 100)}%`}
+        value={`${recoveryRate}%`}
         subtitle={`${totalRecovered} ${t('dashboard.quickStats.recovered')}`}
         icon={Target}
-      />
-      <StatCard
-        title={t('dashboard.quickStats.activeChallenges')}
-        value={activeChallenges}
-        subtitle={t('dashboard.quickStats.dopamineDetox')}
-        icon={Activity}
       />
       <StatCard
         title={t('dashboard.quickStats.currentStreak')}
