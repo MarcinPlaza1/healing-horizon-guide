@@ -1,5 +1,4 @@
-
-import { Heart, Calendar, Settings2, LayoutDashboard, CheckSquare, Apple, Target } from "lucide-react";
+import { Heart, Calendar, Settings2, LayoutDashboard, CheckSquare, Apple, Target, ChevronRight } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
