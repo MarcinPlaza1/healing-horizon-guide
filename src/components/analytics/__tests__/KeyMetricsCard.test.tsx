@@ -1,14 +1,17 @@
 
 import { render, screen } from '@testing-library/react';
-import KeyMetricsCard from '../KeyMetricsCard';
+import { KeyMetricsCard } from '../KeyMetricsCard';
 
 describe('KeyMetricsCard', () => {
   const defaultProps = {
     title: 'Test Metric',
     value: '100',
-    icon: 'trending-up',
-    trend: 'positive',
-    trendValue: '10%',
+    subtitle: 'Test Subtitle',
+    icon: () => null,
+    trend: {
+      direction: 'up' as const,
+      color: 'green' as const
+    }
   };
 
   it('renders correctly with all props', () => {
@@ -16,6 +19,6 @@ describe('KeyMetricsCard', () => {
     
     expect(screen.getByText('Test Metric')).toBeInTheDocument();
     expect(screen.getByText('100')).toBeInTheDocument();
-    expect(screen.getByText('10%')).toBeInTheDocument();
+    expect(screen.getByText('Test Subtitle')).toBeInTheDocument();
   });
 });
