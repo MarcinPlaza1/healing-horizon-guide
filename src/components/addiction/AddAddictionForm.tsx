@@ -92,8 +92,8 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
+        <div className="space-y-4 min-h-[300px] overflow-y-auto pr-2">
           <AddictionTypeSelect 
             control={form.control}
             selectedType={selectedType}
@@ -104,7 +104,7 @@ export const AddAddictionForm = ({ onSuccess, onCancel }: AddAddictionFormProps)
           <NotesField control={form.control} />
         </div>
 
-        <div className="flex gap-3 pt-6">
+        <div className="flex gap-3 pt-6 mt-auto sticky bottom-0 bg-background">
           <Button 
             type="submit" 
             className="flex-1 bg-primary hover:bg-primary/90 text-white font-medium py-6"
