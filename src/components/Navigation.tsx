@@ -48,10 +48,6 @@ const Navigation = () => {
               <Calendar className="w-4 h-4" />
               <span>{t('general.dashboard')}</span>
             </Link>
-            <Link to="/dashboard" className="flex items-center space-x-1 text-sm font-medium hover:text-primary transition-colors">
-              <Users className="w-4 h-4" />
-              <span>Community</span>
-            </Link>
             <Link to="/profile" className="flex items-center space-x-1 text-sm font-medium hover:text-primary transition-colors">
               <UserCircle className="w-4 h-4" />
               <span>Profile</span>
