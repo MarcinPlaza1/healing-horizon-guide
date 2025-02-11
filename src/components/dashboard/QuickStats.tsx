@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+import { useProgressStats } from "@/hooks/useProgressStats";
 
 const StatCard = ({ title, value, subtitle, icon: Icon }: {
   title: string;
@@ -38,6 +39,8 @@ const StatCard = ({ title, value, subtitle, icon: Icon }: {
 
 export const QuickStats = () => {
   const { t } = useTranslation();
+  const progressStats = useProgressStats();
+  
   const { data: addictions } = useQuery({
     queryKey: ['dashboard-addictions'],
     queryFn: async () => {
@@ -69,7 +72,7 @@ export const QuickStats = () => {
     }
   });
 
-  if (!addictions || !detoxChallenges) {
+  if (!addictions || !detoxChallenges || !progressStats) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[...Array(4)].map((_, i) => (
@@ -113,8 +116,8 @@ export const QuickStats = () => {
       />
       <StatCard
         title={t('dashboard.quickStats.currentStreak')}
-        value={`${stats.streak_count} ${t('dashboard.quickStats.days')}`}
-        subtitle={`${t('dashboard.quickStats.best')}: ${stats.longest_streak} ${t('dashboard.quickStats.days')}`}
+        value={`${progressStats.streak_count} ${t('dashboard.quickStats.days')}`}
+        subtitle={`${t('dashboard.quickStats.best')}: ${progressStats.longest_streak} ${t('dashboard.quickStats.days')}`}
         icon={Flame}
       />
     </div>

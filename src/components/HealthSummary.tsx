@@ -1,9 +1,9 @@
 
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Brain, BookText, Trophy, Target, Pill, Activity, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { HealthMetrics } from "./health/HealthMetrics";
+import { RecoveryOverview } from "./health/RecoveryOverview";
 
 interface HealthSummaryData {
   mood_average: string | null;
@@ -59,7 +59,6 @@ const HealthSummary = () => {
         if (healthData) {
           setSummary(healthData);
         } else {
-          // If no data exists for today, create a default summary
           setSummary({
             mood_average: null,
             journal_entries: 0
@@ -137,81 +136,19 @@ const HealthSummary = () => {
   return (
     <Card className="p-6 glass-card fade-in">
       <h3 className="text-lg font-semibold mb-4">Today's Health Summary</h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="flex items-center space-x-3">
-          <div className="bg-primary/10 p-2 rounded-full">
-            <Brain className="h-5 w-5 text-primary" />
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Mood</p>
-            <p className="font-medium">
-              {summary.mood_average ? (
-                <Badge variant="outline" className="capitalize">
-                  {summary.mood_average}
-                </Badge>
-              ) : (
-                "Not recorded"
-              )}
-            </p>
-          </div>
-        </div>
+      
+      <HealthMetrics
+        moodAverage={summary.mood_average}
+        journalEntries={summary.journal_entries}
+        totalMilestones={addictionStats.total_milestones}
+      />
 
-        <div className="flex items-center space-x-3">
-          <div className="bg-primary/10 p-2 rounded-full">
-            <BookText className="h-5 w-5 text-primary" />
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Journal Entries</p>
-            <p className="font-medium">{summary.journal_entries} today</p>
-          </div>
-        </div>
-
-        <div className="flex items-center space-x-3">
-          <div className="bg-primary/10 p-2 rounded-full">
-            <Trophy className="h-5 w-5 text-primary" />
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Recovery Progress</p>
-            <p className="font-medium">
-              {addictionStats.total_milestones} milestones
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-6">
-        <h4 className="text-md font-semibold mb-3">Recovery Overview</h4>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="p-3 bg-secondary/10 rounded-lg">
-            <div className="flex items-center gap-2 mb-1">
-              <Activity className="h-4 w-4 text-primary" />
-              <p className="text-sm text-muted-foreground">Active Records</p>
-            </div>
-            <p className="font-medium text-lg">{addictionStats.active}</p>
-          </div>
-          <div className="p-3 bg-secondary/10 rounded-lg">
-            <div className="flex items-center gap-2 mb-1">
-              <Target className="h-4 w-4 text-primary" />
-              <p className="text-sm text-muted-foreground">Recovered</p>
-            </div>
-            <p className="font-medium text-lg">{addictionStats.recovered}</p>
-          </div>
-          <div className="p-3 bg-secondary/10 rounded-lg">
-            <div className="flex items-center gap-2 mb-1">
-              <Pill className="h-4 w-4 text-primary" />
-              <p className="text-sm text-muted-foreground">Need Support</p>
-            </div>
-            <p className="font-medium text-lg">{addictionStats.relapsed}</p>
-          </div>
-          <div className="p-3 bg-secondary/10 rounded-lg">
-            <div className="flex items-center gap-2 mb-1">
-              <Clock className="h-4 w-4 text-primary" />
-              <p className="text-sm text-muted-foreground">Total Clean Days</p>
-            </div>
-            <p className="font-medium text-lg">{addictionStats.clean_days}</p>
-          </div>
-        </div>
-      </div>
+      <RecoveryOverview
+        active={addictionStats.active}
+        recovered={addictionStats.recovered}
+        relapsed={addictionStats.relapsed}
+        cleanDays={addictionStats.clean_days}
+      />
     </Card>
   );
 };
