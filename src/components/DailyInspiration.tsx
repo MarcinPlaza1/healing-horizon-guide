@@ -15,13 +15,11 @@ const DailyInspiration = () => {
 
   useEffect(() => {
     const fetchQuote = async () => {
-      // Using a simpler query that will still give us random results
       const { data, error } = await supabase
         .from('inspirational_quotes')
         .select('*');
 
       if (data && data.length > 0) {
-        // Get a random quote from the results
         const randomIndex = Math.floor(Math.random() * data.length);
         setQuote(data[randomIndex]);
       }
@@ -31,16 +29,20 @@ const DailyInspiration = () => {
   }, []);
 
   return (
-    <Card className="p-6 glass-card text-center fade-in">
+    <Card className="p-6 text-center h-full bg-background/50 backdrop-blur-lg border border-primary/10">
       <div className="flex justify-center mb-4">
-        <Sun className="h-8 w-8 text-primary" />
+        <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+          <Sun className="h-6 w-6 text-primary" />
+        </div>
       </div>
-      <h3 className="text-lg font-semibold mb-2">Today's Inspiration</h3>
+      <h3 className="text-lg font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
+        Today's Inspiration
+      </h3>
       {quote && (
-        <>
-          <p className="text-muted-foreground italic mb-2">"{quote.quote}"</p>
-          <p className="text-sm text-primary">- {quote.author}</p>
-        </>
+        <div className="space-y-4">
+          <p className="text-primary/80 italic text-lg leading-relaxed">"{quote.quote}"</p>
+          <p className="text-sm font-medium text-primary">- {quote.author}</p>
+        </div>
       )}
     </Card>
   );

@@ -49,13 +49,13 @@ const QuickStats = () => {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[...Array(4)].map((_, i) => (
-          <Card key={i} className="p-6 glass-card animate-pulse">
+          <Card key={i} className="p-6 animate-pulse bg-background/50 backdrop-blur-lg border border-primary/10">
             <div className="flex justify-between items-start">
               <div className="space-y-2">
-                <div className="h-4 w-24 bg-muted rounded" />
-                <div className="h-6 w-16 bg-muted rounded" />
+                <div className="h-4 w-24 bg-primary/10 rounded" />
+                <div className="h-6 w-16 bg-primary/10 rounded" />
               </div>
-              <div className="h-8 w-8 rounded-lg bg-muted" />
+              <div className="h-8 w-8 rounded-lg bg-primary/10" />
             </div>
           </Card>
         ))}
@@ -69,56 +69,64 @@ const QuickStats = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <Card className="p-6 glass-card">
+      <Card className="p-6 bg-background/50 backdrop-blur-lg border border-primary/10 hover:shadow-lg hover:border-primary/20 transition-all duration-300">
         <div className="flex justify-between items-start">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">{t('dashboard.quickStats.activeRecovery')}</p>
-            <h3 className="text-2xl font-bold mt-2">{activeAddictions}</h3>
+            <p className="text-sm font-medium text-primary/80">{t('dashboard.quickStats.activeRecovery')}</p>
+            <h3 className="text-2xl font-bold mt-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
+              {activeAddictions}
+            </h3>
             <p className="text-xs text-muted-foreground mt-1">{t('dashboard.quickStats.recordsTracked')}</p>
           </div>
-          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Brain className="h-4 w-4 text-primary" />
+          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+            <Brain className="h-5 w-5 text-primary" />
           </div>
         </div>
       </Card>
 
-      <Card className="p-6 glass-card">
+      <Card className="p-6 bg-background/50 backdrop-blur-lg border border-primary/10 hover:shadow-lg hover:border-primary/20 transition-all duration-300">
         <div className="flex justify-between items-start">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">{t('dashboard.quickStats.recoveryRate')}</p>
-            <h3 className="text-2xl font-bold mt-2">
+            <p className="text-sm font-medium text-primary/80">{t('dashboard.quickStats.recoveryRate')}</p>
+            <h3 className="text-2xl font-bold mt-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
               {Math.round((totalRecovered / (totalRecovered + activeAddictions)) * 100)}%
             </h3>
             <p className="text-xs text-muted-foreground mt-1">{totalRecovered} {t('dashboard.quickStats.recovered')}</p>
           </div>
-          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Target className="h-4 w-4 text-primary" />
+          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+            <Target className="h-5 w-5 text-primary" />
           </div>
         </div>
       </Card>
 
-      <Card className="p-6 glass-card">
+      <Card className="p-6 bg-background/50 backdrop-blur-lg border border-primary/10 hover:shadow-lg hover:border-primary/20 transition-all duration-300">
         <div className="flex justify-between items-start">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">{t('dashboard.quickStats.activeChallenges')}</p>
-            <h3 className="text-2xl font-bold mt-2">{activeChallenges}</h3>
+            <p className="text-sm font-medium text-primary/80">{t('dashboard.quickStats.activeChallenges')}</p>
+            <h3 className="text-2xl font-bold mt-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
+              {activeChallenges}
+            </h3>
             <p className="text-xs text-muted-foreground mt-1">{t('dashboard.quickStats.dopamineDetox')}</p>
           </div>
-          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Activity className="h-4 w-4 text-primary" />
+          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+            <Activity className="h-5 w-5 text-primary" />
           </div>
         </div>
       </Card>
 
-      <Card className="p-6 glass-card">
+      <Card className="p-6 bg-background/50 backdrop-blur-lg border border-primary/10 hover:shadow-lg hover:border-primary/20 transition-all duration-300">
         <div className="flex justify-between items-start">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">{t('dashboard.quickStats.currentStreak')}</p>
-            <h3 className="text-2xl font-bold mt-2">{stats.streak_count} {t('dashboard.quickStats.days')}</h3>
-            <p className="text-xs text-muted-foreground mt-1">{t('dashboard.quickStats.best')}: {stats.longest_streak} {t('dashboard.quickStats.days')}</p>
+            <p className="text-sm font-medium text-primary/80">{t('dashboard.quickStats.currentStreak')}</p>
+            <h3 className="text-2xl font-bold mt-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
+              {stats.streak_count} {t('dashboard.quickStats.days')}
+            </h3>
+            <p className="text-xs text-muted-foreground mt-1">
+              {t('dashboard.quickStats.best')}: {stats.longest_streak} {t('dashboard.quickStats.days')}
+            </p>
           </div>
-          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Flame className="h-4 w-4 text-primary" />
+          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+            <Flame className="h-5 w-5 text-primary" />
           </div>
         </div>
       </Card>
@@ -130,7 +138,7 @@ const Dashboard = () => {
   const { t } = useTranslation();
   
   return (
-    <section className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/10">
+    <section className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
       <div className="container mx-auto px-4 py-8">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -141,7 +149,7 @@ const Dashboard = () => {
           <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60 mb-2">
             {t('dashboard.title')}
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-lg text-muted-foreground">
             {t('dashboard.subtitle')}
           </p>
         </motion.div>
@@ -169,6 +177,7 @@ const Dashboard = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
+            className="h-full"
           >
             <ProgressPreview />
           </motion.div>
@@ -177,6 +186,7 @@ const Dashboard = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
+            className="h-full"
           >
             <DailyInspiration />
           </motion.div>
