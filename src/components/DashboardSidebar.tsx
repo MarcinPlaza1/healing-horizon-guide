@@ -1,3 +1,4 @@
+
 import { Heart, Calendar, Settings2, LayoutDashboard, CheckSquare, Apple, Target, ChevronRight } from "lucide-react";
 import {
   Sidebar,
@@ -80,30 +81,39 @@ export function DashboardSidebar() {
                   <SidebarMenuButton
                     asChild
                     className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all duration-200 relative group mx-2",
+                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-muted-foreground transition-all duration-300 relative group mx-2",
                       "hover:bg-primary/10 hover:text-primary hover:translate-x-1",
                       "focus:bg-primary/10 focus:text-primary",
                       "active:bg-primary/5",
-                      location.pathname === item.to && "bg-primary/10 text-primary translate-x-1"
+                      location.pathname === item.to && [
+                        "bg-primary/10 text-primary translate-x-1",
+                        "before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2",
+                        "before:w-1 before:h-8 before:bg-primary before:rounded-r-full"
+                      ]
                     )}
                   >
                     <Link to={item.to} className="flex items-center w-full">
                       <div className="relative">
                         <item.icon className={cn(
-                          "w-4 h-4 shrink-0",
-                          "transition-transform duration-200",
-                          "group-hover:scale-110",
-                          location.pathname === item.to && "scale-110"
+                          "w-5 h-5 shrink-0",
+                          "transition-all duration-300",
+                          "group-hover:scale-110 group-hover:rotate-3",
+                          location.pathname === item.to && "scale-110 text-primary"
                         )} />
                         {location.pathname === item.to && (
-                          <div className="absolute -left-1 -right-1 -bottom-1 h-0.5 bg-primary rounded-full" />
+                          <div className="absolute -inset-2 bg-primary/10 rounded-full -z-10 animate-pulse" />
                         )}
                       </div>
                       <div className="ml-3 flex flex-col">
-                        <span className="font-medium text-sm">{item.title}</span>
+                        <span className={cn(
+                          "font-medium text-sm",
+                          location.pathname === item.to && "font-semibold"
+                        )}>
+                          {item.title}
+                        </span>
                         <p className={cn(
                           "text-[11px] text-muted-foreground/70",
-                          "transition-all duration-200",
+                          "transition-all duration-300",
                           "opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0",
                           location.pathname === item.to && "opacity-100 translate-y-0"
                         )}>
