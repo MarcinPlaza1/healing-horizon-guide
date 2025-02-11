@@ -1,13 +1,14 @@
 
 import { render, screen } from '@testing-library/react';
 import { KeyMetricsCard } from '../KeyMetricsCard';
+import { TrendingUp } from 'lucide-react';
 
 describe('KeyMetricsCard', () => {
   const defaultProps = {
     title: 'Test Metric',
     value: '100',
     subtitle: 'Test Subtitle',
-    icon: () => null,
+    icon: TrendingUp,
     trend: {
       direction: 'up' as const,
       color: 'green' as const
@@ -22,3 +23,4 @@ describe('KeyMetricsCard', () => {
     expect(screen.getByText('Test Subtitle')).toBeInTheDocument();
   });
 });
+
