@@ -12,21 +12,15 @@ interface AddictionHeaderProps {
 
 export const AddictionHeader = ({ addDialogOpen, setAddDialogOpen, onSuccess }: AddictionHeaderProps) => {
   return (
-    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-8 border-b">
-      <div className={`transition-all duration-500 ${addDialogOpen ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0'}`}>
+    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-8 border-b relative">
+      <div className="transition-all duration-500">
         <CardTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
-          Begin Your Recovery Journey
+          {addDialogOpen ? "Begin Your Recovery Journey" : "Recovery Dashboard"}
         </CardTitle>
         <CardDescription className="text-base mt-2">
-          Take the first step towards positive change. We're here to support you every step of the way.
-        </CardDescription>
-      </div>
-      <div className={`absolute transition-all duration-500 ${!addDialogOpen ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0'}`}>
-        <CardTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
-          Recovery Dashboard
-        </CardTitle>
-        <CardDescription className="text-base mt-2">
-          Track your progress and celebrate every milestone on your recovery journey
+          {addDialogOpen 
+            ? "Take the first step towards positive change. We're here to support you every step of the way."
+            : "Track your progress and celebrate every milestone on your recovery journey"}
         </CardDescription>
       </div>
       <div className={`flex items-center gap-6 transition-all duration-500 ${addDialogOpen ? 'opacity-0 translate-x-4' : 'opacity-100 translate-x-0'}`}>
