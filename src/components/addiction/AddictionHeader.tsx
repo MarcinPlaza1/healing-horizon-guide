@@ -1,6 +1,5 @@
 
-import { PlusCircle, Clock, CheckCircle, AlertTriangle } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
@@ -23,21 +22,7 @@ export const AddictionHeader = ({ addDialogOpen, setAddDialogOpen, onSuccess }: 
             : "Track your progress and celebrate every milestone on your recovery journey"}
         </CardDescription>
       </div>
-      <div className={`flex items-center gap-6 transition-all duration-500 ${addDialogOpen ? 'opacity-0 translate-x-4' : 'opacity-100 translate-x-0'}`}>
-        <div className="flex gap-2">
-          <Badge variant="outline" className="bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20 px-3 py-1.5 transition-colors duration-200">
-            <Clock className="h-4 w-4 mr-1.5" />
-            Active
-          </Badge>
-          <Badge variant="outline" className="bg-green-500/10 text-green-500 hover:bg-green-500/20 px-3 py-1.5 transition-colors duration-200">
-            <CheckCircle className="h-4 w-4 mr-1.5" />
-            Recovered
-          </Badge>
-          <Badge variant="outline" className="bg-red-500/10 text-red-500 hover:bg-red-500/20 px-3 py-1.5 transition-colors duration-200">
-            <AlertTriangle className="h-4 w-4 mr-1.5" />
-            Relapsed
-          </Badge>
-        </div>
+      <div className={`transition-all duration-500 ${addDialogOpen ? 'opacity-0 translate-x-4' : 'opacity-100 translate-x-0'}`}>
         <Button 
           size="lg" 
           onClick={() => setAddDialogOpen(true)}
